@@ -2,29 +2,30 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./Home";
+import NoPage from "./NoPage";
+import Football from "./Football";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
-      <div class="grid grid-cols-12 gap-4 h-screen bg-green-600">
-        <div class="col-start-3 col-span-8 bg-indigo-400">01</div>
-
-        <div class="bg-indigo-400 col-span-3">01</div>
-        <div class="bg-indigo-400 col-span-3">01</div>
-        <div class="bg-indigo-400 col-span-3">01</div>
-        <div class="bg-indigo-400 col-span-3">01</div>
-
-        <div class="bg-indigo-400 col-span-4">01</div>
-        <div class="bg-indigo-400 col-span-4">01</div>
-        <div class="bg-indigo-400 col-span-4">01</div>
-
-        <div class="bg-indigo-400 col-span-6">01</div>
-        <div class="bg-indigo-400 col-span-6">01</div>
-
-        <div class="col-start-3 col-span-8 bg-indigo-400">01</div>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}>
+            <Route path="*" element={<NoPage />} />
+            <Route path="Football" element={<Football />} />
+            {/* <Route index element={<Home />} /> */}
+            {/* <Route index element={<Home />} /> */}
+            {/* <Route path="blogs" element={<Blogs />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="*" element={<NoPage />} /> */}
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
