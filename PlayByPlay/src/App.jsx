@@ -13,7 +13,7 @@ function App() {
 
   return (
     <>
-      {/* this is the rout components hai */}
+      {/* this is the rout components haib  */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />}>
