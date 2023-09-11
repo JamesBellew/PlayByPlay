@@ -6,24 +6,20 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import NoPage from "./NoPage";
-import Football from "./Football";
+import Football from "./Football/Football";
+import Layout from "./Layout";
+import SetPlay from "./Football/SetPlay";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      {/* this is the rout components haib  */}
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route path="*" element={<NoPage />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
             <Route path="Football" element={<Football />} />
-            {/* <Route index element={<Home />} /> */}
-            {/* <Route index element={<Home />} /> */}
-            {/* <Route path="blogs" element={<Blogs />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="*" element={<NoPage />} /> */}
+            <Route path="Football/SetPlay" element={<SetPlay />} />
+            <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
