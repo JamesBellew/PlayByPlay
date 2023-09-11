@@ -2,6 +2,37 @@ const SetPlay = () => {
   return (
     <>
       <div className="flex h-[90vh] top-[5vh] gaa-pitch relative bg-green-500 ">
+        <div class="grid grid-cols-3 gap-4  w-full ">
+          <div className="goalkeeper absolute w-full  h-10 ">
+            <div class=" bg-yellow-300 rounded   w-12 mx-auto place-self-center center  p-2 ">
+              1
+            </div>
+          </div>
+          <div
+            className="fullbacks absolute w-full  h-10 top-[16.5%] grid grid-cols-3 gap-4
+           place-items-center">
+            <div className="bg-yellow-300 rounded p-2  w-12 ">02</div>
+            <div className="bg-yellow-300 rounded p-2  w-12 ">03</div>
+            <div className="bg-yellow-300 rounded p-2  w-12 ">04</div>
+          </div>
+          <div className="halfbacks absolute w-full bg-blue-700 h-10 top-[34.6%]"></div>
+          <div className="midfields absolute w-full bg-blue-700 h-10 top-[50%]"></div>
+          {/* <div class="... bg-red-500">01</div>
+          <div class="... bg-yellow-500">02</div>
+          <div class="... bg-red-500">01</div>
+          <div class="... bg-yellow-500">02</div>
+          <div class="... bg-red-500">01</div>
+          <div class="... bg-yellow-500">02</div>
+          <div class="... bg-red-500">01</div>
+          <div class="... bg-yellow-500">02</div>
+          <div class="... bg-red-500">01</div>
+          <div class="... bg-yellow-500">02</div>
+          <div class="... bg-red-500">01</div>
+          <div class="... bg-yellow-500">02</div>
+          <div class="... bg-red-500">01</div>
+          <div class="... bg-yellow-500">02</div>
+          <div class="... bg-red-500">01</div> */}
+        </div>
         {/* Lines */}
         <div className="w-full 13-meter h-[2px] color-white top-[10%] absolute  bg-white"></div>
         <div className="w-full 21-meter h-[2px] color-white top-[16.15%] absolute  bg-white"></div>
@@ -21,8 +52,8 @@ const SetPlay = () => {
             rounded-tl-full absolute rounded-tr-full"></div>
 
         {/* Goals */}
-        <div className="goals w-[25%] h-[10%] border-2 text-white mx-auto "></div>
-        <div className="goals w-[25%] left-[37.5%] h-[10%] border-2 text-white mx-auto absolute top-[90%] "></div>
+        <div className="goals w-[25%] left-[37.5%] h-[5%] border-2 text-white mx-auto absolute "></div>
+        <div className="goals w-[25%] left-[37.5%] h-[5%] border-2 text-white mx-auto absolute top-[95%] "></div>
       </div>
     </>
   );
