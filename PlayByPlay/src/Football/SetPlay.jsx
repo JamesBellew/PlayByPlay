@@ -9,7 +9,7 @@ const SetPlay = () => {
             </div>
           </div>
           <div
-            className="fullbacks absolute w-full  h-10 top-[16.5%] grid grid-cols-3 gap-4
+            className="fullbacksdiv absolute w-full  h-10 top-[16.5%] grid grid-cols-3 gap-4
            place-items-center">
             <div className="bg-yellow-300 rounded p-2  w-12 ">02</div>
             <div className="bg-yellow-300 rounded p-2  w-12 ">03</div>
