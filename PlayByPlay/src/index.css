@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.player{
+    border: 2px solid red;
+    width: 50px;
+
+}
