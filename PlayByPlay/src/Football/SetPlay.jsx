@@ -1,21 +1,132 @@
+import { useState } from "react";
+import "../App.css";
 const SetPlay = () => {
+  const buttonStyle = {
+    float: "left", // Use 'left' to position the button on the left
+    // Add any other styles you need here
+  };
+  const [settingsMenuState, updateSettingsMenuState] = useState(true);
+  const [showPlayerNameState, updatePlayerNameState] = useState(true);
+  const settingsCloseHandler = () => {
+    updateSettingsMenuState(!settingsMenuState);
+  };
+  const showPlayerNameHanlder = () => {
+    updatePlayerNameState(!showPlayerNameState);
+  };
+  const buttonText = settingsMenuState ? "Close Settings" : "Settings";
+
+  const hideStyle = {
+    // Add your styles to hide the <p> elements here
+    display: "none",
+  };
+
+  const showStyle = {
+    // Add your styles to show the <p> elements here
+    display: "block",
+  };
+  const componentStyle = {
+    // Add your component-level styles here
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: "1rem",
+    placeItems: "center",
+  };
+  const secondComponentStyle = {
+    // Second component styles
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: "1rem",
+    textAlign: "center",
+    marginTop: "2rem",
+  };
   return (
     <>
-      <div className="flex h-[90vh] top-[2vh] gaa-pitch relative bg-green-500 ">
+      <button
+        onClick={settingsCloseHandler}
+        className="text-left relative  bg-gray-700    text-white font-bold py-2 px-4 rounded"
+        style={buttonStyle}>
+        {buttonText}
+      </button>
+
+      {settingsMenuState && (
+        <div className="bg-gray-700 top-[3vh] relative p-4 h-auto">
+          <br></br>
+
+          <div className="flex h-auto rounded mt-2   gaa-pitch relative bg-gray-600 settings p-4 ">
+            <div className="flex w-auto bg-gray-600 h-10 text-left rounded">
+              <p className="p-2 text-white">
+                <div class="flex items-center mb-4">
+                  <input
+                    id="default-checkbox"
+                    onClick={showPlayerNameHanlder}
+                    type="checkbox"
+                    value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    for="default-checkbox"
+                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Show Player Name
+                  </label>
+                </div>
+              </p>
+            </div>
+            <div className="flex ml-2 w-auto bg-gray-600 h-10 text-left rounded">
+              <p className="p-2 text-white">
+                <div class="flex items-center mb-4">
+                  <input
+                    id="default-checkbox"
+                    type="checkbox"
+                    value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    for="default-checkbox"
+                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Jersey Color
+                  </label>
+                </div>
+              </p>
+            </div>
+          </div>
+          <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
+            <button class="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Edit Formation
+            </button>
+            <button class=" ml-2 bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Edit Player Names
+            </button>
+          </div>
+          <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Save Lineup
+            </button>
+            <button class=" ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Download
+            </button>
+          </div>
+        </div>
+      )}
+      <div className="flex h-[80vh] w-full top-[7vh] gaa-pitch relative bg-green-500 ">
         <div class="grid grid-cols-3 gap-4  w-full ">
           <div class="goalkeeper absolute w-full h-10">
             <div class="bg-yellow-300 rounded w-12 mx-auto place-self-center center p-2">
               1
             </div>
-            <div class="text-center mt-2">Joe Blogs</div>
+            <div class="text-center mt-3 z-50 player-name">Joe Blogs</div>
           </div>
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[16.15%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded p-2 w-12">02</div>
+              <div className="bg-yellow-300 rounded p-2 w-12 ">02</div>
               <div className="bg-yellow-300 rounded p-2 w-12">03</div>
               <div className="bg-yellow-300 rounded p-2 w-12">04</div>
             </div>
-            <div className="grid grid-cols-3 gap-4 place-items-center">
+            <div
+              style={{
+                ...componentStyle,
+                ...(showPlayerNameState ? {} : hideStyle),
+              }}
+              className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
               <div className="text-center">Text 02</div>
               <div className="text-center">Text 03</div>
               <div className="text-center">Text 04</div>
@@ -27,7 +138,12 @@ const SetPlay = () => {
               <div className="bg-yellow-300 rounded p-2 w-12">06</div>
               <div className="bg-yellow-300 rounded p-2 w-12">07</div>
             </div>
-            <div className="grid grid-cols-3 gap-4 place-items-center">
+            <div
+              style={{
+                ...componentStyle,
+                ...(showPlayerNameState ? {} : hideStyle),
+              }}
+              className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
               <div className="text-center">Text 05</div>
               <div className="text-center">Text 06</div>
               <div className="text-center">Text 07</div>
@@ -42,7 +158,12 @@ const SetPlay = () => {
                 09
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 text-center mt-2">
+            <div
+              style={{
+                ...(showPlayerNameState ? {} : hideStyle),
+              }}
+              className={` ${showPlayerNameState ? "" : "hide"}`}
+              class="grid grid-cols-2 gap-4 text-center ">
               <div className="ml-[20vw]">Text 08</div>
               <div className="mr-[20vw]">Text 09</div>
             </div>
@@ -54,7 +175,12 @@ const SetPlay = () => {
               <div className="bg-yellow-300 rounded p-2 w-12">11</div>
               <div className="bg-yellow-300 rounded p-2 w-12">12</div>
             </div>
-            <div className="grid grid-cols-3 gap-4 place-items-center mt-2">
+            <div
+              style={{
+                ...componentStyle,
+                ...(showPlayerNameState ? {} : hideStyle),
+              }}
+              className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
               <div>Text 10</div>
               <div>Text 11</div>
               <div>Text 12</div>
@@ -67,9 +193,14 @@ const SetPlay = () => {
               <div className="bg-yellow-300 rounded p-2 w-12">11</div>
               <div className="bg-yellow-300 rounded p-2 w-12">12</div>
             </div>
-            <div className="grid grid-cols-3 gap-4 place-items-center mt-2">
+            <div
+              style={{
+                ...componentStyle,
+                ...(showPlayerNameState ? {} : hideStyle),
+              }}
+              className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
               <div>Text 10</div>
-              <div>Text 11</div>
+              <div className="z-10">Text 11</div>
               <div>Text 12</div>
             </div>
           </div>

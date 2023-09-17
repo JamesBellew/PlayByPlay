@@ -4,7 +4,21 @@
   padding: 2rem;
   text-align: center;
 }
+.fade-in-out {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out; /* Adjust the duration and timing function as needed */
+}
+.fade-in-out.visible {
+  opacity: 1;
+}
 
+.my-component .hide p {
+  display: none;
+}
+
+.my-component .show p {
+  display: block;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
