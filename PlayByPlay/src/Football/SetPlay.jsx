@@ -7,13 +7,20 @@ const SetPlay = () => {
   };
   const [settingsMenuState, updateSettingsMenuState] = useState(true);
   const [showPlayerNameState, updatePlayerNameState] = useState(true);
+  const [editPlayerNameState, updateEditPlayerNameState] = useState(false);
   const settingsCloseHandler = () => {
     updateSettingsMenuState(!settingsMenuState);
   };
   const showPlayerNameHanlder = () => {
     updatePlayerNameState(!showPlayerNameState);
   };
+  const editPlayerNameHandler = () => {
+    updateEditPlayerNameState(!editPlayerNameState);
+  };
   const buttonText = settingsMenuState ? "Close Settings" : "Settings";
+  const EditPlayerNamebuttonText = editPlayerNameState
+    ? "Cancel"
+    : "Edit Player Names";
 
   const hideStyle = {
     // Add your styles to hide the <p> elements here
@@ -61,6 +68,7 @@ const SetPlay = () => {
                     onClick={showPlayerNameHanlder}
                     type="checkbox"
                     value=""
+                    checked={showPlayerNameState}
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label
@@ -90,12 +98,24 @@ const SetPlay = () => {
             </div>
           </div>
           <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
-            <button class="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Edit Formation
+            {!editPlayerNameState && (
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Edit Formation
+              </button>
+            )}
+            <button
+              onClick={editPlayerNameHandler}
+              className={`ml-2 ${
+                editPlayerNameState ? "bg-red-500" : "bg-blue-500"
+              } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}>
+              {EditPlayerNamebuttonText}
             </button>
-            <button class=" ml-2 bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Edit Player Names
-            </button>
+            {editPlayerNameState && (
+              <button className="ml-2 bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {" "}
+                Save Player Names
+              </button>
+            )}
           </div>
           <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -127,9 +147,22 @@ const SetPlay = () => {
                 ...(showPlayerNameState ? {} : hideStyle),
               }}
               className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
-              <div className="text-center">Text 02</div>
+              {editPlayerNameState ? (
+                <>
+                  <input type="text" />
+                  <input type="text" />
+                  <input type="text" />
+                </>
+              ) : (
+                <>
+                  <div className="text-center">Text 02</div>
+                  <div className="text-center">Text 03</div>
+                  <div className="text-center">Text 04</div>
+                </>
+              )}
+              {/* <div className="text-center">Text 02</div>
               <div className="text-center">Text 03</div>
-              <div className="text-center">Text 04</div>
+              <div className="text-center">Text 04</div> */}
             </div>
           </div>
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[34.6%]">
@@ -144,9 +177,19 @@ const SetPlay = () => {
                 ...(showPlayerNameState ? {} : hideStyle),
               }}
               className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
-              <div className="text-center">Text 05</div>
-              <div className="text-center">Text 06</div>
-              <div className="text-center">Text 07</div>
+              {editPlayerNameState ? (
+                <>
+                  <input type="text" />
+                  <input type="text" />
+                  <input type="text" />
+                </>
+              ) : (
+                <>
+                  <div className="text-center">Text 05</div>
+                  <div className="text-center">Text 06</div>
+                  <div className="text-center">Text 07</div>
+                </>
+              )}
             </div>
           </div>
           <div className="midfields absolute w-full bg-blue-00 h-auto top-[50%]">
@@ -181,9 +224,19 @@ const SetPlay = () => {
                 ...(showPlayerNameState ? {} : hideStyle),
               }}
               className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
-              <div>Text 10</div>
-              <div>Text 11</div>
-              <div>Text 12</div>
+              {editPlayerNameState ? (
+                <>
+                  <input type="text" />
+                  <input type="text" />
+                  <input type="text" />
+                </>
+              ) : (
+                <>
+                  <div className="text-center">Text 02</div>
+                  <div className="text-center">Text 03</div>
+                  <div className="text-center">Text 04</div>
+                </>
+              )}
             </div>
           </div>
 
@@ -199,9 +252,19 @@ const SetPlay = () => {
                 ...(showPlayerNameState ? {} : hideStyle),
               }}
               className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
-              <div>Text 10</div>
-              <div className="z-10">Text 11</div>
-              <div>Text 12</div>
+              {editPlayerNameState ? (
+                <>
+                  <input type="text" />
+                  <input type="text" />
+                  <input type="text" />
+                </>
+              ) : (
+                <>
+                  <div className="text-center">Text 02</div>
+                  <div className="text-center z-10">Text 03</div>
+                  <div className="text-center z-10">Text 04</div>
+                </>
+              )}
             </div>
           </div>
         </div>
