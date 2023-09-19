@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../App.css";
 const SetPlay = () => {
-  const players = [
+  const [players, setPlayers] = useState([
     { playerNumber: "01", playerName: "John Doe" },
     { playerNumber: "02", playerName: "Joe Blogs" },
     { playerNumber: "03", playerName: "Joe Blogs" },
@@ -10,8 +10,7 @@ const SetPlay = () => {
     { playerNumber: "06", playerName: "Joe Blogs" },
     { playerNumber: "07", playerName: "Joe Blogs" },
     { playerNumber: "08", playerName: "Joe Blogs" },
-  ];
-
+  ]);
   const buttonStyle = {
     float: "left", // Use 'left' to position the button on the left
     // Add any other styles you need here
@@ -70,6 +69,22 @@ const SetPlay = () => {
       {player.playerName}
     </div>
   ));
+  const editPlayerName = (playerNumber, newPlayerName) => {
+    // Create a copy of the players array
+    const updatedPlayers = [...players];
+
+    // Find the player with the specified playerNumber
+    const playerIndex = updatedPlayers.findIndex(
+      (player) => player.playerNumber === playerNumber
+    );
+
+    // If the player is found, update the playerName
+    if (playerIndex !== -1) {
+      updatedPlayers[playerIndex].playerName = newPlayerName;
+      setPlayers(updatedPlayers);
+    }
+    updateEditPlayerNameState(!editPlayerName);
+  };
   return (
     <>
       <button
@@ -135,7 +150,10 @@ const SetPlay = () => {
               {EditPlayerNamebuttonText}
             </button>
             {editPlayerNameState && (
-              <button className="ml-2 bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button
+                onClick={() => editPlayerName("01", "New Name")}
+                className="ml-2 bg-green-500 hover:bg-blue-700 text-white
+                font-bold py-2 px-4 rounded">
                 {" "}
                 Save Player Names
               </button>
@@ -158,7 +176,9 @@ const SetPlay = () => {
               {players[0].playerNumber}
             </div>
             {editPlayerNameState ? (
-              <input type="text" />
+              <>
+                <input type="text" value="hi" className="z-50 mt-5" />
+              </>
             ) : (
               <div class="text-center mt-3 z-50 player-name">
                 {players[0].playerName}
