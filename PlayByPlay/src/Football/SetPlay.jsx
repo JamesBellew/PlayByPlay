@@ -1,6 +1,17 @@
 import { useState } from "react";
 import "../App.css";
 const SetPlay = () => {
+  const players = [
+    { playerNumber: "01", playerName: "John Doe" },
+    { playerNumber: "02", playerName: "Joe Blogs" },
+    { playerNumber: "03", playerName: "Joe Blogs" },
+    { playerNumber: "04", playerName: "Joe Blogs" },
+    { playerNumber: "05", playerName: "John Doe" },
+    { playerNumber: "06", playerName: "Joe Blogs" },
+    { playerNumber: "07", playerName: "Joe Blogs" },
+    { playerNumber: "08", playerName: "Joe Blogs" },
+  ];
+
   const buttonStyle = {
     float: "left", // Use 'left' to position the button on the left
     // Add any other styles you need here
@@ -46,6 +57,19 @@ const SetPlay = () => {
     textAlign: "center",
     marginTop: "2rem",
   };
+
+  //this is the mapping for the full backs, this will need to become dynamic as formations become custome/changebale
+  const fullBackNames = players.slice(1, 4).map((player, index) => (
+    <div key={index} className="text-center">
+      {player.playerName}
+    </div>
+  ));
+  //this is the mapping for the Half backs, this will need to become dynamic as formations become custome/changebale
+  const halfBackNames = players.slice(5, 8).map((player, index) => (
+    <div key={index} className="text-center">
+      {player.playerName}
+    </div>
+  ));
   return (
     <>
       <button
@@ -127,15 +151,21 @@ const SetPlay = () => {
           </div>
         </div>
       )}
-      <div className="flex h-[80vh] w-full top-[7vh] gaa-pitch relative bg-green-500 ">
+      <div className="flex h-[80vh] w-full mb-[10vh] top-[7vh] gaa-pitch relative bg-green-500 ">
         <div class="grid grid-cols-3 gap-4  w-full ">
           <div class="goalkeeper absolute w-full h-10">
             <div class="bg-yellow-300 rounded w-12 mx-auto place-self-center center p-2">
-              1
+              {players[0].playerNumber}
             </div>
-            <div class="text-center mt-3 z-50 player-name">Joe Blogs</div>
+            {editPlayerNameState ? (
+              <input type="text" />
+            ) : (
+              <div class="text-center mt-3 z-50 player-name">
+                {players[0].playerName}
+              </div>
+            )}
           </div>
-          <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[16.15%]">
+          <div className="fullbacks absolute w-full bg-blue-00 h-auto top-[16.15%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
               <div className="bg-yellow-300 rounded p-2 w-12 ">02</div>
               <div className="bg-yellow-300 rounded p-2 w-12">03</div>
@@ -154,11 +184,7 @@ const SetPlay = () => {
                   <input type="text" />
                 </>
               ) : (
-                <>
-                  <div className="text-center">Text 02</div>
-                  <div className="text-center">Text 03</div>
-                  <div className="text-center">Text 04</div>
-                </>
+                <>{fullBackNames}</>
               )}
               {/* <div className="text-center">Text 02</div>
               <div className="text-center">Text 03</div>
@@ -184,11 +210,7 @@ const SetPlay = () => {
                   <input type="text" />
                 </>
               ) : (
-                <>
-                  <div className="text-center">Text 05</div>
-                  <div className="text-center">Text 06</div>
-                  <div className="text-center">Text 07</div>
-                </>
+                <>{halfBackNames}</>
               )}
             </div>
           </div>
