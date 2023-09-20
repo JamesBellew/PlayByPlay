@@ -208,6 +208,7 @@ const SetPlay = () => {
               )}
               {/* <div className="text-center">Text 02</div>
               <div className="text-center">Text 03</div>
+              I dont know
               <div className="text-center">Text 04</div> */}
             </div>
           </div>
