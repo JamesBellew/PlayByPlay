@@ -172,7 +172,7 @@ const SetPlay = () => {
       <div className="flex h-[80vh] w-full mb-[10vh] top-[7vh] gaa-pitch relative bg-green-500 ">
         <div class="grid grid-cols-3 gap-4  w-full ">
           <div class="goalkeeper absolute w-full h-10">
-            <div class="bg-yellow-300 rounded w-12 mx-auto place-self-center center p-2">
+            <div class="bg-yellow-300 rounded-full   w-7 h-7 mx-auto place-self-center center ">
               {players[0].playerNumber}
             </div>
             {editPlayerNameState ? (
@@ -187,9 +187,15 @@ const SetPlay = () => {
           </div>
           <div className="fullbacks absolute w-full bg-blue-00 h-auto top-[16.15%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded p-2 w-12 ">02</div>
-              <div className="bg-yellow-300 rounded p-2 w-12">03</div>
-              <div className="bg-yellow-300 rounded p-2 w-12">04</div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7  ">
+                02
+              </div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                03
+              </div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                04
+              </div>
             </div>
             <div
               style={{
@@ -214,9 +220,15 @@ const SetPlay = () => {
           </div>
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[34.6%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded p-2 w-12">05</div>
-              <div className="bg-yellow-300 rounded p-2 w-12">06</div>
-              <div className="bg-yellow-300 rounded p-2 w-12">07</div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                05
+              </div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                06
+              </div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                07
+              </div>
             </div>
             <div
               style={{
@@ -237,10 +249,10 @@ const SetPlay = () => {
           </div>
           <div className="midfields absolute w-full bg-blue-00 h-auto top-[50%]">
             <div className="grid grid-cols-2 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded ml-[20vw] p-2 w-12 text-center">
+              <div className="bg-yellow-300 rounded-full ml-[20vw] flex items-center justify-center w-7 h-7 text-center">
                 08
               </div>
-              <div className="bg-yellow-300 rounded p-2 w-12 mr-[20vw] text-center">
+              <div className="bg-yellow-300 rounded-full w-7 h-7 flex items-center justify-center mr-[20vw]">
                 09
               </div>
             </div>
@@ -257,9 +269,15 @@ const SetPlay = () => {
 
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[69.2%] text-center">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded p-2 w-12">10</div>
-              <div className="bg-yellow-300 rounded p-2 w-12">11</div>
-              <div className="bg-yellow-300 rounded p-2 w-12">12</div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                10
+              </div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                11
+              </div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                12
+              </div>
             </div>
             <div
               style={{
@@ -285,9 +303,15 @@ const SetPlay = () => {
 
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[90%] text-center">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded p-2 w-12">10</div>
-              <div className="bg-yellow-300 rounded p-2 w-12">11</div>
-              <div className="bg-yellow-300 rounded p-2 w-12">12</div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                10
+              </div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                11
+              </div>
+              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+                12
+              </div>
             </div>
             <div
               style={{
