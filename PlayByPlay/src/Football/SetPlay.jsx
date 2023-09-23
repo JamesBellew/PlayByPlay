@@ -13,15 +13,18 @@ const SetPlay = () => {
   ]);
 
   const formations = ["3-3-2-3-3", "3-3-1-2-3-2", "3-3-1-2-2-3"];
+
   const buttonStyle = {
-    float: "left", // Use 'left' to position the button on the left
-    // Add any other styles you need here
+    float: "left",
   };
   const [settingsMenuState, updateSettingsMenuState] = useState(true);
   const [showPlayerNameState, updatePlayerNameState] = useState(true);
   const [editPlayerNameState, updateEditPlayerNameState] = useState(false);
   const [showFormationsState, updateshowFormationsState] = useState(false);
-
+  //*    - this is the check to see what formations is selectedf, if there are no formations saved under the user then a default formation will be selected
+  //*    - for the moment, I will hard code this in as the first element of the formations array.
+  //TODO - in future, I will want to check if the user have stored a saved formation from the local storage and if not supply the default like below
+  const [currentFormation, updatecurrentFormation] = useState("3-3-2-3-3");
   const settingsCloseHandler = () => {
     updateSettingsMenuState(!settingsMenuState);
   };
@@ -34,6 +37,9 @@ const SetPlay = () => {
   const editFormationHandler = () => {
     updateshowFormationsState(!showFormationsState);
   };
+  const formationInputHandler = (formation) => [
+    updatecurrentFormation(formation),
+  ];
   const buttonText = settingsMenuState ? "Close Settings" : "Settings";
   const FormationbuttonText = showFormationsState
     ? "Close Formations"
@@ -182,6 +188,8 @@ const SetPlay = () => {
                       id={`default-checkbox-${index}`}
                       type="checkbox"
                       value=""
+                      onClick={() => formationInputHandler(formation)}
+                      checked={currentFormation === formation ? true : false}
                       className="w-4 ml-2 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
                     <label
@@ -221,7 +229,7 @@ const SetPlay = () => {
               </div>
             )}
           </div>
-          <div className="fullbacks absolute w-full bg-blue-00 h-auto top-[16.15%]">
+          <div className="fullbacks  absolute w-full bg-blue-00 h-auto top-[16.15%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
               <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7  ">
                 02
@@ -248,12 +256,29 @@ const SetPlay = () => {
               ) : (
                 <>{fullBackNames}</>
               )}
-              {/* <div className="text-center">Text 02</div>
-              <div className="text-center">Text 03</div>
-              I dont know haiiii
-              <div className="text-center">Text 04</div> */}
             </div>
           </div>
+          {/* this is the sweeper div, only appears in certain formations */}
+          {currentFormation === "3-3-1-2-3-2" ? (
+            <div className="sweeper bg-red-500 absolute w-full bg-blue-00 h-auto top-[25.15%]">
+              <div class="goalkeeper absolute w-full h-10">
+                <div class="bg-yellow-300 player-circle rounded-full   w-7 h-7 mx-auto place-self-center center ">
+                  15
+                </div>
+                {editPlayerNameState ? (
+                  <>
+                    <input type="text" value="hi" className="z-50 mt-5" />
+                  </>
+                ) : (
+                  <div class="text-center  z-50 player-name">
+                    {players[0].playerName}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : null}
+          {/* end of sweeper div */}
+
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[34.6%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
               <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
@@ -302,7 +327,6 @@ const SetPlay = () => {
               <div className="mr-[20vw]">Text 09</div>
             </div>
           </div>
-
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[69.2%] text-center">
             <div className="grid grid-cols-3 gap-4 place-items-center">
               <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
@@ -336,18 +360,29 @@ const SetPlay = () => {
               )}
             </div>
           </div>
+          <div className="full-forwards absolute w-full bg-blue-00 h-auto top-[90%] text-center">
+            <div className="flex justify-center">
+              <div className="flex flex-col items-center">
+                <div className="bg-yellow-300 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
+                  13
+                </div>
+                <div className="text-center z-50">Text 02</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="bg-yellow-300 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
+                  14
+                </div>
+                <div className="text-center z-50">Text 03</div>
+              </div>
 
-          <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[90%] text-center">
-            <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                10
-              </div>
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                11
-              </div>
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                12
-              </div>
+              {currentFormation != "3-3-1-2-3-2" ? (
+                <div className="flex flex-col items-center">
+                  <div className="bg-yellow-300 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
+                    15
+                  </div>
+                  <div className="text-center z-10">Text 04</div>
+                </div>
+              ) : null}
             </div>
             <div
               style={{
@@ -362,11 +397,7 @@ const SetPlay = () => {
                   <input type="text" />
                 </>
               ) : (
-                <>
-                  <div className="text-center">Text 02</div>
-                  <div className="text-center z-10">Text 03</div>
-                  <div className="text-center z-10">Text 04</div>
-                </>
+                <>{/* You can add additional text here if needed */}</>
               )}
             </div>
           </div>
