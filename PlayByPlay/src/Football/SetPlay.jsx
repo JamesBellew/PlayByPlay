@@ -11,6 +11,8 @@ const SetPlay = () => {
     { playerNumber: "07", playerName: "Joe Blogs" },
     { playerNumber: "08", playerName: "Joe Blogs" },
   ]);
+
+  const formations = ["3-3-2-3-3", "3-3-1-2-3-2", "3-3-1-2-2-3"];
   const buttonStyle = {
     float: "left", // Use 'left' to position the button on the left
     // Add any other styles you need here
@@ -18,6 +20,8 @@ const SetPlay = () => {
   const [settingsMenuState, updateSettingsMenuState] = useState(true);
   const [showPlayerNameState, updatePlayerNameState] = useState(true);
   const [editPlayerNameState, updateEditPlayerNameState] = useState(false);
+  const [showFormationsState, updateshowFormationsState] = useState(false);
+
   const settingsCloseHandler = () => {
     updateSettingsMenuState(!settingsMenuState);
   };
@@ -27,7 +31,13 @@ const SetPlay = () => {
   const editPlayerNameHandler = () => {
     updateEditPlayerNameState(!editPlayerNameState);
   };
+  const editFormationHandler = () => {
+    updateshowFormationsState(!showFormationsState);
+  };
   const buttonText = settingsMenuState ? "Close Settings" : "Settings";
+  const FormationbuttonText = showFormationsState
+    ? "Close Formations"
+    : "Edit Formations";
   const EditPlayerNamebuttonText = editPlayerNameState
     ? "Cancel"
     : "Edit Player Names";
@@ -138,10 +148,13 @@ const SetPlay = () => {
           </div>
           <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
             {!editPlayerNameState && (
-              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Edit Formation
+              <button
+                onClick={editFormationHandler}
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {FormationbuttonText}
               </button>
             )}
+
             <button
               onClick={editPlayerNameHandler}
               className={`ml-2 ${
@@ -159,6 +172,29 @@ const SetPlay = () => {
               </button>
             )}
           </div>
+          {/* this is the formations divs */}
+          {showFormationsState && (
+            <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
+              <div className="flex">
+                {formations.map((formation, index) => (
+                  <div key={index}>
+                    <input
+                      id={`default-checkbox-${index}`}
+                      type="checkbox"
+                      value=""
+                      className="w-4 ml-2 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label
+                      htmlFor={`default-checkbox-${index}`}
+                      className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                      {formation}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* end of formations div */}
           <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Save Lineup
@@ -172,7 +208,7 @@ const SetPlay = () => {
       <div className="flex h-[80vh] w-full mb-[10vh] top-[7vh] gaa-pitch relative bg-green-500 ">
         <div class="grid grid-cols-3 gap-4  w-full ">
           <div class="goalkeeper absolute w-full h-10">
-            <div class="bg-yellow-300 rounded-full   w-7 h-7 mx-auto place-self-center center ">
+            <div class="bg-yellow-300 player-circle rounded-full   w-7 h-7 mx-auto place-self-center center ">
               {players[0].playerNumber}
             </div>
             {editPlayerNameState ? (
@@ -187,13 +223,13 @@ const SetPlay = () => {
           </div>
           <div className="fullbacks absolute w-full bg-blue-00 h-auto top-[16.15%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7  ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7  ">
                 02
               </div>
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 03
               </div>
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 04
               </div>
             </div>
@@ -220,13 +256,13 @@ const SetPlay = () => {
           </div>
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[34.6%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 05
               </div>
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 06
               </div>
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 07
               </div>
             </div>
@@ -249,10 +285,10 @@ const SetPlay = () => {
           </div>
           <div className="midfields absolute w-full bg-blue-00 h-auto top-[50%]">
             <div className="grid grid-cols-2 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded-full ml-[20vw] flex items-center justify-center w-7 h-7 text-center">
+              <div className="bg-yellow-300 player-circle rounded-full ml-[20vw] flex items-center justify-center w-7 h-7 text-center">
                 08
               </div>
-              <div className="bg-yellow-300 rounded-full w-7 h-7 flex items-center justify-center mr-[20vw]">
+              <div className="bg-yellow-300 player-circle rounded-full w-7 h-7 flex items-center justify-center mr-[20vw]">
                 09
               </div>
             </div>
@@ -269,13 +305,13 @@ const SetPlay = () => {
 
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[69.2%] text-center">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 10
               </div>
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 11
               </div>
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 12
               </div>
             </div>
@@ -303,13 +339,13 @@ const SetPlay = () => {
 
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[90%] text-center">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 10
               </div>
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 11
               </div>
-              <div className="bg-yellow-300 rounded-full flex items-center justify-center  w-7 h-7 ">
+              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
                 12
               </div>
             </div>
