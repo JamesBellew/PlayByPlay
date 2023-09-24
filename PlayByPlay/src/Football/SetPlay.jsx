@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../App.css";
 const SetPlay = () => {
   const [players, setPlayers] = useState([
-    { playerNumber: "01", playerName: "John Doe" },
+    { playerNumber: "01", playerName: "John Keeper" },
     { playerNumber: "02", playerName: "Joe Blogs" },
     { playerNumber: "03", playerName: "Joe Blogs" },
     { playerNumber: "04", playerName: "Joe Blogs" },
@@ -72,7 +72,22 @@ const SetPlay = () => {
     textAlign: "center",
     marginTop: "2rem",
   };
+  //this is the mapping for the Keeper , this will need to become dynamic as formations become custome/changebale
+  const KeeperName = players.slice(0, 1).map((player, index) => (
+    <div
+      key={index}
+      className="text-center mx-auto mt-7"
+      style={{
+        width: "40%",
+        left: "30%",
+        position: "absolute",
 
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+      {player.playerName}
+    </div>
+  ));
   //this is the mapping for the full backs, this will need to become dynamic as formations become custome/changebale
   const fullBackNames = players.slice(1, 4).map((player, index) => (
     <div key={index} className="text-center">
@@ -81,6 +96,12 @@ const SetPlay = () => {
   ));
   //this is the mapping for the Half backs, this will need to become dynamic as formations become custome/changebale
   const halfBackNames = players.slice(5, 8).map((player, index) => (
+    <div key={index} className="text-center">
+      {player.playerName}
+    </div>
+  ));
+  //this is the mapping for the Half backs, this will need to become dynamic as formations become custome/changebale
+  const fullForwardsNames = players.slice(12, 15).map((player, index) => (
     <div key={index} className="text-center">
       {player.playerName}
     </div>
@@ -219,15 +240,21 @@ const SetPlay = () => {
             <div class="bg-yellow-300 player-circle rounded-full   w-7 h-7 mx-auto place-self-center center ">
               {players[0].playerNumber}
             </div>
-            {editPlayerNameState ? (
-              <>
-                <input type="text" value="hi" className="z-50 mt-5" />
-              </>
-            ) : (
-              <div class="text-center mt-3 z-50 player-name">
-                {players[0].playerName}
-              </div>
-            )}
+
+            <div
+              style={{
+                ...componentStyle,
+                ...(showPlayerNameState ? {} : hideStyle),
+              }}
+              className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
+              {editPlayerNameState ? (
+                <>
+                  <input type="text" />
+                </>
+              ) : (
+                <>{KeeperName}</>
+              )}
+            </div>
           </div>
           <div className="fullbacks  absolute w-full bg-blue-00 h-auto top-[16.15%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
@@ -271,7 +298,7 @@ const SetPlay = () => {
                   </>
                 ) : (
                   <div class="text-center  z-50 player-name">
-                    {players[0].playerName}
+                    {players[2].playerName}
                   </div>
                 )}
               </div>
@@ -308,12 +335,12 @@ const SetPlay = () => {
               )}
             </div>
           </div>
-          <div className="midfields absolute w-full bg-blue-00 h-auto top-[50%]">
+          <div className="midfields absolute w-full bg-blue-00 h-auto top-[48%]">
             <div className="grid grid-cols-2 gap-4 place-items-center">
-              <div className="bg-yellow-300 player-circle rounded-full ml-[20vw] flex items-center justify-center w-7 h-7 text-center">
+              <div className="bg-yellow-300 player-circle rounded-full ml-[25vw] flex items-center justify-center w-7 h-7 text-center">
                 08
               </div>
-              <div className="bg-yellow-300 player-circle rounded-full w-7 h-7 flex items-center justify-center mr-[20vw]">
+              <div className="bg-yellow-300 player-circle rounded-full w-7 h-7 flex items-center justify-center mr-[25vw]">
                 09
               </div>
             </div>
@@ -406,23 +433,26 @@ const SetPlay = () => {
         <div className="w-full 13-meter h-[2px] color-white top-[10%] absolute  bg-white"></div>
         <div className="w-full 21-meter h-[2px] color-white top-[16.15%] absolute  bg-white"></div>
         <div className="w-full 45-meter h-[2px] color-white top-[34.6%] absolute  bg-white"></div>
-        <div className="w-full mid h-[2px] color-white top-[50%] absolute  bg-white"></div>
+        <div className="w-full mid h-[2px] color-white top-[45%] absolute  bg-white"></div>
+        <div className="w-[10%] left-[45%] mx-auto  mid-line h-[2px] color-white top-[50%] absolute  bg-white"></div>
+
+        <div className="w-full mid h-[2px] color-white top-[55%] absolute  bg-white"></div>
         <div className="w-full op-45-meter h-[2px] color-white top-[69.2%] absolute  bg-white"></div>
         <div className="w-full op-21-meter h-[2px] color-white top-[83.85%] absolute  bg-white"></div>
         <div className="w-full op-13-meter h-[2px] color-white top-[90%] absolute  bg-white"></div>
 
         {/* Circles */}
-        {/* <div
-          className="21-circle text-center center border-b-0 color-white rotate-180 h-[10%] top-[16.15%] first-letter: w-[25%] left-[37.5%] border-2 
+        <div
+          className="21-circle text-center center border-b-0 color-white rotate-180 h-[10%] top-[16.15%] first-letter: w-[15%] left-[42.5%] border-2 
             rounded-tl-full absolute rounded-tr-full"></div>
         <div
-          className="op-21-circle text-center center border-b-0 color-white  h-[10%] first-letter:
-           w-[25%] top-[74%] left-[37.5%] border-2 
-            rounded-tl-full absolute rounded-tr-full"></div> */}
+          className="op-21-circle text-center center border-b-0 color-white  h-[8%] first-letter:
+           w-[15%] top-[76%] left-[42.5%] border-2 
+            rounded-tl-full absolute rounded-tr-full"></div>
 
         {/* Goals */}
-        <div className="goals w-[25%] left-[37.5%] h-[5%] border-2 text-white mx-auto absolute "></div>
-        <div className="goals w-[25%] left-[37.5%] h-[5%] border-2 text-white mx-auto absolute top-[95%] "></div>
+        <div className="goals w-[15%] left-[42.5%] h-[5%] border-2 text-white mx-auto absolute "></div>
+        <div className="goals w-[15%] left-[42.5%] h-[5%] border-2 text-white mx-auto absolute top-[95%] "></div>
       </div>
     </>
   );
