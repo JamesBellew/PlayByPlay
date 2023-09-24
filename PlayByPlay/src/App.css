@@ -8,6 +8,9 @@
   cursor: pointer;
   z-index: 100;
 }
+.jersey{
+  background: linear-gradient(to right, blue 50%, yellow 50%)
+}
 .player-circle:hover{
   transition: all;
   transition-duration: .2s;

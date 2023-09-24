@@ -236,9 +236,12 @@ const SetPlay = () => {
       )}
       <div className="flex h-[80vh] w-full mb-[10vh] top-[7vh] gaa-pitch relative bg-green-500 ">
         <div class="grid grid-cols-3 gap-4  w-full ">
+          {/* keeper div */}
           <div class="goalkeeper absolute w-full h-10">
-            <div class="bg-yellow-300 player-circle rounded-full   w-7 h-7 mx-auto place-self-center center ">
-              {players[0].playerNumber}
+            <div class="bg-blue-600 player-circle rounded-full   w-7 h-7 mx-auto place-self-center center ">
+              <p className="text-yellow-400 capitalize shadow-white ">
+                {players[0].playerNumber}
+              </p>
             </div>
 
             <div
@@ -248,24 +251,28 @@ const SetPlay = () => {
               }}
               className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
               {editPlayerNameState ? (
-                <>
-                  <input type="text" />
-                </>
+                <div className=" bg-red-300 absolute w-[100%]  ">
+                  <input
+                    type="text"
+                    className="bg-yellow-400 w-[20%] absolute left-[40%]"
+                  />
+                </div>
               ) : (
                 <>{KeeperName}</>
               )}
             </div>
+            {/* end of keeper div */}
           </div>
           <div className="fullbacks  absolute w-full bg-blue-00 h-auto top-[16.15%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7  ">
-                02
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7  ">
+                <p className="text-yellow-400 capitalize shadow-white ">02</p>
               </div>
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                03
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
+                <p className="text-yellow-400 capitalize shadow-white ">03</p>
               </div>
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                04
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
+                <p className="text-yellow-400 capitalize shadow-white ">04</p>
               </div>
             </div>
             <div
@@ -288,9 +295,9 @@ const SetPlay = () => {
           {/* this is the sweeper div, only appears in certain formations */}
           {currentFormation === "3-3-1-2-3-2" ? (
             <div className="sweeper bg-red-500 absolute w-full bg-blue-00 h-auto top-[25.15%]">
-              <div class="goalkeeper absolute w-full h-10">
-                <div class="bg-yellow-300 player-circle rounded-full   w-7 h-7 mx-auto place-self-center center ">
-                  15
+              <div class="goalkeeper absolute w-full z-50 h-10">
+                <div class="bg-blue-600 player-circle rounded-full -z-50  w-7 h-7 mx-auto place-self-center center ">
+                  <p className="text-yellow-400 capitalize shadow-white ">15</p>
                 </div>
                 {editPlayerNameState ? (
                   <>
@@ -308,14 +315,14 @@ const SetPlay = () => {
 
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[34.6%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                05
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
+                <p className="text-yellow-400 capitalize shadow-white ">05</p>
               </div>
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                06
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
+                <p className="text-yellow-400 capitalize shadow-white ">06</p>
               </div>
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                07
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
+                <p className="text-yellow-400 capitalize shadow-white ">07</p>
               </div>
             </div>
             <div
@@ -335,35 +342,64 @@ const SetPlay = () => {
               )}
             </div>
           </div>
-          <div className="midfields absolute w-full bg-blue-00 h-auto top-[48%]">
-            <div className="grid grid-cols-2 gap-4 place-items-center">
-              <div className="bg-yellow-300 player-circle rounded-full ml-[25vw] flex items-center justify-center w-7 h-7 text-center">
-                08
+          <div className="midfielders absolute w-full bg-blue-00 h-auto top-[48%] text-center">
+            <div className="flex justify-center">
+              <div className="flex flex-col items-center">
+                <div className="bg-blue-600 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
+                  <p className="text-yellow-400 capitalize shadow-white ">08</p>
+                </div>
+                <p
+                  style={{
+                    ...(showPlayerNameState ? {} : hideStyle),
+                  }}
+                  className={`text-center z-50 ${
+                    showPlayerNameState ? "" : "hide"
+                  }`}>
+                  Text full
+                </p>
               </div>
-              <div className="bg-yellow-300 player-circle rounded-full w-7 h-7 flex items-center justify-center mr-[25vw]">
-                09
+              <div className="flex player-div flex-col items-center">
+                <div className="bg-blue-600 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
+                  <p className="text-yellow-400 capitalize shadow-white ">09</p>
+                </div>
+                <p
+                  style={{
+                    ...(showPlayerNameState ? {} : hideStyle),
+                  }}
+                  className={`text-center z-50 ${
+                    showPlayerNameState ? "" : "hide"
+                  }`}>
+                  Text full
+                </p>
               </div>
             </div>
             <div
               style={{
+                ...componentStyle,
                 ...(showPlayerNameState ? {} : hideStyle),
               }}
-              className={` ${showPlayerNameState ? "" : "hide"}`}
-              class="grid grid-cols-2 gap-4 text-center ">
-              <div className="ml-[20vw]">Text 08</div>
-              <div className="mr-[20vw]">Text 09</div>
+              className={`my-component ${showPlayerNameState ? "" : "hide"}`}>
+              {editPlayerNameState ? (
+                <>
+                  <input type="text" />
+                  <input type="text" />
+                  <input type="text" />
+                </>
+              ) : (
+                <>{/* You can add additional text here if needed */}</>
+              )}
             </div>
           </div>
           <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[69.2%] text-center">
             <div className="grid grid-cols-3 gap-4 place-items-center">
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                10
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
+                <p className="text-yellow-400 capitalize shadow-white ">10</p>
               </div>
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                11
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
+                <p className="text-yellow-400 capitalize shadow-white ">11</p>
               </div>
-              <div className="bg-yellow-300 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
-                12
+              <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center  w-7 h-7 ">
+                <p className="text-yellow-400 capitalize shadow-white ">12</p>
               </div>
             </div>
             <div
@@ -390,24 +426,50 @@ const SetPlay = () => {
           <div className="full-forwards absolute w-full bg-blue-00 h-auto top-[90%] text-center">
             <div className="flex justify-center">
               <div className="flex flex-col items-center">
-                <div className="bg-yellow-300 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
-                  13
+                <div className="bg-blue-600 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
+                  <p className="text-yellow-400 capitalize shadow-white ">13</p>
                 </div>
-                <div className="text-center z-50">Text 02</div>
+                <p
+                  style={{
+                    ...(showPlayerNameState ? {} : hideStyle),
+                  }}
+                  className={`text-center z-50 ${
+                    showPlayerNameState ? "" : "hide"
+                  }`}>
+                  Text full
+                </p>
               </div>
               <div className="flex flex-col items-center">
-                <div className="bg-yellow-300 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
-                  14
+                <div className="bg-blue-600 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
+                  <p className="text-yellow-400 capitalize shadow-white ">14</p>
                 </div>
-                <div className="text-center z-50">Text 03</div>
+                <p
+                  style={{
+                    ...(showPlayerNameState ? {} : hideStyle),
+                  }}
+                  className={`text-center z-50 ${
+                    showPlayerNameState ? "" : "hide"
+                  }`}>
+                  Text full
+                </p>
               </div>
 
               {currentFormation != "3-3-1-2-3-2" ? (
                 <div className="flex flex-col items-center">
-                  <div className="bg-yellow-300 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
-                    15
+                  <div className="bg-blue-600 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
+                    <p className="text-yellow-400 capitalize shadow-white ">
+                      15
+                    </p>
                   </div>
-                  <div className="text-center z-10">Text 04</div>
+                  <p
+                    style={{
+                      ...(showPlayerNameState ? {} : hideStyle),
+                    }}
+                    className={`text-center z-50 ${
+                      showPlayerNameState ? "" : "hide"
+                    }`}>
+                    Text full
+                  </p>
                 </div>
               ) : null}
             </div>
