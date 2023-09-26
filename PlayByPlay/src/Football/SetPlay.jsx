@@ -336,7 +336,7 @@ const SetPlay = () => {
             </div>
           </div>
 
-          {/* this is the sweeper div, only appears in certain formations */}
+          {/* this is the sweeper div, only appears in certain formations that have a sweeper in play */}
           {currentFormation === "3-3-1-2-3-2" ||
           currentFormation === "3-3-1-2-2-3" ? (
             <div className="sweeper bg-red-500 absolute w-full bg-blue-00 h-auto top-[25.15%]">
