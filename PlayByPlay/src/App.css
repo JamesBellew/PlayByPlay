@@ -11,6 +11,14 @@
 .jersey{
   background: linear-gradient(to right, blue 50%, yellow 50%)
 }
+input[type=text]{
+  border-radius: 5px;
+  
+  padding: 2px 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
 .player-circle:hover{
   transition: all;
   transition-duration: .2s;

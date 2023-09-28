@@ -3,20 +3,20 @@ import "../App.css";
 const SetPlay = () => {
   const [players, setPlayers] = useState([
     { playerNumber: "01", playerName: "John Keeper" },
-    { playerNumber: "02", playerName: "Joe Blogs2" },
-    { playerNumber: "03", playerName: "Joe Blogs3" },
-    { playerNumber: "04", playerName: "Joe Blogs4" },
-    { playerNumber: "05", playerName: "John Doe5" },
-    { playerNumber: "06", playerName: "Joe Blogs6" },
-    { playerNumber: "07", playerName: "Joe Blogs7" },
-    { playerNumber: "08", playerName: "Joe Blogs8" },
-    { playerNumber: "09", playerName: "Joe Blogs9" },
-    { playerNumber: "10", playerName: "Joe Blogs" },
-    { playerNumber: "11", playerName: "Joe Blogs" },
-    { playerNumber: "12", playerName: "Joe Blogs" },
-    { playerNumber: "13", playerName: "Joe Blogs" },
-    { playerNumber: "14", playerName: "Joe Blogs" },
-    { playerNumber: "15", playerName: "Joe Blogs" },
+    { playerNumber: "02", playerName: "left full back" },
+    { playerNumber: "03", playerName: "center back" },
+    { playerNumber: "04", playerName: "right full back" },
+    { playerNumber: "05", playerName: "left half back" },
+    { playerNumber: "06", playerName: "center half back" },
+    { playerNumber: "07", playerName: "right half back" },
+    { playerNumber: "08", playerName: "midfield" },
+    { playerNumber: "09", playerName: "midfield" },
+    { playerNumber: "10", playerName: "left half forward" },
+    { playerNumber: "11", playerName: "center half forward" },
+    { playerNumber: "12", playerName: "right half forward" },
+    { playerNumber: "13", playerName: "left full forward" },
+    { playerNumber: "14", playerName: "center forward" },
+    { playerNumber: "15", playerName: "right full forward" },
   ]);
 
   const formations = ["3-3-2-3-3", "3-3-1-2-3-2", "3-3-1-2-2-3"];
@@ -106,7 +106,7 @@ const SetPlay = () => {
   const KeeperName = players.slice(0, 1).map((player, index) => (
     <div
       key={index}
-      className="text-center mx-auto mt-7"
+      className="text-center z-50 mx-auto mt-7"
       style={{
         width: "40%",
         left: "30%",
@@ -125,7 +125,7 @@ const SetPlay = () => {
     </div>
   ));
   //this is the mapping for the Half backs, this will need to become dynamic as formations become custome/changebale
-  const halfBackNames = players.slice(5, 8).map((player, index) => (
+  const halfBackNames = players.slice(4, 7).map((player, index) => (
     <div key={index} className="text-center">
       {player.playerName}
     </div>
@@ -258,7 +258,7 @@ const SetPlay = () => {
           {/* keeper div */}
           {/* keeper div */}
           <div class="goalkeeper absolute w-full h-10">
-            <div class="bg-blue-600 player-circle rounded-full w-7 mt-1 h-7 mx-auto place-self-center center ">
+            <div class="bg-blue-600 player-circle rounded-full w-7 mt-5 h-7 mx-auto place-self-center center ">
               <p className="text-yellow-400 capitalize shadow-white ">
                 {players[0].playerNumber}
               </p>
@@ -283,7 +283,7 @@ const SetPlay = () => {
                       )
                     }
                     value={players[0].playerName}
-                    className=" w-[20%] absolute mt-2 left-[40%]"
+                    className=" w-[20%] absolute mt-2 z-50 left-[40%]"
                   />
                 </div>
               ) : (
@@ -346,11 +346,20 @@ const SetPlay = () => {
                 </div>
                 {editPlayerNameState ? (
                   <>
-                    <input type="text" className="z-50" />
+                    <input
+                      type="text"
+                      onChange={(e) =>
+                        playerNameChangeHandler(
+                          e.target.value,
+                          players[14].playerNumber
+                        )
+                      }
+                      value={players[14].playerName}
+                    />
                   </>
                 ) : showPlayerNameState ? (
                   <div class="text-center z-50 player-name">
-                    {players[2].playerName}
+                    {players[14].playerName}
                   </div>
                 ) : null}
               </div>
@@ -358,7 +367,7 @@ const SetPlay = () => {
           ) : null}
           {/* end of sweeper div */}
 
-          <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[34.6%]">
+          <div className="halfbacks absolute w-full bg-blue-00 h-auto top-[31.6%]">
             <div className="grid grid-cols-3 gap-4 place-items-center">
               <div className="bg-blue-600 player-circle rounded-full flex items-center justify-center w-7 h-7 ">
                 <p className="text-yellow-400 capitalize shadow-white">05</p>
@@ -386,10 +395,10 @@ const SetPlay = () => {
                       onChange={(e) =>
                         playerNameChangeHandler(
                           e.target.value,
-                          players[index + 1].playerNumber
+                          players[index + 4].playerNumber
                         )
                       }
-                      value={players[index + 1].playerName}
+                      value={players[index + 4].playerName}
                     />
                   ))}
                 </>
@@ -406,7 +415,16 @@ const SetPlay = () => {
                 </div>
                 {editPlayerNameState ? (
                   <>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      onChange={(e) =>
+                        playerNameChangeHandler(
+                          e.target.value,
+                          players[7].playerNumber
+                        )
+                      }
+                      value={players[7].playerName}
+                    />
                   </>
                 ) : (
                   <p
@@ -416,7 +434,7 @@ const SetPlay = () => {
                     className={`text-center z-50 ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
-                    Text full
+                    {players[7].playerName}
                   </p>
                 )}
               </div>
@@ -426,7 +444,16 @@ const SetPlay = () => {
                 </div>
                 {editPlayerNameState ? (
                   <>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      onChange={(e) =>
+                        playerNameChangeHandler(
+                          e.target.value,
+                          players[8].playerNumber
+                        )
+                      }
+                      value={players[8].playerName}
+                    />
                   </>
                 ) : (
                   <p
@@ -436,7 +463,7 @@ const SetPlay = () => {
                     className={`text-center z-50 ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
-                    Text full
+                    {players[8].playerName}
                   </p>
                 )}
               </div>
@@ -457,7 +484,7 @@ const SetPlay = () => {
             </div>
           </div>
 
-          <div className="halfforwards absolute w-full bg-blue-00 h-auto top-[65.2%] text-center">
+          <div className="half-forwards absolute w-full bg-blue-00 h-auto top-[67%] text-center">
             <div className="flex justify-center">
               <div className="flex flex-col items-center">
                 <div className="bg-blue-600 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
@@ -465,7 +492,16 @@ const SetPlay = () => {
                 </div>
                 {editPlayerNameState ? (
                   <>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      onChange={(e) =>
+                        playerNameChangeHandler(
+                          e.target.value,
+                          players[9].playerNumber
+                        )
+                      }
+                      value={players[9].playerName}
+                    />
                   </>
                 ) : (
                   <p
@@ -475,7 +511,7 @@ const SetPlay = () => {
                     className={`text-center z-50 ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
-                    Text full
+                    {players[9].playerName}
                   </p>
                 )}
               </div>
@@ -485,7 +521,16 @@ const SetPlay = () => {
                 </div>
                 {editPlayerNameState ? (
                   <>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      onChange={(e) =>
+                        playerNameChangeHandler(
+                          e.target.value,
+                          players[10].playerNumber
+                        )
+                      }
+                      value={players[10].playerName}
+                    />
                   </>
                 ) : (
                   <p
@@ -495,7 +540,7 @@ const SetPlay = () => {
                     className={`text-center z-50 ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
-                    Text full
+                    {players[10].playerName}
                   </p>
                 )}
               </div>
@@ -510,7 +555,16 @@ const SetPlay = () => {
                   </div>
                   {editPlayerNameState ? (
                     <>
-                      <input type="text" />
+                      <input
+                        type="text"
+                        onChange={(e) =>
+                          playerNameChangeHandler(
+                            e.target.value,
+                            players[11].playerNumber
+                          )
+                        }
+                        value={players[11].playerName}
+                      />
                     </>
                   ) : (
                     <p
@@ -520,7 +574,7 @@ const SetPlay = () => {
                       className={`text-center z-50 ${
                         showPlayerNameState ? "" : "hide"
                       }`}>
-                      Text full
+                      {players[11].playerName}
                     </p>
                   )}
                 </div>
@@ -540,7 +594,7 @@ const SetPlay = () => {
             </div>
           </div>
 
-          <div className="full-forwards absolute w-full bg-blue-00 h-auto top-[86%] text-center">
+          <div className="full-forwards absolute w-full bg-blue-00 h-auto top-[88%] text-center">
             <div className="flex justify-center">
               <div className="flex flex-col items-center">
                 <div className="bg-blue-600 mx-20 player-circle rounded-full flex items-center justify-center w-7 h-7">
@@ -548,7 +602,16 @@ const SetPlay = () => {
                 </div>
                 {editPlayerNameState ? (
                   <>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      onChange={(e) =>
+                        playerNameChangeHandler(
+                          e.target.value,
+                          players[12].playerNumber
+                        )
+                      }
+                      value={players[12].playerName}
+                    />
                   </>
                 ) : (
                   <p
@@ -558,7 +621,7 @@ const SetPlay = () => {
                     className={`text-center z-50 ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
-                    Text full
+                    {players[12].playerName}
                   </p>
                 )}
               </div>
@@ -568,7 +631,16 @@ const SetPlay = () => {
                 </div>
                 {editPlayerNameState ? (
                   <>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      onChange={(e) =>
+                        playerNameChangeHandler(
+                          e.target.value,
+                          players[13].playerNumber
+                        )
+                      }
+                      value={players[13].playerName}
+                    />
                   </>
                 ) : (
                   <p
@@ -578,7 +650,7 @@ const SetPlay = () => {
                     className={`text-center z-50 ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
-                    Text full
+                    {players[13].playerName}
                   </p>
                 )}
               </div>
@@ -593,7 +665,16 @@ const SetPlay = () => {
                   </div>
                   {editPlayerNameState ? (
                     <>
-                      <input type="text" />
+                      <input
+                        type="text"
+                        onChange={(e) =>
+                          playerNameChangeHandler(
+                            e.target.value,
+                            players[14].playerNumber
+                          )
+                        }
+                        value={players[14].playerName}
+                      />
                     </>
                   ) : (
                     <p
@@ -603,7 +684,7 @@ const SetPlay = () => {
                       className={`text-center z-50 ${
                         showPlayerNameState ? "" : "hide"
                       }`}>
-                      Text full
+                      {players[14].playerName}
                     </p>
                   )}
                 </div>
@@ -626,7 +707,7 @@ const SetPlay = () => {
         {/* Lines */}
         <div className="w-full 13-meter h-[2px] color-white top-[10%] absolute  bg-white"></div>
         <div className="w-full 21-meter h-[2px] color-white top-[16.15%] absolute  bg-white"></div>
-        <div className="w-full 45-meter h-[2px] color-white top-[34.6%] absolute  bg-white"></div>
+        <div className="w-full 45-meter h-[2px] color-white top-[31.6%] absolute  bg-white"></div>
         <div className="w-full mid h-[2px] color-white top-[45%] absolute  bg-white"></div>
         <div className="w-[10%] left-[45%] mx-auto  mid-line h-[2px] color-white top-[50%] absolute  bg-white"></div>
 
