@@ -9,6 +9,7 @@ import NoPage from "./NoPage";
 import Football from "./Football/Football";
 import Layout from "./Layout";
 import SetPlay from "./Football/SetPlay";
+import Formations from "./Football/Formations";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="Football" element={<Football />} />
             <Route path="Football/SetPlay" element={<SetPlay />} />
+            <Route path="Football/Formations" element={<Formations />} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>

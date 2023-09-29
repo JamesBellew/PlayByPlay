@@ -18,9 +18,11 @@ const Football = () => {
               {" "}
               New Set Play
             </Link>
-            <a className="bg-slate-700 cursor-pointer  rounded text-white h-auto text-2xl px-10 py-10  w-full  text-center items-center">
+            <Link
+              to="Formations"
+              className="bg-slate-700 cursor-pointer  rounded text-white h-auto text-2xl px-10 py-10  w-full  text-center items-center">
               Formations
-            </a>
+            </Link>
             <a className="bg-slate-700 cursor-pointer  rounded text-white h-auto text-2xl px-10 py-10  w-full  text-center items-center">
               Rosters
             </a>

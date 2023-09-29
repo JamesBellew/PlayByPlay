@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../App.css";
+import SaveLineupConfirm from "./FootballComponents/saveLineupConfirm";
+
 const SetPlay = () => {
   const [players, setPlayers] = useState([
     { playerNumber: "01", playerName: "John Keeper" },
@@ -18,6 +20,26 @@ const SetPlay = () => {
     { playerNumber: "14", playerName: "center forward" },
     { playerNumber: "15", playerName: "right full forward" },
   ]);
+  const [messageFromChild, setMessageFromChild] = useState("");
+
+  const saveLineupHandler = () => {
+    console.log("clicked");
+    updateShowLineupConfirm(true);
+    updateSettingsMenuState(!settingsCloseHandler);
+  };
+  // Function to store players in local storage
+  const storePlayersInLocalStorage = () => {
+    // Convert the players array to a JSON string
+    const playersJSON = JSON.stringify(players);
+
+    // Store the JSON string in local storage with a specific key (e.g., "playersData")
+    localStorage.setItem("playersData", playersJSON);
+  };
+
+  // Call the function to store players when needed, e.g., when the component updates
+  useEffect(() => {
+    storePlayersInLocalStorage();
+  }, [players]); // This will trigger the storage when players state changes
 
   const formations = ["3-3-2-3-3", "3-3-1-2-3-2", "3-3-1-2-2-3"];
 
@@ -28,6 +50,13 @@ const SetPlay = () => {
   const [showPlayerNameState, updatePlayerNameState] = useState(true);
   const [editPlayerNameState, updateEditPlayerNameState] = useState(false);
   const [showFormationsState, updateshowFormationsState] = useState(false);
+  const [showSaveLinupConfirm, updateShowLineupConfirm] = useState(false);
+
+  // Function to receive data from the child
+  const handleChildClick = (message) => {
+    updateShowLineupConfirm(message);
+    updateSettingsMenuState(!settingsMenuState);
+  };
   //*    - this is the check to see what formations is selectedf, if there are no formations saved under the user then a default formation will be selected
   //*    - for the moment, I will hard code this in as the first element of the formations array.
   //TODO - in future, I will want to check if the user have stored a saved formation from the local storage and if not supply the default like below
@@ -111,7 +140,7 @@ const SetPlay = () => {
         width: "40%",
         left: "30%",
         position: "absolute",
-
+        color: "black",
         justifyContent: "center",
         alignItems: "center",
       }}>
@@ -120,13 +149,13 @@ const SetPlay = () => {
   ));
   //this is the mapping for the full backs, this will need to become dynamic as formations become custome/changebale
   const fullBackNames = players.slice(1, 4).map((player, index) => (
-    <div key={index} className="text-center">
+    <div key={index} className="text-center text-black">
       {player.playerName}
     </div>
   ));
   //this is the mapping for the Half backs, this will need to become dynamic as formations become custome/changebale
   const halfBackNames = players.slice(4, 7).map((player, index) => (
-    <div key={index} className="text-center">
+    <div key={index} className="text-center text-black">
       {player.playerName}
     </div>
   ));
@@ -149,7 +178,7 @@ const SetPlay = () => {
       </button>
 
       {settingsMenuState && (
-        <div className="bg-gray-700 top-[3vh] relative px-4 h-auto">
+        <div className=" top-[3vh] mb-4 pb-4 relative px-4 h-auto">
           <div className="flex h-auto rounded w-full   gaa-pitch relative bg-gray-600 settings p-4 ">
             <div className="flex w-auto bg-gray-600 h-10 text-left rounded">
               <p className="p-2 text-white">
@@ -242,18 +271,34 @@ const SetPlay = () => {
             </div>
           )}
           {/* end of formations div */}
-          <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Save Lineup
-            </button>
-            <button class=" ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Download
-            </button>
-          </div>
+          {!editPlayerNameState && (
+            <div className="flex h-auto rounded mt-2 gaa-pitch relative bg-gray-600 settings p-4 ">
+              <button
+                onClick={saveLineupHandler}
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Save Lineup
+              </button>
+              <button class=" ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Download
+              </button>
+            </div>
+          )}
           <br></br>
         </div>
       )}
-      <div className="flex h-[80vh] w-full mb-[10vh] top-[4vh] gaa-pitch relative bg-green-500 ">
+
+      {/* this is the GAA pitch */}
+      {showSaveLinupConfirm && (
+        <SaveLineupConfirm
+          onChildClick={handleChildClick}
+          formation={currentFormation}
+          players={players}
+        />
+      )}
+      <div
+        className={`flex h-[80vh] w-full mb-[10vh] relative bg-green-500 ${
+          showSaveLinupConfirm ? "mt-[25vh]" : ""
+        }`}>
         <div class="grid grid-cols-3 gap-4  w-full ">
           {/* keeper div */}
           {/* keeper div */}
@@ -339,7 +384,7 @@ const SetPlay = () => {
           {/* this is the sweeper div, only appears in certain formations that havehbghgg a sweeper in play */}
           {currentFormation === "3-3-1-2-3-2" ||
           currentFormation === "3-3-1-2-2-3" ? (
-            <div className="sweeper bg-red-500 absolute w-full bg-blue-00 h-auto top-[25.15%]">
+            <div className="sweeper bg-red-500 absolute w-full bg-blue-00 h-auto top-[24.15%]">
               <div class="goalkeeper absolute w-full z-50 h-10">
                 <div class="bg-blue-600 player-circle rounded-full -z-50 w-7 h-7 mx-auto place-self-center center ">
                   <p className="text-yellow-400 capitalize shadow-white">15</p>
@@ -358,7 +403,7 @@ const SetPlay = () => {
                     />
                   </>
                 ) : showPlayerNameState ? (
-                  <div class="text-center z-50 player-name">
+                  <div class="text-center z-50 text-black player-name">
                     {players[14].playerName}
                   </div>
                 ) : null}
@@ -431,7 +476,7 @@ const SetPlay = () => {
                     style={{
                       ...(showPlayerNameState ? {} : hideStyle),
                     }}
-                    className={`text-center z-50 ${
+                    className={`text-center text-black z-50 ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
                     {players[7].playerName}
@@ -460,7 +505,7 @@ const SetPlay = () => {
                     style={{
                       ...(showPlayerNameState ? {} : hideStyle),
                     }}
-                    className={`text-center z-50 ${
+                    className={`text-center text-black z-50 ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
                     {players[8].playerName}
@@ -508,7 +553,7 @@ const SetPlay = () => {
                     style={{
                       ...(showPlayerNameState ? {} : hideStyle),
                     }}
-                    className={`text-center z-50 ${
+                    className={`text-center z-50 text-black ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
                     {players[9].playerName}
@@ -537,7 +582,7 @@ const SetPlay = () => {
                     style={{
                       ...(showPlayerNameState ? {} : hideStyle),
                     }}
-                    className={`text-center z-50 ${
+                    className={`text-center z-50 text-black ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
                     {players[10].playerName}
@@ -571,7 +616,7 @@ const SetPlay = () => {
                       style={{
                         ...(showPlayerNameState ? {} : hideStyle),
                       }}
-                      className={`text-center z-50 ${
+                      className={`text-center z-50 text-black ${
                         showPlayerNameState ? "" : "hide"
                       }`}>
                       {players[11].playerName}
@@ -618,7 +663,7 @@ const SetPlay = () => {
                     style={{
                       ...(showPlayerNameState ? {} : hideStyle),
                     }}
-                    className={`text-center z-50 ${
+                    className={`text-center z-50 text-black ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
                     {players[12].playerName}
@@ -647,7 +692,7 @@ const SetPlay = () => {
                     style={{
                       ...(showPlayerNameState ? {} : hideStyle),
                     }}
-                    className={`text-center z-50 ${
+                    className={`text-center z-50 text-black ${
                       showPlayerNameState ? "" : "hide"
                     }`}>
                     {players[13].playerName}
@@ -681,7 +726,7 @@ const SetPlay = () => {
                       style={{
                         ...(showPlayerNameState ? {} : hideStyle),
                       }}
-                      className={`text-center z-50 ${
+                      className={`text-center text-black z-50 ${
                         showPlayerNameState ? "" : "hide"
                       }`}>
                       {players[14].playerName}
