@@ -22,7 +22,7 @@ const Formations = () => {
                   </p>
                 ))
               ) : (
-                <p>Unexpected data format</p>
+                <p>Unexpected why is this not working format</p>
               )}
             </li>
           ))}
