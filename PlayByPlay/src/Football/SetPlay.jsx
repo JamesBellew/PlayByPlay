@@ -48,7 +48,7 @@ const SetPlay = () => {
   };
   const [settingsMenuState, updateSettingsMenuState] = useState(true);
   const [showPlayerNameState, updatePlayerNameState] = useState(true);
-  const [editPlayerNameState, updateEditPlayerNameState] = useState(false);
+  const [editPlayerNameState, updateEditPlayerNameState] = useState(true);
   const [showFormationsState, updateshowFormationsState] = useState(false);
   const [showSaveLinupConfirm, updateShowLineupConfirm] = useState(false);
 

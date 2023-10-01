@@ -1,35 +1,26 @@
-import { Outlet, Link } from "react-router-dom";
-import ReactDOM from "react-dom/client";
+import React, { useState, useEffect } from "react";
 
-const Formations = () => {
-  // Retrieve and parse formations/players from localStorage
-  const storedLineups = JSON.parse(localStorage.getItem("playersData") || "[]");
+function Formations(props) {
+  const [allPlayers, setAllPlayers] = useState([]);
+
+  useEffect(() => {
+    // Retrieve players from local storage
+    const storedPlayers = localStorage.getItem("playersData");
+    const parsedPlayers = storedPlayers ? JSON.parse(storedPlayers) : [];
+    setAllPlayers(parsedPlayers);
+  }, []);
 
   return (
     <div>
-      <h1>In the Formations Tab</h1>
-
-      {storedLineups.length === 0 ? (
-        <p>No formations/players exist.</p>
-      ) : (
-        <ul>
-          {storedLineups.map((lineup, index) => (
-            <li key={index}>
-              {Array.isArray(lineup) ? (
-                lineup.map((player) => (
-                  <p key={player.playerNumber}>
-                    {player.playerNumber}: {player.playerName}
-                  </p>
-                ))
-              ) : (
-                <p>Unexpected why is this not working format</p>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul>
+        {allPlayers.map((player, index) => (
+          <li key={index}>
+            {player.playerNumber} - {player.playerName}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
+}
 
 export default Formations;
