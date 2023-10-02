@@ -9,7 +9,7 @@ function Formations(props) {
     const parsedPlayers = storedPlayers ? JSON.parse(storedPlayers) : [];
     setAllPlayers(parsedPlayers);
   }, []);
-
+  // this is very early stages, More to come
   return (
     <div>
       <ul>
