@@ -13,7 +13,7 @@ const KickOuts = () => {
     useState(false);
   const startingFifteenSelectedHandler = (playerNumber) => {
     // user just clicked on one of the numbers
-    // I now want to update the startinf 15 to only show to clicked number as active
+    // I now want to update the startinf 15 to only show tobfbb clicked number as active
     updateStartingFifteenPlayerNumberSelected(playerNumber);
     updatestartingFifteenEditingState(true);
   };
