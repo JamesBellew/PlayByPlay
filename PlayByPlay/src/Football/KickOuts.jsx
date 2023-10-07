@@ -2,18 +2,16 @@ import React, { useState } from "react";
 
 const KickOuts = () => {
   const handleDivClick = (outerDiv, index) => {
-    // alert(`You clicked the ${index + 1}-th div inside the ${outerDiv} div`);
-    const positionClicked = index + 1 + outerDiv;
-    alert(
-      startingFiftenPlayerNumberSelected + " is going into " + positionClicked
-    );
-    // addPlayer()
+    //alert(`You clicked the ${index + 1}-th div inside the ${outerDiv} div`);
+    const positionClicked = outerDiv + "-" + (index + 1);
+    // alert(startingFiftenPlayerNumberSelected + "  into " + positionClicked);
+    addPlayer(startingFiftenPlayerNumberSelected, positionClicked);
   };
   const [players, setPlayers] = useState([
-    {
-      playerNumber: 1,
-      pitchPosition: "goalkeeper",
-    },
+    // {
+    //   playerNumber: 1,
+    //   pitchPosition: "goalkeeper",
+    // },
     //... You can add more players here as needed
   ]);
 
@@ -36,52 +34,76 @@ const KickOuts = () => {
           Select Position on pitch for Player
           {startingFiftenPlayerNumberSelected}
         </h2>
-        {[...Array(14).keys()].map((index) => (
-          <p
-            key={index}
-            onClick={() => startingFifteenSelectedHandler(index + 2)}
-            className={`text-white hover:scale-105 mx-auto
+        {[...Array(14).keys()]
+          .map((index) => index + 2) // Convert indexes to player numbers
+          .filter(
+            (playerNumber) =>
+              !players.some((player) => player.playerNumber === playerNumber)
+          ) // Filter out numbers present in the 'players' array
+          .map((playerNumber) => (
+            <p
+              key={playerNumber}
+              onClick={() => startingFifteenSelectedHandler(playerNumber)}
+              className={`text-white hover:scale-105 mx-auto
             transition-all cursor-pointer h-10 my-auto
             text-center  m-2 w-10 
             ${
-              index + 2 === startingFiftenPlayerNumberSelected
+              playerNumber === startingFiftenPlayerNumberSelected
                 ? "bg-emerald-400"
                 : "bg-blue-400"
             } rounded-full`}>
-            {index + 2}
-          </p>
-        ))}
+              {playerNumber}
+            </p>
+          ))}
       </div>
     );
   };
 
   const TenDivs = ({ outerDivName, count }) => (
     <>
-      {[...Array(count).keys()].map((index) => (
-        <div className="group my-auto">
-          <div
-            key={index}
-            onClick={() => {
-              if (startingFifteenEditingState) {
-                handleDivClick(outerDivName, index);
-              }
-            }}
-            className={` h-10 w-10 mx-auto my-auto text-center
-             ${
-               startingFifteenEditingState
-                 ? "bg-slate-400 cursor-pointer transition-all hover:bg-emerald-400"
-                 : "bg-slate-400 opacity-20 disabled"
-             }
-         
-              p-2 m-2 rounded-full`}>
-            <span className="invisible text-white group-hover:visible duration-75">
-              +
-            </span>
+      {[...Array(count).keys()].map((index) => {
+        // Check if there's a player with the matching pitchPosition
+        // console.log(outerDivName + index);
+        const divposition = outerDivName + "-" + (index + 1);
+        const positionIsUsed = players.some(
+          (player) => player.pitchPosition === divposition
+        );
+        const matchingPlayerNumber =
+          players.find((player) => player.pitchPosition === divposition)
+            ?.playerNumber || "Not Found";
+
+        // console.log(divposition + positionIsUsed);
+        return (
+          <div className="group my-auto">
+            <div
+              key={index}
+              onClick={() => {
+                if (startingFifteenEditingState) {
+                  handleDivClick(outerDivName, index);
+                }
+              }}
+              className={`h-10 w-10 mx-auto my-auto text-center
+              ${positionIsUsed ? "bg-blue-300" : ""}
+                ${
+                  startingFifteenEditingState
+                    ? "bg-slate-400 cursor-pointer transition-all hover:bg-emerald-400"
+                    : "bg-slate-400 opacity-20 disabled"
+                }
+             
+                p-2 m-2 rounded-full`}>
+              <span
+                className=" text-white 
+    
+               duration-75">
+                {positionIsUsed ? matchingPlayerNumber : "+"}
+              </span>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
+
   const [numDivs, setNumDivs] = useState(10);
   const [showSweeperSectionState, setshowSweeperSectionState] = useState(true);
   const changeButtonText = numDivs === 3 ? "10 rows" : "3 rows";
@@ -98,14 +120,13 @@ const KickOuts = () => {
   };
 
   const addPlayer = (number, position) => {
-    const newPlayerNumber =
-      players.length > 0 ? players[players.length - 1].playerNumber + 1 : 1;
     const newPlayer = {
-      playerNumber: newPlayerNumber,
+      playerNumber: number,
       pitchPosition: position,
     };
     setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
   };
+  // console.log(players);
   return (
     <>
       <div className="flex">
@@ -131,7 +152,7 @@ const KickOuts = () => {
               className={`flex-grow border grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
-              <TenDivs outerDivName="Full Back" count={numDivs} />
+              <TenDivs outerDivName="fb" count={numDivs} />
             </div>
 
             <div
@@ -139,21 +160,21 @@ const KickOuts = () => {
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
               {showSweeperSectionState && (
-                <TenDivs outerDivName="In between full Back" count={numDivs} />
+                <TenDivs outerDivName="fb-hf" count={numDivs} />
               )}
             </div>
             <div
               className={`flex-grow border grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
-              <TenDivs outerDivName="yellow" count={numDivs} />
+              <TenDivs outerDivName="hb" count={numDivs} />
             </div>
             <div
               className={`flex-grow  h-10  grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
               {showSweeperSectionState && (
-                <TenDivs outerDivName="Grey" count={numDivs} />
+                <TenDivs outerDivName="hb-mf" count={numDivs} />
               )}
             </div>
           </div>
@@ -161,7 +182,7 @@ const KickOuts = () => {
             className={`flex-grow border  grid ${
               numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
             }`}>
-            <TenDivs outerDivName="Grey" count={numDivs} />
+            <TenDivs outerDivName="mf" count={numDivs} />
           </div>
           {/* <div className="bg-purple-600 h-1/6 grid grid-cols-10">
             <TenDivs outerDivName="Mid Purple" />
@@ -172,28 +193,28 @@ const KickOuts = () => {
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
               {showSweeperSectionState && (
-                <TenDivs outerDivName="Blue" count={numDivs} />
+                <TenDivs outerDivName="mf-hf" count={numDivs} />
               )}
             </div>
             <div
               className={`flex-grow border grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
-              <TenDivs outerDivName="Pink" count={numDivs} />
+              <TenDivs outerDivName="hf" count={numDivs} />
             </div>
             <div
               className={`flex-grow  h-10  grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
               {showSweeperSectionState && (
-                <TenDivs outerDivName="Orange" count={numDivs} />
+                <TenDivs outerDivName="hf-ff" count={numDivs} />
               )}
             </div>
             <div
               className={`flex-grow border  grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
-              <TenDivs outerDivName="Black" count={numDivs} />
+              <TenDivs outerDivName="ff" count={numDivs} />
             </div>
           </div>
         </div>
