@@ -9,8 +9,8 @@ const KickOuts = () => {
   };
   const [players, setPlayers] = useState([
     // {
-    //   playerNumber: 1,
-    //   pitchPosition: "goalkeeper",
+    //   playerNumber: 10,
+    //   pitchPosition: "fb-1",
     // },
     //... You can add more players here as needed
   ]);
@@ -83,7 +83,7 @@ const KickOuts = () => {
                 }
               }}
               className={`h-10 w-10 mx-auto my-auto text-center
-              ${positionIsUsed ? "bg-blue-300" : ""}
+              ${positionIsUsed ? "bg-red-400 " : ""}
                 ${
                   startingFifteenEditingState
                     ? "bg-slate-400 cursor-pointer transition-all hover:bg-emerald-400"
@@ -113,10 +113,21 @@ const KickOuts = () => {
     : "Show Sweeper Formation";
 
   const toggleDivs = () => {
-    setNumDivs((prevNum) => (prevNum === 10 ? 3 : 10));
+    if (players.length === 0) {
+      setNumDivs((prevNum) => (prevNum === 10 ? 3 : 10));
+    } else {
+      // alert("you have players selcted on the pitch");
+      document.getElementById("my_modal_1").showModal();
+    }
   };
   const sweeperSectionHandler = () => {
-    setshowSweeperSectionState(!showSweeperSectionState);
+    //first we want to see if there is anything stored in the players array
+    if (players.length === 0) {
+      setshowSweeperSectionState(!showSweeperSectionState);
+    } else {
+      // alert("you have players selcted on the pitch");
+      document.getElementById("my_modal_1").showModal();
+    }
   };
 
   const addPlayer = (number, position) => {
@@ -127,6 +138,10 @@ const KickOuts = () => {
     setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
   };
   // console.log(players);
+
+  const removeAllCurrentPlayersFromPitch = () => {
+    setPlayers([]);
+  };
   return (
     <>
       <div className="flex">
@@ -135,6 +150,7 @@ const KickOuts = () => {
           className=" left-1 bg-blue-400 mb-2 text-gray-800  font-medium  px-4 rounded  z-10">
           {changeButtonText}
         </button>
+
         <button
           onClick={sweeperSectionHandler}
           className=" left-1 ml-2 bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
@@ -142,6 +158,27 @@ const KickOuts = () => {
         </button>
       </div>
       <div className="centering-wrapper">
+        <dialog id="my_modal_1" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Hey</h3>
+            <p className="py-4">
+              You have players on the pitch in formation. To swicth formations,
+              you will need to remove all players from the pitch
+            </p>
+            <div className="modal-action">
+              <form method="dialog">
+                {/* if there is a button in form, it will close the modal */}
+
+                <button className="btn mr-2">Back</button>
+                <button
+                  onClick={removeAllCurrentPlayersFromPitch}
+                  className="btn bg-red-500 text-white">
+                  Remove all Players
+                </button>
+              </form>
+            </div>
+          </div>
+        </dialog>
         <div className="relative flex  h-[20vh] bg-gray-700 mb-[2vh] rounded">
           <StartingFifteen></StartingFifteen>
         </div>
