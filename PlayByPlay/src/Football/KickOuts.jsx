@@ -62,9 +62,8 @@ const KickOuts = () => {
   const TenDivs = ({ outerDivName, count }) => (
     <>
       {[...Array(count).keys()].map((index) => {
-        // Check if there's a player with the matching pitchPosition
-        // console.log(outerDivName + index);
         const divposition = outerDivName + "-" + (index + 1);
+
         const positionIsUsed = players.some(
           (player) => player.pitchPosition === divposition
         );
@@ -72,29 +71,27 @@ const KickOuts = () => {
           players.find((player) => player.pitchPosition === divposition)
             ?.playerNumber || "Not Found";
 
-        // console.log(divposition + positionIsUsed);
+        const shouldHide = players.length === 14 && !positionIsUsed;
+
         return (
           <div className="group my-auto">
             <div
               key={index}
               onClick={() => {
-                if (startingFifteenEditingState) {
+                if (startingFifteenEditingState && !shouldHide) {
                   handleDivClick(outerDivName, index);
                 }
               }}
               className={`h-10 w-10 mx-auto my-auto text-center
-              ${positionIsUsed ? "bg-red-400 " : ""}
+                ${positionIsUsed ? "bg-orange-500 positionUsed " : ""}
                 ${
                   startingFifteenEditingState
                     ? "bg-slate-400 cursor-pointer transition-all hover:bg-emerald-400"
                     : "bg-slate-400 opacity-20 disabled"
                 }
-             
+                ${shouldHide ? "opacity-0 cursor-default" : ""}
                 p-2 m-2 rounded-full`}>
-              <span
-                className=" text-white 
-    
-               duration-75">
+              <span className="text-white duration-75">
                 {positionIsUsed ? matchingPlayerNumber : "+"}
               </span>
             </div>
