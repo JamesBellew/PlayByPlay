@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const KickOuts = () => {
   const handleDivClick = (outerDiv, index) => {
@@ -126,15 +126,36 @@ const KickOuts = () => {
       document.getElementById("my_modal_1").showModal();
     }
   };
+  useEffect(() => {
+    getRemainingNumber();
+  }, [players]);
 
+  const getRemainingNumber = () => {
+    const totalPlayers = 15;
+    const numbers = [...Array(totalPlayers).keys()].map((index) => index + 2);
+
+    const remainingNumbers = numbers.filter(
+      (playerNumber) =>
+        !players.some((player) => player.playerNumber === playerNumber)
+    );
+
+    // Get the smallest number from the remaining numbers and assign to the variable.
+    updateStartingFifteenPlayerNumberSelected(Math.min(...remainingNumbers));
+
+    return remainingNumbers;
+  };
   const addPlayer = (number, position) => {
     const newPlayer = {
       playerNumber: number,
       pitchPosition: position,
     };
     setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
+    //after we set the new player, we must now change the current player who is selexcted in the startign 15 to a new unumber/player.
+    // updateStartingFifteenPlayerNumberSelected(10);
+    getRemainingNumber();
   };
-  // console.log(players);
+  console.log(players);
+  console.log(getRemainingNumber);
 
   const removeAllCurrentPlayersFromPitch = () => {
     setPlayers([]);
