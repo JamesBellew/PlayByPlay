@@ -34,6 +34,16 @@ const KickOuts = () => {
           Select Position on pitch for Player
           {startingFiftenPlayerNumberSelected}
         </h2>
+        {usePlayersLength === 14 && (
+          <div className="absolute self-center mx-auto text-center w-[100%] left-0 ">
+            <button className="btn btn-primary col-span-2 m-2 text-white  left-0">
+              Next
+            </button>
+            <button className="btn btn-secondary col-span-2 text-white  left-0 ">
+              Edit Lineout
+            </button>
+          </div>
+        )}
         {[...Array(14).keys()]
           .map((index) => index + 2) // Convert indexes to player numbers
           .filter(
@@ -104,7 +114,7 @@ const KickOuts = () => {
   const [numDivs, setNumDivs] = useState(10);
   const [showSweeperSectionState, setshowSweeperSectionState] = useState(true);
   const changeButtonText = numDivs === 3 ? "10 rows" : "3 rows";
-
+  const usePlayersLength = players.length;
   const showSweeperButtonText = showSweeperSectionState
     ? "Show Only 3-3-2-3-3"
     : "Show Sweeper Formation";
