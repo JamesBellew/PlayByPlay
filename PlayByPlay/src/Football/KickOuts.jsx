@@ -1,12 +1,57 @@
 import React, { useState, useEffect } from "react";
 
 const KickOuts = () => {
+  const testhandler = (playherNumber) => {
+    // alert("it's working ;)");
+    updateStartingFifteenPlayerNumberSelected(playherNumber);
+  };
   const handleDivClick = (outerDiv, index) => {
     //alert(`You clicked the ${index + 1}-th div inside the ${outerDiv} div`);
     const positionClicked = outerDiv + "-" + (index + 1);
     // alert(startingFiftenPlayerNumberSelected + "  into " + positionClicked);
     addPlayer(startingFiftenPlayerNumberSelected, positionClicked);
   };
+  const assignBasicFormation1 = () => {
+    const basicFormation = [
+      { playerNumber: 2, pitchPosition: "fb-3" },
+      { playerNumber: 3, pitchPosition: "fb-5" },
+      { playerNumber: 4, pitchPosition: "fb-7" },
+      { playerNumber: 5, pitchPosition: "fb-hf-2" },
+      { playerNumber: 6, pitchPosition: "hb-5" },
+      { playerNumber: 7, pitchPosition: "fb-hf-8" },
+      { playerNumber: 8, pitchPosition: "mf-4" },
+      { playerNumber: 9, pitchPosition: "mf-6" },
+      { playerNumber: 10, pitchPosition: "mf-hf-2" },
+      { playerNumber: 11, pitchPosition: "mf-hf-5" },
+      { playerNumber: 12, pitchPosition: "mf-hf-8" },
+      { playerNumber: 13, pitchPosition: "hf-5" },
+      { playerNumber: 14, pitchPosition: "ff-4" },
+      { playerNumber: 15, pitchPosition: "ff-6" },
+    ];
+
+    setPlayers(basicFormation);
+  };
+  const assignBasicFormation2 = () => {
+    const basicFormation = [
+      { playerNumber: 2, pitchPosition: "fb-1" },
+      { playerNumber: 3, pitchPosition: "fb-5" },
+      { playerNumber: 4, pitchPosition: "fb-10" },
+      { playerNumber: 5, pitchPosition: "fb-hf-1" },
+      { playerNumber: 6, pitchPosition: "hb-5" },
+      { playerNumber: 7, pitchPosition: "fb-hf-10" },
+      { playerNumber: 8, pitchPosition: "mf-2" },
+      { playerNumber: 9, pitchPosition: "mf-9" },
+      { playerNumber: 10, pitchPosition: "mf-hf-1" },
+      { playerNumber: 11, pitchPosition: "mf-hf-5" },
+      { playerNumber: 12, pitchPosition: "mf-hf-10" },
+      { playerNumber: 13, pitchPosition: "hf-5" },
+      { playerNumber: 14, pitchPosition: "ff-4" },
+      { playerNumber: 15, pitchPosition: "ff-6" },
+    ];
+
+    setPlayers(basicFormation);
+  };
+
   const [players, setPlayers] = useState([
     // {
     //   playerNumber: 10,
@@ -69,7 +114,7 @@ const KickOuts = () => {
     );
   };
 
-  const TenDivs = ({ outerDivName, count }) => (
+  const TenDivs = ({ outerDivName, count, forceHide = false }) => (
     <>
       {[...Array(count).keys()].map((index) => {
         const divposition = outerDivName + "-" + (index + 1);
@@ -81,7 +126,8 @@ const KickOuts = () => {
           players.find((player) => player.pitchPosition === divposition)
             ?.playerNumber || "Not Found";
 
-        const shouldHide = players.length === 14 && !positionIsUsed;
+        const shouldHide = false;
+        // = players.length === 14 && !positionIsUsed;
 
         return (
           <div className="group my-auto">
@@ -89,14 +135,18 @@ const KickOuts = () => {
               key={index}
               onClick={() => {
                 if (startingFifteenEditingState && !shouldHide) {
-                  handleDivClick(outerDivName, index);
+                  if (positionIsUsed) {
+                    testhandler(matchingPlayerNumber);
+                  } else {
+                    handleDivClick(outerDivName, index);
+                  }
                 }
               }}
               className={`h-10 w-10 mx-auto my-auto text-center
-                ${positionIsUsed ? "bg-orange-500 positionUsed " : ""}
+                ${positionIsUsed ? "bg-orange-400 positionUsed " : ""}
                 ${
                   startingFifteenEditingState
-                    ? "bg-slate-400 cursor-pointer transition-all hover:bg-emerald-400"
+                    ? " cursor-pointer transition-all bg-emerald-400 hover:bg-orange-400"
                     : "bg-slate-400 opacity-20 disabled"
                 }
                 ${shouldHide ? "opacity-0 cursor-default" : ""}
@@ -141,7 +191,7 @@ const KickOuts = () => {
   }, [players]);
 
   const getRemainingNumber = () => {
-    const totalPlayers = 15;
+    const totalPlayers = 14;
     const numbers = [...Array(totalPlayers).keys()].map((index) => index + 2);
 
     const remainingNumbers = numbers.filter(
@@ -149,24 +199,63 @@ const KickOuts = () => {
         !players.some((player) => player.playerNumber === playerNumber)
     );
 
-    // Get the smallest number from the remaining numbers and assign to the variable.
-    updateStartingFifteenPlayerNumberSelected(Math.min(...remainingNumbers));
+    let selectedNumber;
+    console.log(remainingNumbers);
+    // If there are remaining numbers, get the smallest.
+    if (remainingNumbers.length > 0) {
+      selectedNumber = Math.min(...remainingNumbers);
+    } else if (players.length >= totalPlayers - 1) {
+      // This means all numbers between 2-15 are occupied
+      selectedNumber = 2; // or any other default you'd like when the array is full
+    } else {
+      // Get the smallest from the players array between 2-15 if there are any.
+      const validPlayerNumbers = players
+        .map((player) => player.playerNumber)
+        .filter((number) => number >= 2 && number <= 15);
+
+      selectedNumber = 6;
+
+      // Math.min(...validPlayerNumbers);
+    }
+
+    updateStartingFifteenPlayerNumberSelected(selectedNumber);
 
     return remainingNumbers;
   };
+
   const addPlayer = (number, position) => {
-    const newPlayer = {
-      playerNumber: number,
-      pitchPosition: position,
-    };
-    setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
-    //after we set the new player, we must now change the current player who is selexcted in the startign 15 to a new unumber/player.
+    setPlayers((prevPlayers) => {
+      // Check if the player with the given number already exists
+      const existingPlayerIndex = prevPlayers.findIndex(
+        (player) => player.playerNumber === number
+      );
+
+      if (existingPlayerIndex !== -1) {
+        // Player exists, so we update its position
+        const updatedPlayers = [...prevPlayers];
+        updatedPlayers[existingPlayerIndex].pitchPosition = position;
+        return updatedPlayers;
+      } else {
+        // Player doesn't exist, so we add a new entry
+        const newPlayer = {
+          playerNumber: number,
+          pitchPosition: position,
+        };
+        return [...prevPlayers, newPlayer];
+      }
+    });
+
+    // The rest of your code remains unchanged
+    // ...
     // updateStartingFifteenPlayerNumberSelected(10);
     getRemainingNumber();
   };
-  console.log(players);
-  console.log(getRemainingNumber);
 
+  // console.log(players);
+  // console.log(getRemainingNumber);
+  const ShowClearSelectionModal = () => {
+    document.getElementById("my_modal_1").showModal();
+  };
   const removeAllCurrentPlayersFromPitch = () => {
     setPlayers([]);
   };
@@ -184,6 +273,29 @@ const KickOuts = () => {
           className=" left-1 ml-2 bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
           {showSweeperButtonText}
         </button>
+
+        <div className="dropdown left-1  bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
+          <label tabIndex={0} className="cursor-pointer m-1">
+            Templates
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content text-white z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+            <li>
+              <a onClick={assignBasicFormation1}>Basic 3-3-2-3-3</a>
+            </li>
+            <li>
+              <a onClick={assignBasicFormation2}>Wide -3-3-2-3-3</a>
+            </li>
+          </ul>
+        </div>
+        {players.length >= 1 && (
+          <button
+            onClick={ShowClearSelectionModal}
+            className=" left-1 ml-2 bg-red-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
+            Clear Selection
+          </button>
+        )}
       </div>
       <div className="centering-wrapper">
         <dialog id="my_modal_1" className="modal">
