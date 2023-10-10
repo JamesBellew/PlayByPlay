@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Timeline from "./FootballComponents/Timeline";
 
 const KickOuts = () => {
   const testhandler = (playherNumber) => {
@@ -72,6 +73,10 @@ const KickOuts = () => {
     updateStartingFifteenPlayerNumberSelected(playerNumber);
     updatestartingFifteenEditingState(true);
   };
+  const [showTimelineState, setshowTimelineState] = useState(false);
+  const showTinelineHandler = () => {
+    setshowTimelineState(true);
+  };
   const StartingFifteen = () => {
     return (
       <div className="grid grid-rows-2 text-center grid-cols-8 w-full p-5">
@@ -81,7 +86,9 @@ const KickOuts = () => {
         </h2>
         {usePlayersLength === 14 && (
           <div className="absolute self-center mx-auto text-center w-[100%] left-0 ">
-            <button className="btn btn-primary col-span-2 m-2 text-white  left-0">
+            <button
+              onClick={showTinelineHandler}
+              className="btn btn-primary col-span-2 m-2 text-white  left-0">
               Next
             </button>
             <button className="btn btn-secondary col-span-2 text-white  left-0 ">
@@ -262,41 +269,46 @@ const KickOuts = () => {
   return (
     <>
       <div className="flex">
-        <button
-          onClick={toggleDivs}
-          className=" left-1 bg-blue-400 mb-2 text-gray-800  font-medium  px-4 rounded  z-10">
-          {changeButtonText}
-        </button>
+        {!showTimelineState && (
+          <div className="btn-group">
+            <button
+              onClick={toggleDivs}
+              className=" left-1 bg-blue-400 mb-2 text-gray-800  font-medium  px-4 rounded  z-10">
+              {changeButtonText}
+            </button>
 
-        <button
-          onClick={sweeperSectionHandler}
-          className=" left-1 ml-2 bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
-          {showSweeperButtonText}
-        </button>
+            <button
+              onClick={sweeperSectionHandler}
+              className=" left-1 ml-2 bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
+              {showSweeperButtonText}
+            </button>
 
-        <div className="dropdown left-1  bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
-          <label tabIndex={0} className="cursor-pointer m-1">
-            Templates
-          </label>
-          <ul
-            tabIndex={0}
-            className="dropdown-content text-white z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-            <li>
-              <a onClick={assignBasicFormation1}>Basic 3-3-2-3-3</a>
-            </li>
-            <li>
-              <a onClick={assignBasicFormation2}>Wide -3-3-2-3-3</a>
-            </li>
-          </ul>
-        </div>
-        {players.length >= 1 && (
-          <button
-            onClick={ShowClearSelectionModal}
-            className=" left-1 ml-2 bg-red-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
-            Clear Selection
-          </button>
+            <div className="dropdown left-1  bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
+              <label tabIndex={0} className="cursor-pointer m-1">
+                Templates
+              </label>
+              <ul
+                tabIndex={0}
+                className="dropdown-content text-white z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                <li>
+                  <a onClick={assignBasicFormation1}>Basic 3-3-2-3-3</a>
+                </li>
+                <li>
+                  <a onClick={assignBasicFormation2}>Wide -3-3-2-3-3</a>
+                </li>
+              </ul>
+            </div>
+            {players.length >= 1 && (
+              <button
+                onClick={ShowClearSelectionModal}
+                className=" left-1 ml-2 bg-red-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
+                Clear Selection
+              </button>
+            )}
+          </div>
         )}
       </div>
+
       <div className="centering-wrapper">
         <dialog id="my_modal_1" className="modal">
           <div className="modal-box">
@@ -319,9 +331,12 @@ const KickOuts = () => {
             </div>
           </div>
         </dialog>
-        <div className="relative flex  h-[20vh] bg-gray-700 mb-[2vh] rounded">
-          <StartingFifteen></StartingFifteen>
-        </div>
+        {!showTimelineState && (
+          <div className="relative flex  h-[20vh] bg-gray-700 mb-[2vh] rounded">
+            <StartingFifteen></StartingFifteen>
+          </div>
+        )}
+        {showTimelineState && <Timeline></Timeline>}
 
         <div className="flex flex-col bg-green-600 relative self-center  gap-4 h-[70vh]">
           <div className="flex-grow flex flex-col">
