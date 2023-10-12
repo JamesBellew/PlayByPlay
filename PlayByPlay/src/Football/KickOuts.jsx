@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Timeline from "./FootballComponents/Timeline";
 
-const KickOuts = () => {
+const KickOuts = (props) => {
   const testhandler = (playherNumber) => {
     // alert("it's working ;)");
     updateStartingFifteenPlayerNumberSelected(playherNumber);
@@ -34,6 +34,27 @@ const KickOuts = () => {
   };
   const assignBasicFormation2 = () => {
     const basicFormation = [
+      { playerNumber: 2, pitchPosition: "fb-3" },
+      { playerNumber: 3, pitchPosition: "fb-5" },
+      { playerNumber: 4, pitchPosition: "fb-7" },
+      { playerNumber: 5, pitchPosition: "fb-hf-2" },
+      { playerNumber: 6, pitchPosition: "hb-5" },
+      { playerNumber: 7, pitchPosition: "fb-hf-8" },
+      { playerNumber: 8, pitchPosition: "mf-4" },
+      { playerNumber: 9, pitchPosition: "mf-6" },
+      { playerNumber: 10, pitchPosition: "mf-hf-2" },
+      { playerNumber: 11, pitchPosition: "mf-hf-5" },
+      { playerNumber: 12, pitchPosition: "mf-hf-8" },
+      { playerNumber: 13, pitchPosition: "hf-5" },
+      { playerNumber: 14, pitchPosition: "ff-4" },
+      { playerNumber: 15, pitchPosition: "ff-6" },
+    ];
+
+    setPlayers(basicFormation);
+  };
+
+  const testFirstMoveArray = () => {
+    const basicFormation = [
       { playerNumber: 2, pitchPosition: "fb-1" },
       { playerNumber: 3, pitchPosition: "fb-5" },
       { playerNumber: 4, pitchPosition: "fb-10" },
@@ -49,10 +70,7 @@ const KickOuts = () => {
       { playerNumber: 14, pitchPosition: "ff-4" },
       { playerNumber: 15, pitchPosition: "ff-6" },
     ];
-
-    setPlayers(basicFormation);
   };
-
   const [players, setPlayers] = useState([
     // {
     //   playerNumber: 10,
@@ -266,6 +284,13 @@ const KickOuts = () => {
   const removeAllCurrentPlayersFromPitch = () => {
     setPlayers([]);
   };
+
+  const handleFormationData = (data) => {
+    // setPlayers(data);
+    console.log(JSON.stringify(data, null, 2) + " from child");
+
+    // Now, you have the data in the parent component. You can use it as needed.
+  };
   return (
     <>
       <div className="flex">
@@ -336,7 +361,9 @@ const KickOuts = () => {
             <StartingFifteen></StartingFifteen>
           </div>
         )}
-        {showTimelineState && <Timeline></Timeline>}
+        {showTimelineState && (
+          <Timeline onRunClick={handleFormationData}></Timeline>
+        )}
 
         <div className="flex flex-col bg-green-600 relative self-center  gap-4 h-[70vh]">
           <div className="flex-grow flex flex-col">
