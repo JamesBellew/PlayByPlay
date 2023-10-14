@@ -289,7 +289,7 @@ const KickOuts = (props) => {
     // setPlayers(data);
     console.log(JSON.stringify(data, null, 2) + " from child");
 
-    // Now, you have the data in the parent component. You can use it as needed.
+    // Now, you have the datavv in the parent component. You can use it as needed.
   };
   return (
     <>
