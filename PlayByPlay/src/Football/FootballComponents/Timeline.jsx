@@ -1,8 +1,8 @@
 import { Outlet, Link } from "react-router-dom";
 import ReactDOM from "react-dom/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const Timeline = (props) => {
+const Timeline = ({ movesArr, onButtonClick }) => {
   const basicFormation = [
     { playerNumber: 2, pitchPosition: "fb-hf-3" },
     { playerNumber: 3, pitchPosition: "fb-5" },
@@ -19,42 +19,52 @@ const Timeline = (props) => {
     { playerNumber: 14, pitchPosition: "ff-4" },
     { playerNumber: 15, pitchPosition: "ff-6" },
   ];
-  const Moves = [
-    {
-      move: "1",
-      players: [
-        {
-          playerNumber: 2,
-          newPitchPosition: "fb-hf-3",
-          oldPitchPosition: "fb-hf-2",
-        },
-        {
-          playerNumber: 5,
-          newPitchPosition: "fb-hf-3",
-          oldPitchPosition: "fb-hf-2",
-        },
-        // ... add more players as needed for this move
-      ],
-    },
-    // {
-    //   move: "2",
-    //   players: [
-    //     {
-    //       playerNumber: 3,
-    //       newPitchPosition: "fb-mf-4",
-    //       oldPitchPosition: "fb-mf-3",
-    //     },
-    //     // ... add more players as needed for this move
-    //   ],
-    // },
-    // ... add more moves as needed
-  ];
+
+  // [
+  //   {
+  //     move: "1",
+  //     players: [
+  //       {
+  //         playerNumber: 2,
+  //         newPitchPosition: "fb-hf-3",
+  //         oldPitchPosition: "fb-hf-2",
+  //       },
+  //       {
+  //         playerNumber: 5,
+  //         newPitchPosition: "fb-hf-3",
+  //         oldPitchPosition: "fb-hf-2",
+  //       },
+  //       // ... add more players as needed for this move
+  //     ],
+  //   },
+  //   // {
+  //   //   move: "2",
+  //   //   players: [
+  //   //     {
+  //   //       playerNumber: 3,
+  //   //       newPitchPosition: "fb-mf-4",
+  //   //       oldPitchPosition: "fb-mf-3",
+  //   //     },
+  //   //     // ... add more players as needed for this move
+  //   //   ],
+  //   // },
+  //   // ... add more moves as needed
+  // ];
 
   const [currentMoveSelected, setcurrentMoveSelected] = useState(1);
   const handleButtonClick = () => {
-    // Passing the data to the parent through the callback prop
-    props.onRunClick(Moves);
+    const dataToPass = true; // Replace this with the actual data you want to send
+    onButtonClick(dataToPass);
   };
+
+  // console.log("In Lineup comp");
+  // console.log(props.moves);
+  const [moves, setMoves] = useState(movesArr);
+
+  // If the prop changes, update the state
+  useEffect(() => {
+    setMoves(movesArr);
+  }, [movesArr]);
   return (
     <>
       <h1 className="ml-4 text-xl">
@@ -65,31 +75,47 @@ const Timeline = (props) => {
           Run
         </div>
       </h1>
+      {/* <div>
+        {
+          // Loop through the state array and render each object's attributes
+          moves.map((move, index) => (
+            <div key={index}>
+              <p>
+                Player Number: {move.playerNumber}New Position:{" "}
+                {move.newPosition}
+              </p>
+              <p></p>
+            </div>
+          ))
+        }
+      </div> */}
+      <h3 className="text-left mb-4 ">Move 1</h3>
+      <ol class="items-center sm:flex mb-5">
+        {
+          // Loop through the state array and render each object's attributes
+          moves.map((move, index) => (
+            <div key={index}>
+              {/* <p>
+                Player Number: {move.playerNumber}New Position:{" "}
+                {move.newPosition}
+              </p> */}
 
-      <ol className="relative mb-5 p-4 text-left border-l border-gray-200 dark:border-gray-700">
-        {Moves.map((move, moveIndex) => (
-          <li key={moveIndex} className="mb-10 ml-4">
-            <div
-              className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border 
-                border-white dark:border-gray-900 dark:bg-gray-700"></div>
-            <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-              {`Move ${move.move}`}
-            </time>
-
-            {move.players.map((player, playerIndex) => (
-              <h3
-                key={playerIndex}
-                className="text-lg font-semibold text-gray-900 dark:text-white mt-2">
-                <div className="inline-block mr-2 bg-orange-400 text-center rounded-full h-7 w-7">
-                  {player.playerNumber}
+              <li class="relative mb-6 sm:mb-0 ">
+                <div class="flex items-center">
+                  <div class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0"></div>
+                  <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                 </div>
-                {player.oldPitchPosition}
-                <span className="text-md text-gray-500"> to </span>
-                {player.newPitchPosition}
-              </h3>
-            ))}
-          </li>
-        ))}
+                <div class="mt-3 sm:pr-8">
+                  <div className="">
+                    <span className="">{move.playerNumber}</span> to{" "}
+                    {move.newPosition}
+                  </div>
+                </div>
+              </li>
+              <p></p>
+            </div>
+          ))
+        }
       </ol>
     </>
   );

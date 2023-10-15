@@ -9,9 +9,28 @@ const KickOuts = (props) => {
   const handleDivClick = (outerDiv, index) => {
     //alert(`You clicked the ${index + 1}-th div inside the ${outerDiv} div`);
     const positionClicked = outerDiv + "-" + (index + 1);
+
     // alert(startingFiftenPlayerNumberSelected + "  into " + positionClicked);
-    addPlayer(startingFiftenPlayerNumberSelected, positionClicked);
+    if (showTimelineState) {
+      //the user is in timeline mode and now we must record moves
+      console.log("move below");
+      addMove(startingFiftenPlayerNumberSelected, positionClicked);
+      console.log(Moves);
+    } else {
+      addPlayer(startingFiftenPlayerNumberSelected, positionClicked);
+    }
   };
+  const [Moves, setMoves] = useState([]);
+  const [firstCall, setFirstCall] = useState(true);
+  function addMove(playerNumber, newPosition) {
+    if (firstCall) {
+      setMoves([{ playerNumber, newPosition }]);
+      setFirstCall(false);
+    } else {
+      setMoves((prevMoves) => [...prevMoves, { playerNumber, newPosition }]);
+    }
+  }
+
   const assignBasicFormation1 = () => {
     const basicFormation = [
       { playerNumber: 2, pitchPosition: "fb-3" },
@@ -34,9 +53,9 @@ const KickOuts = (props) => {
   };
   const assignBasicFormation2 = () => {
     const basicFormation = [
-      { playerNumber: 2, pitchPosition: "fb-3" },
-      { playerNumber: 3, pitchPosition: "fb-5" },
-      { playerNumber: 4, pitchPosition: "fb-7" },
+      { playerNumber: 2, pitchPosition: "fb-1" },
+      { playerNumber: 3, pitchPosition: "fb-3" },
+      { playerNumber: 4, pitchPosition: "fb-10" },
       { playerNumber: 5, pitchPosition: "fb-hf-2" },
       { playerNumber: 6, pitchPosition: "hb-5" },
       { playerNumber: 7, pitchPosition: "fb-hf-8" },
@@ -92,6 +111,7 @@ const KickOuts = (props) => {
     updatestartingFifteenEditingState(true);
   };
   const [showTimelineState, setshowTimelineState] = useState(false);
+
   const showTinelineHandler = () => {
     setshowTimelineState(true);
   };
@@ -147,9 +167,13 @@ const KickOuts = (props) => {
         const positionIsUsed = players.some(
           (player) => player.pitchPosition === divposition
         );
+
         const matchingPlayerNumber =
           players.find((player) => player.pitchPosition === divposition)
             ?.playerNumber || "Not Found";
+        const isPlayerMoving = Moves.some(
+          (move) => move.playerNumber === matchingPlayerNumber
+        );
 
         const shouldHide = false;
         // = players.length === 14 && !positionIsUsed;
@@ -161,13 +185,16 @@ const KickOuts = (props) => {
               onClick={() => {
                 if (startingFifteenEditingState && !shouldHide) {
                   if (positionIsUsed) {
+                    //the user clicked on a position on the pitch that ha sa player and can move it to a different position
                     testhandler(matchingPlayerNumber);
                   } else {
                     handleDivClick(outerDivName, index);
                   }
                 }
               }}
-              className={`h-10 w-10 mx-auto my-auto text-center
+              className={`h-10 w-10 mx-auto my-auto text-center ${
+                isPlayerMoving ? "border  border-2 border-blue-500" : ""
+              }
                 ${positionIsUsed ? "bg-orange-400 positionUsed " : ""}
                 ${
                   startingFifteenEditingState
@@ -291,8 +318,22 @@ const KickOuts = (props) => {
 
     // Now, you have the datavv in the parent component. You can use it as needed.
   };
+  const [dataFromChild, setDataFromChild] = useState(false);
+  const handleDataFromChild = (data) => {
+    setDataFromChild(data);
+  };
+  const anotherFunction = () => {
+    assignBasicFormation2();
+  };
+
+  useEffect(() => {
+    if (dataFromChild) {
+      anotherFunction();
+    }
+  }, [dataFromChild]); // Watch dataFromChild state for changes
   return (
     <>
+      <p>Data from child: {dataFromChild}</p>
       <div className="flex">
         {!showTimelineState && (
           <div className="btn-group">
@@ -362,7 +403,10 @@ const KickOuts = (props) => {
           </div>
         )}
         {showTimelineState && (
-          <Timeline onRunClick={handleFormationData}></Timeline>
+          <Timeline
+            onRunClick={handleFormationData}
+            onButtonClick={handleDataFromChild}
+            movesArr={Moves}></Timeline>
         )}
 
         <div className="flex flex-col bg-green-600 relative self-center  gap-4 h-[70vh]">
