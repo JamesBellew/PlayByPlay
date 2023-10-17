@@ -69,7 +69,7 @@ const KickOuts = (props) => {
       { playerNumber: 15, pitchPosition: "ff-6" },
     ];
 
-    setPlayers(basicFormation);
+    //setPlayers(basicFormation);
   };
 
   const testFirstMoveArray = () => {
@@ -192,14 +192,17 @@ const KickOuts = (props) => {
                   }
                 }
               }}
-              className={`h-10 w-10 mx-auto my-auto text-center ${
-                isPlayerMoving ? "border  border-2 border-blue-500" : ""
-              }
+              className={`h-10 w-10 mx-auto my-auto text-center
                 ${positionIsUsed ? "bg-orange-400 positionUsed " : ""}
                 ${
                   startingFifteenEditingState
                     ? " cursor-pointer transition-all bg-emerald-400 hover:bg-orange-400"
                     : "bg-slate-400 opacity-20 disabled"
+                }
+                ${
+                  isPlayerMoving
+                    ? "  bg-orange-200   border-2 border-blue-500"
+                    : ""
                 }
                 ${shouldHide ? "opacity-0 cursor-default" : ""}
                 p-2 m-2 rounded-full`}>
@@ -212,7 +215,7 @@ const KickOuts = (props) => {
       })}
     </>
   );
-
+  const [movesArray, setMovesArray] = useState([]);
   const [numDivs, setNumDivs] = useState(10);
   const [showSweeperSectionState, setshowSweeperSectionState] = useState(true);
   const changeButtonText = numDivs === 3 ? "10 rows" : "3 rows";
@@ -318,10 +321,39 @@ const KickOuts = (props) => {
 
     // Now, you have the datavv in the parent component. You can use it as needed.
   };
-  const [dataFromChild, setDataFromChild] = useState(false);
-  const handleDataFromChild = (data) => {
-    setDataFromChild(data);
+
+  const createNewFormationFromMoves = (Formations, Moves) => {
+    return Formations.map((player) => {
+      // Try to find the player in the Moves array by their playerNumber
+      const move = Moves.find((m) => m.playerNumber === player.playerNumber);
+
+      // If the player is found in Moves array
+      if (move) {
+        return {
+          ...player,
+          pitchPosition: move.newPosition, // update the position
+        };
+      }
+
+      // Otherwise, return the player unchanged
+      return player;
+    });
   };
+
+  const [dataFromChild, setDataFromChild] = useState(false);
+  const [newFormationMove1, setNewformationMove1] = useState([]);
+  const handleDataFromChild = (data) => {
+    // Extract flag and movesArray from the data object
+    const { flag, movesArray } = data;
+    setDataFromChild(flag);
+    console.log(movesArray);
+    setMovesArray(movesArray);
+    console.log(movesArray);
+    const testing = createNewFormationFromMoves(players, movesArray);
+    console.log(testing);
+    setPlayers(testing);
+  };
+
   const anotherFunction = () => {
     assignBasicFormation2();
   };
