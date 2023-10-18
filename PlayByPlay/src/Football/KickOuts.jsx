@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Timeline from "./FootballComponents/Timeline";
 
 const KickOuts = (props) => {
+  const fb1Ref = useRef(null);
+  useEffect(() => {
+    if (fb1Ref.current) {
+      const rect = fb1Ref.current.getBoundingClientRect();
+      console.log(`Position of div with class 'fb-1': `, rect.top, rect.left);
+    }
+  }, [fb1Ref.current]);
   const testhandler = (playherNumber) => {
     // alert("it's working ;)");
     updateStartingFifteenPlayerNumberSelected(playherNumber);
@@ -163,6 +170,7 @@ const KickOuts = (props) => {
     <>
       {[...Array(count).keys()].map((index) => {
         const divposition = outerDivName + "-" + (index + 1);
+        //getting the postion of the divs
 
         const positionIsUsed = players.some(
           (player) => player.pitchPosition === divposition
@@ -174,7 +182,7 @@ const KickOuts = (props) => {
         const isPlayerMoving = Moves.some(
           (move) => move.playerNumber === matchingPlayerNumber
         );
-
+        const divRefs = useRef([]);
         const shouldHide = false;
         // = players.length === 14 && !positionIsUsed;
 
@@ -182,6 +190,7 @@ const KickOuts = (props) => {
           <div className="group my-auto">
             <div
               key={index}
+              ref={(el) => (divRefs.current[divposition] = el)}
               onClick={() => {
                 if (startingFifteenEditingState && !shouldHide) {
                   if (positionIsUsed) {
@@ -365,7 +374,6 @@ const KickOuts = (props) => {
   }, [dataFromChild]); // Watch dataFromChild state for changes
   return (
     <>
-      <p>Data from child: {dataFromChild}</p>
       <div className="flex">
         {!showTimelineState && (
           <div className="btn-group">

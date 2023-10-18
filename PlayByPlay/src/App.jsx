@@ -18,7 +18,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
+            <Route index element={<KickOuts />} />
             <Route path="Football" element={<Football />} />
             <Route path="Football/SetPlay" element={<SetPlay />} />
             <Route path="Football/Formations" element={<Formations />} />
