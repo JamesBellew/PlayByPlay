@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 const Timeline = ({ movesArr, onButtonClick }) => {
   const [currentMoveSelected, setcurrentMoveSelected] = useState(1);
   const [showTimelineState, setShowTimeLineState] = useState(true);
+  const [timelineRunningState, setTimelineRunningState] = useState(false);
   const [moves, setMoves] = useState(movesArr);
   const handleButtonClick = () => {
     const dataToPass = {
@@ -12,6 +13,7 @@ const Timeline = ({ movesArr, onButtonClick }) => {
       movesArray: moves,
     };
     onButtonClick(dataToPass);
+    setTimelineRunningState(true);
   };
 
   const removeMoveHandler = (playerNumberToRemove) => {
@@ -90,7 +92,15 @@ const Timeline = ({ movesArr, onButtonClick }) => {
               <div key={index}>
                 <li class="relative mb-6 sm:mb-0 ">
                   <div class="flex items-center">
-                    <div class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                    <div
+                      className={`z-10 flex items-center justify-center w-6 h-6 bg-blue-100 
+                    rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 
+                    ${
+                      timelineRunningState
+                        ? " dark:ring-primary/30"
+                        : " dark:ring-blue-900/50"
+                    }
+                    shrink-0`}>
                       {move.playerNumber}
                       <button
                         onClick={() =>
@@ -100,7 +110,10 @@ const Timeline = ({ movesArr, onButtonClick }) => {
                         x
                       </button>
                     </div>
-                    <div class="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                    <div
+                      className={`hidden sm:flex w-full bg-gray-200 h-0.5
+                    ${timelineRunningState ? "bg-primary" : "dark:bg-gray-700"}
+                    `}></div>
                   </div>
                   <div class="mt-3 sm:pr-8">
                     <div className="">{move.newPosition}</div>
