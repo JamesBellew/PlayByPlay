@@ -28,6 +28,7 @@ const KickOuts = (props) => {
     }
   };
   const [Moves, setMoves] = useState([]);
+  const [ballPosition, setBallPosition] = useState("gk-1");
   const [firstCall, setFirstCall] = useState(true);
   function addMove(playerNumber, newPosition) {
     if (firstCall) {
@@ -131,7 +132,7 @@ const KickOuts = (props) => {
           Select Position on pitch for Player
           {startingFiftenPlayerNumberSelected}
         </h2>
-        {usePlayersLength === 14 && (
+        {usePlayersLength === 15 && (
           <div className="absolute self-center mx-auto text-center w-[100%] left-0 ">
             <button
               onClick={showTinelineHandler}
@@ -177,7 +178,8 @@ const KickOuts = (props) => {
         const positionIsUsed = players.some(
           (player) => player.pitchPosition === divposition
         );
-
+        const ballIsHere = divposition === ballPosition;
+        console.log(ballIsHere);
         const matchingPlayerNumber =
           players.find((player) => player.pitchPosition === divposition)
             ?.playerNumber || "Not Found";
@@ -204,6 +206,7 @@ const KickOuts = (props) => {
                 }
               }}
               className={`h-10 w-10 mx-auto my-auto text-black text-center
+          
                 ${positionIsUsed ? "bg-white positionUsed " : ""}
                 ${
                   startingFifteenEditingState
@@ -216,12 +219,16 @@ const KickOuts = (props) => {
                     : ""
                 }
                 ${shouldHide ? "opacity-0 cursor-default" : ""}
+              
                 p-2 m-2 rounded-full`}>
               <span
                 className={` ${
                   positionIsUsed ? "text-black" : "text-white"
                 } duration-75`}>
                 {positionIsUsed ? matchingPlayerNumber : "+"}
+                {ballIsHere && (
+                  <div className="football absolute bg-black h-4 w-4 mx-auto ml-1 mt-2 rounded-full"></div>
+                )}
               </span>
             </div>
           </div>

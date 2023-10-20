@@ -4,6 +4,10 @@
   padding: 2rem;
   text-align: center;
 }
+.upside-down {
+  display: inline-block;
+  transform: rotate(180deg);
+}
 .player-circle{
   cursor: pointer;
   z-index: 100;
