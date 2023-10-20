@@ -40,6 +40,7 @@ const KickOuts = (props) => {
 
   const assignBasicFormation1 = () => {
     const basicFormation = [
+      { playerNumber: 1, pitchPosition: "gk-1" },
       { playerNumber: 2, pitchPosition: "fb-3" },
       { playerNumber: 3, pitchPosition: "fb-5" },
       { playerNumber: 4, pitchPosition: "fb-7" },
@@ -60,6 +61,7 @@ const KickOuts = (props) => {
   };
   const assignBasicFormation2 = () => {
     const basicFormation = [
+      { playerNumber: 1, pitchPosition: "gk-1" },
       { playerNumber: 2, pitchPosition: "fb-1" },
       { playerNumber: 3, pitchPosition: "fb-3" },
       { playerNumber: 4, pitchPosition: "fb-10" },
@@ -98,10 +100,10 @@ const KickOuts = (props) => {
     ];
   };
   const [players, setPlayers] = useState([
-    // {
-    //   playerNumber: 10,
-    //   pitchPosition: "fb-1",
-    // },
+    {
+      playerNumber: 1,
+      pitchPosition: "gk-1",
+    },
     //... You can add more players here as needed
   ]);
 
@@ -201,8 +203,8 @@ const KickOuts = (props) => {
                   }
                 }
               }}
-              className={`h-10 w-10 mx-auto my-auto text-center
-                ${positionIsUsed ? "bg-orange-400 positionUsed " : ""}
+              className={`h-10 w-10 mx-auto my-auto text-black text-center
+                ${positionIsUsed ? "bg-white positionUsed " : ""}
                 ${
                   startingFifteenEditingState
                     ? " cursor-pointer transition-all bg-emerald-400 hover:bg-orange-400"
@@ -215,7 +217,10 @@ const KickOuts = (props) => {
                 }
                 ${shouldHide ? "opacity-0 cursor-default" : ""}
                 p-2 m-2 rounded-full`}>
-              <span className="text-white duration-75">
+              <span
+                className={` ${
+                  positionIsUsed ? "text-black" : "text-white"
+                } duration-75`}>
                 {positionIsUsed ? matchingPlayerNumber : "+"}
               </span>
             </div>
@@ -451,6 +456,12 @@ const KickOuts = (props) => {
 
         <div className="flex flex-col bg-green-600 relative self-center  gap-4 h-[70vh]">
           <div className="flex-grow flex flex-col">
+            <div
+              className={`flex-grow mx-auto w-0  grid ${
+                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
+              }`}>
+              <TenDivs outerDivName="gk" count={1} />
+            </div>
             <div
               className={`flex-grow border grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
