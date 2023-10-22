@@ -30,6 +30,7 @@ const KickOuts = (props) => {
   const [Moves, setMoves] = useState([]);
   const [ballPosition, setBallPosition] = useState("gk-1");
   const [firstCall, setFirstCall] = useState(true);
+  const [ballEditingState, setBallEditingState] = useState(false);
   function addMove(playerNumber, newPosition) {
     if (firstCall) {
       setMoves([{ playerNumber, newPosition }]);
@@ -127,8 +128,8 @@ const KickOuts = (props) => {
   };
   const StartingFifteen = () => {
     return (
-      <div className="grid grid-rows-2 text-center grid-cols-8 w-full p-5">
-        <h2 className="col-span-8 text-white text-lg left-0">
+      <div className="grid grid-rows-2 text-center grid-cols-8 w-full h-auto p-5">
+        <h2 className="col-span-8 row  text-white text-lg left-0">
           Select Position on pitch for Player
           {startingFiftenPlayerNumberSelected}
         </h2>
@@ -199,7 +200,10 @@ const KickOuts = (props) => {
                 if (startingFifteenEditingState && !shouldHide) {
                   if (positionIsUsed) {
                     //the user clicked on a position on the pitch that ha sa player and can move it to a different position
+
                     testhandler(matchingPlayerNumber);
+                  } else if (ballEditingState) {
+                    ballMoveHandler(outerDivName, index);
                   } else {
                     handleDivClick(outerDivName, index);
                   }
@@ -226,8 +230,10 @@ const KickOuts = (props) => {
                   positionIsUsed ? "text-black" : "text-white"
                 } duration-75`}>
                 {positionIsUsed ? matchingPlayerNumber : "+"}
-                {ballIsHere && (
-                  <div className="football absolute bg-black h-4 w-4 mx-auto ml-1 mt-2 rounded-full"></div>
+                {ballIsHere && showTimelineState && ballEditingState && (
+                  <div
+                    onClick={footballClickHandler}
+                    className="football absolute z-100 cursor-pointer hover:bg-primary bg-black h-4 w-4 mx-auto ml-1 mt-2 rounded-full"></div>
                 )}
               </span>
             </div>
@@ -236,6 +242,7 @@ const KickOuts = (props) => {
       })}
     </>
   );
+
   const [movesArray, setMovesArray] = useState([]);
   const [numDivs, setNumDivs] = useState(10);
   const [showSweeperSectionState, setshowSweeperSectionState] = useState(true);
@@ -253,6 +260,11 @@ const KickOuts = (props) => {
       document.getElementById("my_modal_1").showModal();
     }
   };
+  const ballMoveHandler = (outerDiv, index) => {
+    const positionClicked = outerDiv + "-" + (index + 1);
+    setBallPosition(positionClicked);
+    alert("clicked");
+  };
   const sweeperSectionHandler = () => {
     //first we want to see if there is anything stored in the players array
     if (players.length === 0) {
@@ -261,6 +273,12 @@ const KickOuts = (props) => {
       // alert("you have players selcted on the pitch");
       document.getElementById("my_modal_1").showModal();
     }
+  };
+  const ballEditingStateHandler = () => {
+    setBallEditingState(true);
+  };
+  const footballClickHandler = () => {
+    alert("clicked");
   };
   useEffect(() => {
     getRemainingNumber();
@@ -386,6 +404,26 @@ const KickOuts = (props) => {
   }, [dataFromChild]); // Watch dataFromChild state for changes
   return (
     <>
+      <ul className="steps steps-vertical lg:steps-horizontal">
+        <li
+          data-content={`${showTimelineState ? "✓" : "-"}`}
+          className="step step-primary">
+          Formation
+        </li>
+        <li
+          data-content={``}
+          className={`step ${showTimelineState ? "step-primary" : ""}`}>
+          {" "}
+          Moves
+        </li>
+        <li data-content={``} className="step">
+          {" "}
+          Comments
+        </li>
+        <li data-content={``} className="step">
+          Save
+        </li>
+      </ul>
       <div className="flex">
         {!showTimelineState && (
           <div className="btn-group">
@@ -416,7 +454,7 @@ const KickOuts = (props) => {
                 </li>
               </ul>
             </div>
-            {players.length >= 1 && (
+            {players.length > 1 && (
               <button
                 onClick={ShowClearSelectionModal}
                 className=" left-1 ml-2 bg-red-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
@@ -450,7 +488,7 @@ const KickOuts = (props) => {
           </div>
         </dialog>
         {!showTimelineState && (
-          <div className="relative flex  h-[20vh] bg-gray-700 mb-[2vh] rounded">
+          <div className="relative flex  h-[18vh] bg-gray-700 mb-[2vh] rounded">
             <StartingFifteen></StartingFifteen>
           </div>
         )}
@@ -460,8 +498,18 @@ const KickOuts = (props) => {
             onButtonClick={handleDataFromChild}
             movesArr={Moves}></Timeline>
         )}
-
-        <div className="flex flex-col bg-green-600 relative self-center  gap-4 h-[70vh]">
+        <div class="btn-group left-0 text-left flex btn-group-vertical lg:btn-group-horizontal">
+          <button className={`btn ${!ballEditingState ? "btn-active" : ""}`}>
+            Player
+          </button>
+          <button
+            onClick={ballEditingStateHandler}
+            className={`btn ${ballEditingState ? "btn-active" : ""}`}>
+            Ball
+          </button>
+          <button class="btn">Button</button>
+        </div>
+        <div className="flex flex-col rounded bg-base-200 p-5 relative self-center   h-[70vh]">
           <div className="flex-grow flex flex-col">
             <div
               className={`flex-grow mx-auto w-0  grid ${
@@ -470,7 +518,7 @@ const KickOuts = (props) => {
               <TenDivs outerDivName="gk" count={1} />
             </div>
             <div
-              className={`flex-grow border grid ${
+              className={`flex-grow  grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
               <TenDivs outerDivName="fb" count={numDivs} />
@@ -485,7 +533,7 @@ const KickOuts = (props) => {
               )}
             </div>
             <div
-              className={`flex-grow border grid ${
+              className={`flex-grow  grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
               <TenDivs outerDivName="hb" count={numDivs} />
@@ -500,7 +548,7 @@ const KickOuts = (props) => {
             </div>
           </div>
           <div
-            className={`flex-grow border  grid ${
+            className={`flex-grow   grid ${
               numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
             }`}>
             <TenDivs outerDivName="mf" count={numDivs} />
@@ -518,7 +566,7 @@ const KickOuts = (props) => {
               )}
             </div>
             <div
-              className={`flex-grow border grid ${
+              className={`flex-grow  grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
               <TenDivs outerDivName="hf" count={numDivs} />
@@ -532,7 +580,7 @@ const KickOuts = (props) => {
               )}
             </div>
             <div
-              className={`flex-grow border  grid ${
+              className={`flex-grow   grid ${
                 numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
               }`}>
               <TenDivs outerDivName="ff" count={numDivs} />
