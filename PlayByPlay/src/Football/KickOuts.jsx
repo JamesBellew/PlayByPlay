@@ -44,19 +44,19 @@ const KickOuts = (props) => {
     const basicFormation = [
       { playerNumber: 1, pitchPosition: "gk-1" },
       { playerNumber: 2, pitchPosition: "fb-3" },
-      { playerNumber: 3, pitchPosition: "fb-5" },
-      { playerNumber: 4, pitchPosition: "fb-7" },
-      { playerNumber: 5, pitchPosition: "fb-hf-2" },
-      { playerNumber: 6, pitchPosition: "hb-5" },
-      { playerNumber: 7, pitchPosition: "fb-hf-8" },
-      { playerNumber: 8, pitchPosition: "mf-4" },
-      { playerNumber: 9, pitchPosition: "mf-6" },
-      { playerNumber: 10, pitchPosition: "mf-hf-2" },
-      { playerNumber: 11, pitchPosition: "mf-hf-5" },
-      { playerNumber: 12, pitchPosition: "mf-hf-8" },
-      { playerNumber: 13, pitchPosition: "hf-5" },
-      { playerNumber: 14, pitchPosition: "ff-4" },
-      { playerNumber: 15, pitchPosition: "ff-6" },
+      { playerNumber: 3, pitchPosition: "fb-6" },
+      { playerNumber: 4, pitchPosition: "fb-9" },
+      { playerNumber: 5, pitchPosition: "hb-3" },
+      { playerNumber: 6, pitchPosition: "hb-6" },
+      { playerNumber: 7, pitchPosition: "hb-9" },
+      { playerNumber: 8, pitchPosition: "mf-5" },
+      { playerNumber: 9, pitchPosition: "mf-7" },
+      { playerNumber: 10, pitchPosition: "mf-hf-3" },
+      { playerNumber: 11, pitchPosition: "mf-hf-6" },
+      { playerNumber: 12, pitchPosition: "mf-hf-9" },
+      { playerNumber: 13, pitchPosition: "ff-3" },
+      { playerNumber: 14, pitchPosition: "ff-6" },
+      { playerNumber: 15, pitchPosition: "ff-9" },
     ];
 
     setPlayers(basicFormation);
@@ -244,9 +244,9 @@ const KickOuts = (props) => {
   );
 
   const [movesArray, setMovesArray] = useState([]);
-  const [numDivs, setNumDivs] = useState(10);
+  const [numDivs, setNumDivs] = useState(11);
   const [showSweeperSectionState, setshowSweeperSectionState] = useState(true);
-  const changeButtonText = numDivs === 3 ? "10 rows" : "3 rows";
+  const changeButtonText = numDivs === 3 ? "11 rows" : "3 rows";
   const usePlayersLength = players.length;
   const showSweeperButtonText = showSweeperSectionState
     ? "Show Only 3-3-2-3-3"
@@ -254,7 +254,7 @@ const KickOuts = (props) => {
 
   const toggleDivs = () => {
     if (players.length === 0) {
-      setNumDivs((prevNum) => (prevNum === 10 ? 3 : 10));
+      setNumDivs((prevNum) => (prevNum === 11 ? 3 : 11));
     } else {
       // alert("you have players selcted on the pitch");
       document.getElementById("my_modal_1").showModal();
@@ -404,27 +404,7 @@ const KickOuts = (props) => {
   }, [dataFromChild]); // Watch dataFromChild state for changes
   return (
     <>
-      <ul className="steps steps-vertical lg:steps-horizontal">
-        <li
-          data-content={`${showTimelineState ? "✓" : "-"}`}
-          className="step step-primary">
-          Formation
-        </li>
-        <li
-          data-content={``}
-          className={`step ${showTimelineState ? "step-primary" : ""}`}>
-          {" "}
-          Moves
-        </li>
-        <li data-content={``} className="step">
-          {" "}
-          Comments
-        </li>
-        <li data-content={``} className="step">
-          Save
-        </li>
-      </ul>
-      <div className="flex">
+      {/* <div className="flex">
         {!showTimelineState && (
           <div className="btn-group">
             <button
@@ -463,7 +443,7 @@ const KickOuts = (props) => {
             )}
           </div>
         )}
-      </div>
+      </div> */}
 
       <div className="centering-wrapper">
         <dialog id="my_modal_1" className="modal">
@@ -488,7 +468,7 @@ const KickOuts = (props) => {
           </div>
         </dialog>
         {!showTimelineState && (
-          <div className="relative flex  h-[18vh] bg-gray-700 mb-[2vh] rounded">
+          <div className="relative flex  h-[18vh] bg-base-200 mb-[2vh] rounded">
             <StartingFifteen></StartingFifteen>
           </div>
         )}
@@ -498,7 +478,7 @@ const KickOuts = (props) => {
             onButtonClick={handleDataFromChild}
             movesArr={Moves}></Timeline>
         )}
-        <div class="btn-group left-0 text-left flex btn-group-vertical lg:btn-group-horizontal">
+        {/* <div class="btn-group left-0 text-left flex btn-group-vertical lg:btn-group-horizontal">
           <button className={`btn ${!ballEditingState ? "btn-active" : ""}`}>
             Player
           </button>
@@ -508,83 +488,187 @@ const KickOuts = (props) => {
             Ball
           </button>
           <button class="btn">Button</button>
-        </div>
-        <div className="flex flex-col rounded bg-base-200 p-5 relative self-center   h-[70vh]">
-          <div className="flex-grow flex flex-col">
-            <div
-              className={`flex-grow mx-auto w-0  grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-              }`}>
-              <TenDivs outerDivName="gk" count={1} />
-            </div>
-            <div
-              className={`flex-grow  grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-              }`}>
-              <TenDivs outerDivName="fb" count={numDivs} />
-            </div>
+        </div> */}
+        <div className="w-full  flex bg-base-200 rounded-md">
+          <div className="w-1/6 mx-auto ">
+            <ul class="menu bg-base-200 h-full w-auto rounded-box">
+              {!showTimelineState && (
+                <li>
+                  <h2 class="menu-title">Basic Functions</h2>
+                  <ul>
+                    <li>
+                      <a
+                        onClick={toggleDivs}
+                        className=" left-1  mb-2   font-medium  px-4 rounded  z-10">
+                        {changeButtonText}
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        onClick={sweeperSectionHandler}
+                        className=" left-1   mb-2   font-medium  rounded  z-10">
+                        {showSweeperButtonText}
+                      </a>
+                    </li>
+                    <li>
+                      <div className="dropdown  mb-2   font-medium px-4 rounded  z-10">
+                        <label tabIndex={0} className="cursor-pointer ">
+                          Templates
+                        </label>
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content text-white z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                          <li>
+                            <a onClick={assignBasicFormation1}>
+                              Basic 3-3-2-3-3
+                            </a>
+                          </li>
+                          <li>
+                            <a onClick={assignBasicFormation2}>
+                              Wide -3-3-2-3-3
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
+                    <li>
+                      {players.length > 1 && (
+                        <button
+                          onClick={ShowClearSelectionModal}
+                          className=" left-1  text-red-400 mb-2    font-medium px-4 rounded  z-10">
+                          Clear Selection
+                        </button>
+                      )}
+                    </li>
+                  </ul>
+                </li>
+              )}
+              {showTimelineState && (
+                <ul className="">
+                  <h2 class="menu-title">Setplay Settings</h2>
+                  <li className="mt-2">
+                    <a>Back to Formation</a>
+                  </li>
+                  <li>
+                    <a>Clear all Moves</a>
+                  </li>
+                  <div className=" divider ml-4"></div>
+                  <li>
+                    <a className="hover:text-primary">Next</a>
+                  </li>
+                  <li>
+                    <a className="hover:text-secondary">Save</a>
+                  </li>
+                </ul>
+              )}
+            </ul>
+          </div>
+          <div className="flex flex-col rounded bg-base-200 w-4/6 mx-auto p-5 relative self-center   h-[70vh]">
+            <div className="flex-grow flex flex-col">
+              <div
+                className={`flex-grow mx-auto   grid ${
+                  numDivs === 11 ? "grid-cols-1" : "grid-cols-1"
+                }`}>
+                <TenDivs outerDivName="gk" count={1} />
+              </div>
+              <div
+                className={`flex-grow  grid ${
+                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                }`}>
+                <TenDivs outerDivName="fb" count={numDivs} />
+              </div>
 
-            <div
-              className={`flex-grow  h-10  grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-              }`}>
-              {showSweeperSectionState && (
-                <TenDivs outerDivName="fb-hf" count={numDivs} />
-              )}
-            </div>
-            <div
-              className={`flex-grow  grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-              }`}>
-              <TenDivs outerDivName="hb" count={numDivs} />
-            </div>
-            <div
-              className={`flex-grow  h-10  grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-              }`}>
-              {showSweeperSectionState && (
-                <TenDivs outerDivName="hb-mf" count={numDivs} />
-              )}
-            </div>
-          </div>
-          <div
-            className={`flex-grow   grid ${
-              numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-            }`}>
-            <TenDivs outerDivName="mf" count={numDivs} />
-          </div>
-          {/* <div className="bg-purple-600 h-1/6 grid grid-cols-10">
-            <TenDivs outerDivName="Mid Purple" />
-          </div> */}
-          <div className="flex-grow flex flex-col">
-            <div
-              className={`flex-grow  h-10  grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-              }`}>
-              {showSweeperSectionState && (
-                <TenDivs outerDivName="mf-hf" count={numDivs} />
-              )}
-            </div>
-            <div
-              className={`flex-grow  grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-              }`}>
-              <TenDivs outerDivName="hf" count={numDivs} />
-            </div>
-            <div
-              className={`flex-grow  h-10  grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
-              }`}>
-              {showSweeperSectionState && (
-                <TenDivs outerDivName="hf-ff" count={numDivs} />
-              )}
+              <div
+                className={`flex-grow  h-10  grid ${
+                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                }`}>
+                {showSweeperSectionState && (
+                  <TenDivs outerDivName="fb-hf" count={numDivs} />
+                )}
+              </div>
+              <div
+                className={`flex-grow  grid ${
+                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                }`}>
+                <TenDivs outerDivName="hb" count={numDivs} />
+              </div>
+              <div
+                className={`flex-grow  h-10  grid ${
+                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                }`}>
+                {showSweeperSectionState && (
+                  <TenDivs outerDivName="hb-mf" count={numDivs} />
+                )}
+              </div>
             </div>
             <div
               className={`flex-grow   grid ${
-                numDivs === 10 ? "grid-cols-10" : "grid-cols-3"
+                numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
               }`}>
-              <TenDivs outerDivName="ff" count={numDivs} />
+              <TenDivs outerDivName="mf" count={numDivs} />
             </div>
+            {/* <div className="bg-purple-600 h-1/6 grid grid-cols-10">
+            <TenDivs outerDivName="Mid Purple" />
+          </div> */}
+            <div className="flex-grow flex flex-col">
+              <div
+                className={`flex-grow  h-10  grid ${
+                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                }`}>
+                {showSweeperSectionState && (
+                  <TenDivs outerDivName="mf-hf" count={numDivs} />
+                )}
+              </div>
+              <div
+                className={`flex-grow  grid ${
+                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                }`}>
+                <TenDivs outerDivName="hf" count={numDivs} />
+              </div>
+              <div
+                className={`flex-grow  h-10  grid ${
+                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                }`}>
+                {showSweeperSectionState && (
+                  <TenDivs outerDivName="hf-ff" count={numDivs} />
+                )}
+              </div>
+              <div
+                className={`flex-grow   grid ${
+                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                }`}>
+                <TenDivs outerDivName="ff" count={numDivs} />
+              </div>
+            </div>
+          </div>
+          <div className="w-1/6 mx-auto ">
+            <ul class="menu bg-base-200 h-full w-auto rounded-box">
+              <li>
+                <h2 class="menu-title">Progress</h2>
+                <ul className="steps steps-vertical ">
+                  <li
+                    data-content={`${showTimelineState ? "✓" : "-"}`}
+                    className="step step-primary">
+                    Formation
+                  </li>
+                  <li
+                    data-content={``}
+                    className={`step ${
+                      showTimelineState ? "step-primary" : ""
+                    }`}>
+                    {" "}
+                    Moves
+                  </li>
+                  <li data-content={``} className="step">
+                    {" "}
+                    Comments
+                  </li>
+                  <li data-content={``} className="step">
+                    Save
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
