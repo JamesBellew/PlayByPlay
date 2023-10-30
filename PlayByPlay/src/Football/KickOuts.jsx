@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Timeline from "./FootballComponents/Timeline";
+import SaveSetPlay from "./FootballComponents/SaveSetPlay";
 
 const KickOuts = (props) => {
   const fb1Ref = useRef(null);
@@ -27,7 +28,18 @@ const KickOuts = (props) => {
       addPlayer(startingFiftenPlayerNumberSelected, positionClicked);
     }
   };
+  //this below usestate is for testing the API from the backend
+  const [backendData, setBackendData] = useState([{}]);
+  useEffect(() => {
+    fetch("/formations")
+      .then((response) => response.json())
+      .then((data) => {
+        setBackendData(data);
+      });
+  }, []);
+  //end of the testing
   const [Moves, setMoves] = useState([]);
+  const [isOnSaveSeytPlayPage, setIsOnSaveSeytPlayPage] = useState(false);
   const [ballPosition, setBallPosition] = useState("gk-1");
   const [firstCall, setFirstCall] = useState(true);
   const [ballEditingState, setBallEditingState] = useState(false);
@@ -155,13 +167,13 @@ const KickOuts = (props) => {
             <p
               key={playerNumber}
               onClick={() => startingFifteenSelectedHandler(playerNumber)}
-              className={`text-white hover:scale-105 mx-auto
+              className={` hover:scale-105 mx-auto
             transition-all cursor-pointer h-10 my-auto
             text-center  m-2 w-10 
             ${
               playerNumber === startingFiftenPlayerNumberSelected
-                ? "bg-emerald-400"
-                : "bg-blue-400"
+                ? "bg-white text-black"
+                : "bg-primary/20"
             } rounded-full`}>
               {playerNumber}
             </p>
@@ -211,10 +223,10 @@ const KickOuts = (props) => {
               }}
               className={`h-10 w-10 mx-auto my-auto text-black text-center
           
-                ${positionIsUsed ? "bg-white positionUsed " : ""}
+                ${positionIsUsed ? "bg-white positionUsed " : "bg-primary/20"}
                 ${
                   startingFifteenEditingState
-                    ? " cursor-pointer transition-all bg-emerald-400 hover:bg-orange-400"
+                    ? " cursor-pointer transition-all bg-primary hover:bg-secondary"
                     : "bg-slate-400 opacity-20 disabled"
                 }
                 ${
@@ -402,49 +414,17 @@ const KickOuts = (props) => {
       anotherFunction();
     }
   }, [dataFromChild]); // Watch dataFromChild state for changes
+  const backToFormationsHandler = () => {
+    console.log("clicked");
+    setshowTimelineState(!showTimelineState);
+  };
+
+  const moveToNextHandler = () => {
+    alert("clicked");
+    setIsOnSaveSeytPlayPage(true);
+  };
   return (
     <>
-      {/* <div className="flex">
-        {!showTimelineState && (
-          <div className="btn-group">
-            <button
-              onClick={toggleDivs}
-              className=" left-1 bg-blue-400 mb-2 text-gray-800  font-medium  px-4 rounded  z-10">
-              {changeButtonText}
-            </button>
-
-            <button
-              onClick={sweeperSectionHandler}
-              className=" left-1 ml-2 bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
-              {showSweeperButtonText}
-            </button>
-
-            <div className="dropdown left-1  bg-blue-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
-              <label tabIndex={0} className="cursor-pointer m-1">
-                Templates
-              </label>
-              <ul
-                tabIndex={0}
-                className="dropdown-content text-white z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                <li>
-                  <a onClick={assignBasicFormation1}>Basic 3-3-2-3-3</a>
-                </li>
-                <li>
-                  <a onClick={assignBasicFormation2}>Wide -3-3-2-3-3</a>
-                </li>
-              </ul>
-            </div>
-            {players.length > 1 && (
-              <button
-                onClick={ShowClearSelectionModal}
-                className=" left-1 ml-2 bg-red-400 mb-2  text-gray-800  font-medium px-4 rounded  z-10">
-                Clear Selection
-              </button>
-            )}
-          </div>
-        )}
-      </div> */}
-
       <div className="centering-wrapper">
         <dialog id="my_modal_1" className="modal">
           <div className="modal-box">
@@ -472,24 +452,14 @@ const KickOuts = (props) => {
             <StartingFifteen></StartingFifteen>
           </div>
         )}
-        {showTimelineState && (
+        {showTimelineState && !isOnSaveSeytPlayPage && (
           <Timeline
             onRunClick={handleFormationData}
             onButtonClick={handleDataFromChild}
             movesArr={Moves}></Timeline>
         )}
-        {/* <div class="btn-group left-0 text-left flex btn-group-vertical lg:btn-group-horizontal">
-          <button className={`btn ${!ballEditingState ? "btn-active" : ""}`}>
-            Player
-          </button>
-          <button
-            onClick={ballEditingStateHandler}
-            className={`btn ${ballEditingState ? "btn-active" : ""}`}>
-            Ball
-          </button>
-          <button class="btn">Button</button>
-        </div> */}
-        <div className="w-full  flex bg-base-200 rounded-md">
+
+        <div className="w-full my-auto self-center  flex bg-base-200 rounded-md">
           <div className="w-1/6 mx-auto ">
             <ul class="menu bg-base-200 h-full w-auto rounded-box">
               {!showTimelineState && (
@@ -547,100 +517,122 @@ const KickOuts = (props) => {
                 <ul className="">
                   <h2 class="menu-title">Setplay Settings</h2>
                   <li className="mt-2">
-                    <a>Back to Formation</a>
+                    <a onClick={backToFormationsHandler}>Back to Formation</a>
                   </li>
                   <li>
                     <a>Clear all Moves</a>
                   </li>
                   <div className=" divider ml-4"></div>
                   <li>
-                    <a className="hover:text-primary">Next</a>
+                    <a
+                      onClick={moveToNextHandler}
+                      className={` ${
+                        Moves.length < 1
+                          ? "pointer-events-none opacity-50 text-base-200"
+                          : ""
+                      }hover:text-primary`}>
+                      Next
+                    </a>
                   </li>
                   <li>
-                    <a className="hover:text-secondary">Save</a>
+                    <a
+                      className={` ${
+                        Moves.length < 1
+                          ? "pointer-events-none opacity-50  text-base-200"
+                          : ""
+                      }hover:text-primary`}>
+                      Save
+                    </a>
                   </li>
                 </ul>
               )}
             </ul>
           </div>
-          <div className="flex flex-col rounded bg-base-200 w-4/6 mx-auto p-5 relative self-center   h-[70vh]">
-            <div className="flex-grow flex flex-col">
-              <div
-                className={`flex-grow mx-auto   grid ${
-                  numDivs === 11 ? "grid-cols-1" : "grid-cols-1"
-                }`}>
-                <TenDivs outerDivName="gk" count={1} />
-              </div>
-              <div
-                className={`flex-grow  grid ${
-                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                }`}>
-                <TenDivs outerDivName="fb" count={numDivs} />
-              </div>
-
-              <div
-                className={`flex-grow  h-10  grid ${
-                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                }`}>
-                {showSweeperSectionState && (
-                  <TenDivs outerDivName="fb-hf" count={numDivs} />
-                )}
-              </div>
-              <div
-                className={`flex-grow  grid ${
-                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                }`}>
-                <TenDivs outerDivName="hb" count={numDivs} />
-              </div>
-              <div
-                className={`flex-grow  h-10  grid ${
-                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                }`}>
-                {showSweeperSectionState && (
-                  <TenDivs outerDivName="hb-mf" count={numDivs} />
-                )}
-              </div>
-            </div>
+          {!isOnSaveSeytPlayPage ? (
             <div
-              className={`flex-grow   grid ${
-                numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-              }`}>
-              <TenDivs outerDivName="mf" count={numDivs} />
-            </div>
-            {/* <div className="bg-purple-600 h-1/6 grid grid-cols-10">
-            <TenDivs outerDivName="Mid Purple" />
-          </div> */}
-            <div className="flex-grow flex flex-col">
-              <div
-                className={`flex-grow  h-10  grid ${
-                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                }`}>
-                {showSweeperSectionState && (
-                  <TenDivs outerDivName="mf-hf" count={numDivs} />
-                )}
-              </div>
-              <div
-                className={`flex-grow  grid ${
-                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                }`}>
-                <TenDivs outerDivName="hf" count={numDivs} />
-              </div>
-              <div
-                className={`flex-grow  h-10  grid ${
-                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                }`}>
-                {showSweeperSectionState && (
-                  <TenDivs outerDivName="hf-ff" count={numDivs} />
-                )}
+              className="flex pitch flex-col
+           rounded bg-base-200 w-4/6 mx-auto p-5 relative self-center
+             h-[70vh]">
+              <div className="flex-grow flex flex-col">
+                <div
+                  className={`flex-grow mx-auto   grid ${
+                    numDivs === 11 ? "grid-cols-1" : "grid-cols-1"
+                  }`}>
+                  <TenDivs outerDivName="gk" count={1} />
+                </div>
+                <div
+                  className={`flex-grow  grid ${
+                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                  }`}>
+                  <TenDivs outerDivName="fb" count={numDivs} />
+                </div>
+
+                <div
+                  className={`flex-grow  h-10  grid ${
+                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                  }`}>
+                  {showSweeperSectionState && (
+                    <TenDivs outerDivName="fb-hf" count={numDivs} />
+                  )}
+                </div>
+                <div
+                  className={`flex-grow  grid ${
+                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                  }`}>
+                  <TenDivs outerDivName="hb" count={numDivs} />
+                </div>
+                <div
+                  className={`flex-grow  h-10  grid ${
+                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                  }`}>
+                  {showSweeperSectionState && (
+                    <TenDivs outerDivName="hb-mf" count={numDivs} />
+                  )}
+                </div>
               </div>
               <div
                 className={`flex-grow   grid ${
                   numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
                 }`}>
-                <TenDivs outerDivName="ff" count={numDivs} />
+                <TenDivs outerDivName="mf" count={numDivs} />
+              </div>
+              {/* <div className="bg-purple-600 h-1/6 grid grid-cols-10">
+            <TenDivs outerDivName="Mid Purple" />
+          </div> */}
+              <div className="flex-grow flex flex-col">
+                <div
+                  className={`flex-grow  h-10  grid ${
+                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                  }`}>
+                  {showSweeperSectionState && (
+                    <TenDivs outerDivName="mf-hf" count={numDivs} />
+                  )}
+                </div>
+                <div
+                  className={`flex-grow  grid ${
+                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                  }`}>
+                  <TenDivs outerDivName="hf" count={numDivs} />
+                </div>
+                <div
+                  className={`flex-grow  h-10  grid ${
+                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                  }`}>
+                  {showSweeperSectionState && (
+                    <TenDivs outerDivName="hf-ff" count={numDivs} />
+                  )}
+                </div>
+                <div
+                  className={`flex-grow   grid ${
+                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                  }`}>
+                  <TenDivs outerDivName="ff" count={numDivs} />
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <SaveSetPlay />
+          )}
           <div className="w-1/6 mx-auto ">
             <ul class="menu bg-base-200 h-full w-auto rounded-box">
               <li>
@@ -652,18 +644,26 @@ const KickOuts = (props) => {
                     Formation
                   </li>
                   <li
-                    data-content={``}
+                    data-content={`${isOnSaveSeytPlayPage ? "✓" : "-"}`}
                     className={`step ${
                       showTimelineState ? "step-primary" : ""
                     }`}>
-                    {" "}
                     Moves
                   </li>
-                  <li data-content={``} className="step">
+                  <li
+                    data-content={`${isOnSaveSeytPlayPage ? "✓" : "-"}`}
+                    className={`step ${
+                      isOnSaveSeytPlayPage ? "step-primary" : ""
+                    }`}>
                     {" "}
                     Comments
                   </li>
-                  <li data-content={``} className="step">
+                  <li
+                    data-content={``}
+                    className={`step ${
+                      isOnSaveSeytPlayPage ? "step-primary" : ""
+                    }`}>
+                    {" "}
                     Save
                   </li>
                 </ul>
@@ -671,6 +671,15 @@ const KickOuts = (props) => {
             </ul>
           </div>
         </div>
+        {/* <div className="bg-base-200 w-full mt-2 rounded-md p-4">
+          {typeof backendData.formations === "undefined" ? (
+            <p>Loading...</p>
+          ) : (
+            backendData.formations.map((formation, i) => (
+              <p key={i}>{formation}</p>
+            ))
+          )}
+        </div> */}
       </div>
     </>
   );

@@ -23,7 +23,6 @@ function App() {
             <Route path="Football/SetPlay" element={<SetPlay />} />
             <Route path="Football/Formations" element={<Formations />} />
             <Route path="Football/KickOuts" element={<KickOuts />} />
-            <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -9,6 +9,7 @@ const Timeline = ({ movesArr, onButtonClick }) => {
   const [timelineRunningState, setTimelineRunningState] = useState(false);
   const [addMovesErrorMessage, setaddMovesErrorMessage] = useState("");
   const [moves, setMoves] = useState(movesArr);
+  // const [currentMoveDisplaying, setCurrentMoveDisplaying] = useStatemoves];
   const [moves2, setMoves2] = useState([
     {
       playerNumber: 2,
@@ -71,6 +72,7 @@ const Timeline = ({ movesArr, onButtonClick }) => {
         onClick={() => changeMoveSelected(moveNumber)}
         className="dropdown dropdown-hover dropdown z-[100]">
         <label
+          onClick={moveLabelClickHandler}
           tabIndex={0}
           className={`btn m-1 
        ${isCurrentMove ? "text-primary" : ""}
@@ -105,6 +107,10 @@ const Timeline = ({ movesArr, onButtonClick }) => {
     // Cleanup: clear the timer if the component is unmounted before 5 seconds
     return () => clearTimeout(timer);
   }, [movesArr]);
+
+  const moveLabelClickHandler = () => {
+    alert("clicked");
+  };
   return (
     <>
       {/* <h1 className="ml-4 text-xl">
