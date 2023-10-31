@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Timeline from "./FootballComponents/Timeline";
 import SaveSetPlay from "./FootballComponents/SaveSetPlay";
+import AccountSideBar from "./FootballComponents/AccountSidebar";
+
 
 const KickOuts = (props) => {
   const fb1Ref = useRef(null);
@@ -513,7 +515,7 @@ const KickOuts = (props) => {
                   </ul>
                 </li>
               )}
-              {showTimelineState && (
+              {showTimelineState && !isOnSaveSeytPlayPage && (
                 <ul className="">
                   <h2 class="menu-title">Setplay Settings</h2>
                   <li className="mt-2">
@@ -546,7 +548,10 @@ const KickOuts = (props) => {
                   </li>
                 </ul>
               )}
+                <AccountSideBar/>
             </ul>
+
+          
           </div>
           {!isOnSaveSeytPlayPage ? (
             <div
@@ -631,7 +636,7 @@ const KickOuts = (props) => {
               </div>
             </div>
           ) : (
-            <SaveSetPlay />
+            <SaveSetPlay movesArr={Moves} formation={players}/>
           )}
           <div className="w-1/6 mx-auto ">
             <ul class="menu bg-base-200 h-full w-auto rounded-box">

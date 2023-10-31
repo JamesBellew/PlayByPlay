@@ -112,7 +112,7 @@ const Timeline = ({ movesArr, onButtonClick }) => {
     alert("clicked");
   };
   return (
-    <>
+    <div className="bg-base-200 p-4 rounded-md mb-2">
       {/* <h1 className="ml-4 text-xl">
         {moves.length >= 1 && (
           <div
@@ -125,7 +125,7 @@ const Timeline = ({ movesArr, onButtonClick }) => {
       <h3 className="text-left mb-4 text-xl ml-2 ">
         <p className="text-sm text-secondary ">{addMovesErrorMessage}</p>
 
-        <div>
+        <div className="">
           <button onClick={showTimeLineButtonHandler}>
             {showTimelineButtonText}
           </button>
@@ -203,7 +203,7 @@ const Timeline = ({ movesArr, onButtonClick }) => {
           }
         </ol>
       )}
-    </>
+    </div>
   );
 };
 
