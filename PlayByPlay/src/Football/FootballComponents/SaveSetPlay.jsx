@@ -6,21 +6,36 @@ const SaveSetPlay = (props) => {
   const [selectedOptionPicked,updateSelectOptionPicked] = useState(false);
 const movesArr = props.movesArr;
 const formation = props.formation;
-const name = "Pistol Offence";
-const date = "31/10/2023";
+const name = inputValue;
+// const date = today();
+
+const today = new Date();
+  const date = today.toISOString().split('T')[0];
 
 console.log(movesArr);
 console.log(formation);
 
-const saveSetPlayHandler = ()=>{
+const saveSetPlayHandler = () => {
   const combinedData = {
     name: name,
     date: date,
     firstArray: movesArr,
     secondArray: formation
   };
-  localStorage.setItem('myData', JSON.stringify(combinedData));
 
+  // Get existing data from local storage
+  let existingData = JSON.parse(localStorage.getItem('myData'));
+
+  // Check if existingData is not an array or is null, then initialize it as an empty array
+  if (!Array.isArray(existingData)) {
+    existingData = [];
+  }
+
+  // Push the new record to the existing data
+  existingData.push(combinedData);
+
+  // Save the updated data back to local storage
+  localStorage.setItem('myData', JSON.stringify(existingData));
 }
   const selectOptionClickHandler = ()=>{
     updateSelectOptionPicked(true)

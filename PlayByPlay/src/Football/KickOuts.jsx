@@ -277,7 +277,7 @@ const KickOuts = (props) => {
   const ballMoveHandler = (outerDiv, index) => {
     const positionClicked = outerDiv + "-" + (index + 1);
     setBallPosition(positionClicked);
-    alert("clicked");
+    // alert("clicked");
   };
   const sweeperSectionHandler = () => {
     //first we want to see if there is anything stored in the players array
@@ -422,7 +422,7 @@ const KickOuts = (props) => {
   };
 
   const moveToNextHandler = () => {
-    alert("clicked");
+    // alert("clicked");
     setIsOnSaveSeytPlayPage(true);
   };
   return (
