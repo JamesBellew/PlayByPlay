@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 const SaveSetPlay = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedOptionPicked,updateSelectOptionPicked] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
 const movesArr = props.movesArr;
 const formation = props.formation;
 const name = inputValue;
@@ -15,6 +16,14 @@ const today = new Date();
 console.log(movesArr);
 console.log(formation);
 
+const selectOptionClickHandler = (event)=>{
+   
+  setSelectedOption(event.target.value);
+
+updateSelectOptionPicked(true)
+
+
+}
 const saveSetPlayHandler = () => {
   const combinedData = {
     name: name,
@@ -36,10 +45,12 @@ const saveSetPlayHandler = () => {
 
   // Save the updated data back to local storage
   localStorage.setItem('myData', JSON.stringify(existingData));
+  props.dataFromSaveSetPlay(true)
+  //now we want to direct the user to a new view
+
 }
-  const selectOptionClickHandler = ()=>{
-    updateSelectOptionPicked(true)
-  }
+
+
   return (
     <>
       <div className="flex pitch flex-col rounded bg-base-200 w-4/6 mx-auto p-5 relative self-center h-auto text-center items-center">
@@ -61,13 +72,19 @@ const saveSetPlayHandler = () => {
           <option disabled selected>
             Where to Save
           </option>
-          <option >Save to this machine</option>
-          <option>Save as file</option>
+          <option value={"machine"}>Save to this machine</option>
+          <option value={"file"}>Save as file</option>
           <hr></hr>
           {/* <label>Requires Sign in</label> */}
-          <option>Account (Sign In)</option>
+          <option value={"account"}>Account (Sign In)</option>
         </select>
-
+        <br></br>
+        {selectedOption === "machine" ?   <><small className="text-yellow-300">If you save to this machine, you cannot access it anywhwere else</small>
+<small className="text-yellow-300">You can save it as a file and import it on another machine</small>
+<small className="text-yellow-300">Or you can sign in and save to your account</small>
+</>
+:""
+        }
         <div className="btn-group mt-2">
           <button onClick={saveSetPlayHandler} className={`btn rounded-md
           

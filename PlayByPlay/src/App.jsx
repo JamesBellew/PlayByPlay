@@ -11,7 +11,7 @@ import Layout from "./Layout";
 import SetPlay from "./Football/SetPlay";
 import Formations from "./Football/Formations";
 import KickOuts from "./Football/KickOuts";
-
+import ViewPlay from "./Football/ViewPlay";
 function App() {
   return (
     <>
@@ -20,6 +20,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<KickOuts />} />
             <Route path="Football" element={<Football />} />
+            <Route path="Football/ViewPlay" element={<ViewPlay />} />
             <Route path="Football/SetPlay" element={<SetPlay />} />
             <Route path="Football/Formations" element={<Formations />} />
             <Route path="Football/KickOuts" element={<KickOuts />} />

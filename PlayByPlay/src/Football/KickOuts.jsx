@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import Timeline from "./FootballComponents/Timeline";
 import SaveSetPlay from "./FootballComponents/SaveSetPlay";
 import AccountSideBar from "./FootballComponents/AccountSidebar";
+import { useNavigate } from "react-router-dom";
+
 
 
 const KickOuts = (props) => {
+  const navigate = useNavigate();
   const fb1Ref = useRef(null);
   useEffect(() => {
     if (fb1Ref.current) {
@@ -425,6 +428,21 @@ const KickOuts = (props) => {
     // alert("clicked");
     setIsOnSaveSeytPlayPage(true);
   };
+
+  const [saveSetPlayChildData, setSaveSetPlayChildData] = useState(null);
+
+  const handleDataFromChildSaveSetPlay = (data) => {
+    setSaveSetPlayChildData(data);
+    alert(data)
+    if(data){
+      //we now need to reset the view to show 
+      setIsOnSaveSeytPlayPage(false)
+      setshowTimelineState(false)
+      setPlayers([])
+      setMoves([])
+      navigate('/football/ViewPlay');
+    }
+  }
   return (
     <>
       <div className="centering-wrapper">
@@ -636,7 +654,7 @@ const KickOuts = (props) => {
               </div>
             </div>
           ) : (
-            <SaveSetPlay movesArr={Moves} formation={players}/>
+            <SaveSetPlay movesArr={Moves} formation={players} dataFromSaveSetPlay={handleDataFromChildSaveSetPlay}/>
           )}
           <div className="w-1/6 mx-auto ">
             <ul class="menu bg-base-200 h-full w-auto rounded-box">
