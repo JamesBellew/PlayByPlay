@@ -18,7 +18,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<KickOuts />} />
+            {/* <Route index element={<KickOuts />} /> */}
+            <Route index element={<ViewPlay />} />
             <Route path="Football" element={<Football />} />
             <Route path="Football/ViewPlay" element={<ViewPlay />} />
             <Route path="Football/SetPlay" element={<SetPlay />} />

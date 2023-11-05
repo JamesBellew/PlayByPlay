@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-
+import { useNavigate } from "react-router-dom";
 const AccountSideBar = (props) => {
   const [plays, setPlays] = useState([]);
+  const navigate = useNavigate();
   const [playCount, setPlayCount] = useState(plays.length);
   useEffect(() => {
     // Fetch the plays data from local storage when the component mounts
-    const storedPlays = JSON.parse(localStorage.getItem("myData"));
+    const storedPlays = JSON.parse(localStorage.getItem("setPlays"));
     if (storedPlays && Array.isArray(storedPlays)) {
       setPlays(storedPlays);
     }
     // setPlayCount(plays.length)
   }, []);
-
+  const homeBtnHandler = () => {
+    navigate("/");
+  };
   return (
     <>
       <div className="my-auto w-full h-auto rounded-md text-white align-text-bottom items-end relative p-2">
@@ -32,6 +35,16 @@ const AccountSideBar = (props) => {
             onClick={() => document.getElementById("my_modal_2").showModal()}
             class="btn grid w-auto p-4 h-auto bg-base-300 place-items-center">
             Saved Plays
+          </button>
+        </div>
+        <div class="indicator mt-4">
+          {plays.length >= 1 && (
+            <span class="indicator-item badge badge-secondary"></span>
+          )}
+          <button
+            onClick={homeBtnHandler}
+            class="btn grid w-auto p-4 h-auto bg-base-300 place-items-center">
+            Home
           </button>
         </div>
 
@@ -89,10 +102,12 @@ const AccountSideBar = (props) => {
                 </table>
               )}
             </div>
-            <div className="modal-action">
-              <form method="dialog">
+            <div className="modal-action w-full mx-auto text-center  items-center ">
+              <form method="dialog w-full">
                 {/* if there is a button in form, it will close the modal */}
-                <button className="btn">Close</button>
+                <div className="btn-group w-[100%]  mx-auto text-center">
+                  <button className="btn text-cenetr mx-auto">Close</button>
+                </div>
               </form>
             </div>
           </div>
