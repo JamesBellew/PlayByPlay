@@ -10,6 +10,9 @@ import {
   faPause,
   faForward,
   faRepeat,
+  faShareNodes,
+  faPenToSquare,
+  faList,
 } from "@fortawesome/free-solid-svg-icons";
 
 const ViewPlay = (props) => {
@@ -63,6 +66,12 @@ const ViewPlay = (props) => {
   };
   const createPlayBtnHandler = () => {
     navigate("/Football/KickOuts");
+  };
+  const viewPlaysBtnHandler = () => {
+    setSetplayIsChosen(false);
+    // setPlaySelected([]);
+    // setPlayTimelineState(false);
+    // setPlayers([]);
   };
   console.log(playSelected);
   const numDivs = 11;
@@ -197,11 +206,19 @@ const ViewPlay = (props) => {
             </div>
 
             <div className="bg-base-200 flex items-center justify-center">
-              <ul className="steps">
-                <li className="step step-primary">Move 1</li>
-                <li className="step step-primary">Move 2</li>
-                <li className="step">Move 3</li>
-              </ul>
+              <div className="btn-group ">
+                <button
+                  onClick={viewPlaysBtnHandler}
+                  className="btn btn-primary mx-1">
+                  Plays <FontAwesomeIcon icon={faList} />
+                </button>
+                <button className="btn btn-primary">
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                </button>
+                <button className="btn btn-secondary mx-1">
+                  <FontAwesomeIcon icon={faShareNodes} />
+                </button>
+              </div>
             </div>
           </>
         )}
