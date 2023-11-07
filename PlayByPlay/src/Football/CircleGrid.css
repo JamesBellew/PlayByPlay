@@ -1,0 +1,19 @@
+.circle-grid {
+    position: relative;
+    width: fit-content;
+  }
+  
+  .circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: gray;
+    margin: 5px;
+    display: inline-block;
+    position: absolute; /* Circles need an absolute position for the translate to work */
+  }
+  
+  .active {
+    background-color: blue;
+  }
+  

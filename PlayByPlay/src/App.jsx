@@ -12,6 +12,8 @@ import SetPlay from "./Football/SetPlay";
 import Formations from "./Football/Formations";
 import KickOuts from "./Football/KickOuts";
 import ViewPlay from "./Football/ViewPlay";
+import Test from "./Football/Test";
+
 function App() {
   return (
     <>
@@ -25,6 +27,7 @@ function App() {
             <Route path="Football/SetPlay" element={<SetPlay />} />
             <Route path="Football/Formations" element={<Formations />} />
             <Route path="Football/KickOuts" element={<KickOuts />} />
+            <Route path="Football/Test" element={<Test />} />
           </Route>
         </Routes>
       </BrowserRouter>

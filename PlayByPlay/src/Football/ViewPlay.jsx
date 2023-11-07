@@ -4,6 +4,7 @@ import SaveSetPlay from "./FootballComponents/SaveSetPlay";
 import AccountSideBar from "./FootballComponents/AccountSidebar";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {
   faPlay,
@@ -14,8 +15,21 @@ import {
   faPenToSquare,
   faList,
 } from "@fortawesome/free-solid-svg-icons";
+import Line from "./Line";
 
 const ViewPlay = (props) => {
+  const refs = useRef({});
+
+  const [activePosition, setActivePosition] = useState("mf-5");
+  const [targetPosition, setTargetPosition] = useState("fb-2");
+
+  useEffect(() => {
+    // This will log the currentDiv after the component mounts and the ref is set
+    const currentDiv = refs.current[activePosition];
+    const targetDiv = refs.current[targetPosition];
+    console.log(targetDiv);
+  }, []);
+
   const [Moves, setMoves] = useState([]);
   const navigate = useNavigate();
   const [showTimelineState, setshowTimelineState] = useState(false);
@@ -55,10 +69,38 @@ const ViewPlay = (props) => {
     setPlayers(play.secondArray);
     setMove2(createNewFormationFromMoves(play.secondArray, play.firstArray));
   };
+
+  const [xTarget, setXTarget] = useState(0);
+  console.log("X Target-", xTarget);
+  const [yTarget, setYTarget] = useState(0);
+
+  const [xCurrent, setXCurrent] = useState(0);
+  console.log("X Current-", xCurrent);
+  const [yCurrent, setYCurrent] = useState(0);
   const btnPlayHandler = () => {
     // console.log("cliked");
     setPlayTimelineState(true);
+
+    const currentDiv = refs.current[activePosition];
+    const targetDiv = refs.current[targetPosition];
+    console.log("in here function");
+    const currentRect = currentDiv.getBoundingClientRect();
+    const targetRect = targetDiv.getBoundingClientRect();
+    setXTarget(targetRect.x);
+    setXCurrent(currentRect.x);
+    setYTarget(targetRect.y);
+    setYCurrent(currentRect.y);
     setPlayers(move2);
+    // activePosition.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    // const currentRect = currentDiv.getBoundingClientRect();
+    // const targetRect = targetDiv.getBoundingClientRect();
+
+    // const translateX = targetRect.left - currentRect.left;
+    // const translateY = targetRect.top - currentRect.top;
+    // currentDiv.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    // currentDiv.style.transition = "transform 0.5s ease-in-out";
+
+    // setPlayers(move2);
   };
   const btnResetHandler = () => {
     setPlayTimelineState(false);
@@ -105,6 +147,7 @@ const ViewPlay = (props) => {
     <>
       {[...Array(count).keys()].map((index) => {
         const divposition = outerDivName + "-" + (index + 1);
+        // console.log(divposition);
         //getting the postion of the divs
 
         const positionIsUsed = players.some(
@@ -123,12 +166,18 @@ const ViewPlay = (props) => {
         // = players.length === 14 && !positionIsUsed;
 
         return (
-          <div className="group my-auto">
+          <div className={`group my-auto `}>
             <div
               key={index}
-              ref={(el) => (divRefs.current[divposition] = el)}
-              className={`h-10 w-10 mx-auto my-auto text-black text-center cursor-auto
-                ${positionIsUsed ? "bg-white positionUsed " : "bg-primary/0"}
+              // ref={(el) => (divRefs.current[divposition] = el)}
+              ref={(el) => (refs.current[divposition] = el)}
+              id={`${divposition}`}
+              className={`${divposition} relative h-10 w-10 mx-auto my-auto text-black text-center cursor-auto
+                ${
+                  positionIsUsed
+                    ? "bg-white positionUsed z-50 "
+                    : "bg-primary/0"
+                }
                 ${
                   startingFifteenEditingState
                     ? "  transition-all bg-primary"
@@ -157,9 +206,21 @@ const ViewPlay = (props) => {
       })}
     </>
   );
-
+  const currentX = xCurrent;
+  const targetX = xTarget;
+  const currentY = yCurrent; // Example Y-coordinate
+  const targetY = yTarget; // Example Y-coordinate
   return (
     <>
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        <Line
+          currentX={currentX - 15}
+          targetX={targetX - 15}
+          currentY={currentY - 10}
+          targetY={targetY - 10}
+        />
+        {/* other divs */}
+      </div>
       <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-6  h-[90vh] top-[5vh] ">
         {setPlayIsChosen && (
           <>
@@ -303,7 +364,7 @@ const ViewPlay = (props) => {
                 <h1 className="mb-2 text-primary font-medium text-xl">
                   Please select a set play
                 </h1>
-                <table class="table  w-auto bg-base-300">
+                <table class="table shadow-xl rounded-lg  overflow-auto  w-auto bg-base-300">
                   {/* head */}
                   <thead>
                     <tr>
@@ -313,7 +374,7 @@ const ViewPlay = (props) => {
                       <th>Moves</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="">
                     {/* dynamic rows */}
                     {plays && plays.length > 0 ? (
                       plays.map((play, index) => (

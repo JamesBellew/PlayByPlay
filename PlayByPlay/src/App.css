@@ -12,7 +12,10 @@
   cursor: pointer;
   z-index: 100;
 }
-
+.fb-1 {
+  position: relative; /* Required for transform to work as expected */
+  /* Other styles here */
+}
 .jersey{
   background: linear-gradient(to right, blue 50%, yellow 50%)
 }
