@@ -11,7 +11,7 @@ const Line = ({ currentX, targetX, currentY, targetY }) => {
 
   // Styles for the line
   const style = {
-    position: "absolute",
+    position: "relative",
     left: `${currentX}px`, // This is the starting x position of the line
     top: `${currentY}px`, // This is the starting y position of the line
     zIndex: 50,
