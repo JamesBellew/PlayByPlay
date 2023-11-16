@@ -451,7 +451,7 @@ const KickOuts = (props) => {
             <h3 className="font-bold text-lg">Hey</h3>
             <p className="py-4">
               You have players on the pitch in formation. To swicth formations,
-              you will need to remove all players from the pitch
+              you will need to remove all players from the pitch....
             </p>
             <div className="modal-action">
               <form method="dialog">
