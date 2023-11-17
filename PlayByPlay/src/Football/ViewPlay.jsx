@@ -20,19 +20,19 @@ import Line from "./Line";
 const ViewPlay = (props) => {
   const refs = useRef({});
 
-  const [activePosition, setActivePosition] = useState("mf-5");
-  const [targetPosition, setTargetPosition] = useState("fb-2");
+  const [activePosition, setActivePosition] = useState("fb-1");
+  const [targetPosition, setTargetPosition] = useState("fb-1");
 
   useEffect(() => {
     // This will log the currentDiv after the component mounts and the ref is set
     const currentDiv = refs.current[activePosition];
     const targetDiv = refs.current[targetPosition];
-    console.log(targetDiv);
   }, []);
 
   const [Moves, setMoves] = useState([]);
   const navigate = useNavigate();
   const [showTimelineState, setshowTimelineState] = useState(false);
+  const [showMoveLines, setShowMoveLines] = useState(false);
   const [startingFifteenEditingState, updatestartingFifteenEditingState] =
     useState(true);
   const [players, setPlayers] = useState([
@@ -62,28 +62,22 @@ const ViewPlay = (props) => {
   const [ballPosition, setBallPosition] = useState("gk-1");
   const [playSelected, setPlaySelected] = useState({});
   const setPlayIsPickedHandler = (play) => {
-    console.log(play);
     setPlaySelected(play);
     setSetplayIsChosen(true);
-    // setPlayers(play.secondArray);
+    getLineCoordinance("mf-5", "fb-4");
     setPlayers(play.secondArray);
     setMove2(createNewFormationFromMoves(play.secondArray, play.firstArray));
   };
 
   const [xTarget, setXTarget] = useState(0);
-  console.log("X Target-", xTarget);
   const [yTarget, setYTarget] = useState(0);
-
   const [xCurrent, setXCurrent] = useState(0);
-  console.log("X Current-", xCurrent);
   const [yCurrent, setYCurrent] = useState(0);
-  const btnPlayHandler = () => {
-    // console.log("cliked");
-    setPlayTimelineState(true);
 
+  const btnPlayHandler = () => {
+    setPlayTimelineState(true);
     const currentDiv = refs.current[activePosition];
     const targetDiv = refs.current[targetPosition];
-    console.log("in here function");
     const currentRect = currentDiv.getBoundingClientRect();
     const targetRect = targetDiv.getBoundingClientRect();
     setXTarget(targetRect.x);
@@ -91,16 +85,11 @@ const ViewPlay = (props) => {
     setYTarget(targetRect.y);
     setYCurrent(currentRect.y);
     setPlayers(move2);
-    // activePosition.style.transform = `translate(${translateX}px, ${translateY}px)`;
-    // const currentRect = currentDiv.getBoundingClientRect();
-    // const targetRect = targetDiv.getBoundingClientRect();
+  };
 
-    // const translateX = targetRect.left - currentRect.left;
-    // const translateY = targetRect.top - currentRect.top;
-    // currentDiv.style.transform = `translate(${translateX}px, ${translateY}px)`;
-    // currentDiv.style.transition = "transform 0.5s ease-in-out";
-
-    // setPlayers(move2);
+  const getLineCoordinance = (currentDiv, targetDiv) => {
+    setActivePosition("mf-2");
+    setTargetPosition("fb-2");
   };
   const btnResetHandler = () => {
     setPlayTimelineState(false);
@@ -111,11 +100,8 @@ const ViewPlay = (props) => {
   };
   const viewPlaysBtnHandler = () => {
     setSetplayIsChosen(false);
-    // setPlaySelected([]);
-    // setPlayTimelineState(false);
-    // setPlayers([]);
   };
-  console.log(playSelected);
+  // console.log(playSelected);
   const numDivs = 11;
   useEffect(() => {
     // Fetch the plays data from local storage when the component mounts
@@ -216,10 +202,10 @@ const ViewPlay = (props) => {
     <>
       <div style={{ position: "relative", width: "100%", height: "100%" }}>
         <Line
-          currentX={currentX - 15}
-          targetX={targetX - 15}
-          currentY={currentY - 10}
-          targetY={targetY - 10}
+          currentX={currentX}
+          targetX={targetX}
+          currentY={currentY}
+          targetY={targetY}
         />
         {/* other divs */}
       </div>
