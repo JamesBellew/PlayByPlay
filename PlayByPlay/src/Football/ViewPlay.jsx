@@ -21,7 +21,7 @@ const ViewPlay = (props) => {
   const refs = useRef({});
 
   const [activePosition, setActivePosition] = useState("fb-1");
-  const [targetPosition, setTargetPosition] = useState("fb-1");
+  const [targetPosition, setTargetPosition] = useState("mf-3");
 
   useEffect(() => {
     // This will log the currentDiv after the component mounts and the ref is set
@@ -65,10 +65,24 @@ const ViewPlay = (props) => {
     setPlaySelected(play);
     setSetplayIsChosen(true);
     getLineCoordinance("mf-5", "fb-4");
+    console.log(play);
+    //set the target and current coordinants
+    setTargetPosition(play.firstArray[0].newPosition);
+    setActivePosition("mf-3");
+    setActivePosition(
+      getCurrentPositionOnTargetValue(
+        play.firstArray[0].playerNumber,
+        play.secondArray
+      )
+    );
+
     setPlayers(play.secondArray);
     setMove2(createNewFormationFromMoves(play.secondArray, play.firstArray));
   };
-
+  const getCurrentPositionOnTargetValue = (playerNumber, players) => {
+    const player = players.find((p) => p.playerNumber === playerNumber);
+    return player ? player.pitchPosition : null;
+  };
   const [xTarget, setXTarget] = useState(0);
   const [yTarget, setYTarget] = useState(0);
   const [xCurrent, setXCurrent] = useState(0);
@@ -84,13 +98,14 @@ const ViewPlay = (props) => {
     setXCurrent(currentRect.x);
     setYTarget(targetRect.y);
     setYCurrent(currentRect.y);
-    setPlayers(move2);
+    //I want delay of 2 seconds here before stplayers() is called
+    // setPlayers(move2);
+    setTimeout(() => {
+      setPlayers(move2);
+    }, 2000);
   };
 
-  const getLineCoordinance = (currentDiv, targetDiv) => {
-    setActivePosition("mf-2");
-    setTargetPosition("fb-2");
-  };
+  const getLineCoordinance = (currentDiv, targetDiv) => {};
   const btnResetHandler = () => {
     setPlayTimelineState(false);
     setPlayers(playSelected.secondArray);
@@ -100,6 +115,8 @@ const ViewPlay = (props) => {
   };
   const viewPlaysBtnHandler = () => {
     setSetplayIsChosen(false);
+    // setActivePosition([]);
+    // setTargetPosition([]);
   };
   // console.log(playSelected);
   const numDivs = 11;
@@ -200,15 +217,17 @@ const ViewPlay = (props) => {
   //I want to now be able to print multiple lines
   return (
     <>
-      <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        <Line
-          currentX={currentX}
-          targetX={targetX}
-          currentY={currentY}
-          targetY={targetY}
-        />
-        {/* other divs */}
-      </div>
+      {setPlayIsChosen && (
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <Line
+            currentX={currentX}
+            targetX={targetX}
+            currentY={currentY}
+            targetY={targetY}
+          />
+          {/* other divs */}
+        </div>
+      )}
       <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-6  h-[90vh] top-[5vh] ">
         {setPlayIsChosen && (
           <>
