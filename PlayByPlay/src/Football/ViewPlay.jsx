@@ -61,6 +61,8 @@ const ViewPlay = (props) => {
   const [setPlayIsChosen, setSetplayIsChosen] = useState(false);
   const [ballPosition, setBallPosition] = useState("gk-1");
   const [playSelected, setPlaySelected] = useState({});
+  const [lineData, setLineData] = useState([]);
+  //A play is picked
   const setPlayIsPickedHandler = (play) => {
     setPlaySelected(play);
     setSetplayIsChosen(true);
@@ -75,9 +77,21 @@ const ViewPlay = (props) => {
         play.secondArray
       )
     );
-
     setPlayers(play.secondArray);
     setMove2(createNewFormationFromMoves(play.secondArray, play.firstArray));
+    const newLinesData = play.firstArray.map((move) => {
+      const currentPosition = getCurrentPositionOnTargetValue(
+        move.playerNumber,
+        play.secondArray
+      );
+      return {
+        current: currentPosition,
+        target: move.newPosition,
+      };
+    });
+    setLineData(newLinesData);
+
+    calculateLineCoordinates(exampleLine);
   };
   const getCurrentPositionOnTargetValue = (playerNumber, players) => {
     const player = players.find((p) => p.playerNumber === playerNumber);
@@ -100,6 +114,7 @@ const ViewPlay = (props) => {
     setYCurrent(currentRect.y);
     //I want delay of 2 seconds here before stplayers() is called
     // setPlayers(move2);
+    setShowMoveLines(true);
     setTimeout(() => {
       setPlayers(move2);
     }, 2000);
@@ -109,6 +124,7 @@ const ViewPlay = (props) => {
   const btnResetHandler = () => {
     setPlayTimelineState(false);
     setPlayers(playSelected.secondArray);
+    setShowMoveLines(false);
   };
   const createPlayBtnHandler = () => {
     navigate("/Football/KickOuts");
@@ -213,11 +229,33 @@ const ViewPlay = (props) => {
   const targetX = xTarget;
   const currentY = yCurrent; // Example Y-coordinate
   const targetY = yTarget; // Example Y-coordinate
-
   //I want to now be able to print multiple lines
+
+  const calculateLineCoordinates = (line) => {
+    console.log("in the calculation function");
+
+    const currentDiv = refs.current[line.current];
+    const targetDiv = refs.current[line.target];
+    const currentRect = currentDiv.getBoundingClientRect();
+    const targetRect = targetDiv.getBoundingClientRect();
+    console.log(currentRect.x);
+    console.log(line.target);
+    return {
+      currentX: currentRect.x,
+      currentY: currentRect.y,
+      targetX: targetRect.x,
+      targetY: targetRect.y,
+    };
+  };
+
+  const exampleLine = {
+    current: "fb-1", // This should match a key in refs.current
+    target: "mf-3", // This should also match a key in refs.current
+  };
+  console.log(lineData);
   return (
     <>
-      {setPlayIsChosen && (
+      {showMoveLines && setPlayIsChosen && (
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <Line
             currentX={currentX}
