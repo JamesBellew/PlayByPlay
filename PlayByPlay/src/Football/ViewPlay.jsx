@@ -62,6 +62,17 @@ const ViewPlay = (props) => {
   const [ballPosition, setBallPosition] = useState("gk-1");
   const [playSelected, setPlaySelected] = useState({});
   const [lineData, setLineData] = useState([]);
+  const [lineCoordinates, setLineCoordinates] = useState([]);
+
+  useEffect(() => {
+    // Ensure that we have line data to calculate coordinates for
+    if (lineData.length > 0) {
+      // Calculate all line coordinates
+      const newLineCoordinates = calculateAllLineCoordinates(lineData);
+      // Update the state with the new coordinates
+      setLineCoordinates(newLineCoordinates);
+    }
+  }, [lineData]); // Dependency array ensures this runs whenever lineData changes
   //A play is picked
   const setPlayIsPickedHandler = (play) => {
     setPlaySelected(play);
@@ -90,9 +101,11 @@ const ViewPlay = (props) => {
       };
     });
     setLineData(newLinesData);
-
-    calculateLineCoordinates(exampleLine);
+    btnResetHandler();
+    setPlayers(play.secondArray);
+    // calculateLineCoordinates(exampleLine);
   };
+  //end of setplay is selected brackats
   const getCurrentPositionOnTargetValue = (playerNumber, players) => {
     const player = players.find((p) => p.playerNumber === playerNumber);
     return player ? player.pitchPosition : null;
@@ -231,39 +244,75 @@ const ViewPlay = (props) => {
   const targetY = yTarget; // Example Y-coordinate
   //I want to now be able to print multiple lines
 
-  const calculateLineCoordinates = (line) => {
-    console.log("in the calculation function");
+  // const calculateLineCoordinates = (line) => {
+  //   console.log("in the calculation function");
 
-    const currentDiv = refs.current[line.current];
-    const targetDiv = refs.current[line.target];
-    const currentRect = currentDiv.getBoundingClientRect();
-    const targetRect = targetDiv.getBoundingClientRect();
-    console.log(currentRect.x);
-    console.log(line.target);
-    return {
-      currentX: currentRect.x,
-      currentY: currentRect.y,
-      targetX: targetRect.x,
-      targetY: targetRect.y,
-    };
+  //   const currentDiv = refs.current[line.current];
+  //   const targetDiv = refs.current[line.target];
+  //   const currentRect = currentDiv.getBoundingClientRect();
+  //   const targetRect = targetDiv.getBoundingClientRect();
+  //   console.log(currentRect.x);
+  //   console.log(line.target);
+  //   return {
+  //     currentX: currentRect.x,
+  //     currentY: currentRect.y,
+  //     targetX: targetRect.x,
+  //     targetY: targetRect.y,
+  //   };
+  // };
+  const calculateAllLineCoordinates = (linesArray) => {
+    console.log("Calculating coordinates for all lines");
+    // console.log(linesArray);
+    return linesArray.map((line) => {
+      const currentDiv = refs.current[line.current];
+      const targetDiv = refs.current[line.target];
+
+      // Make sure the currentDiv and targetDiv are not null before trying to get their bounding rectangles
+      if (!currentDiv || !targetDiv) {
+        console.error(
+          "One of the elements is not yet available in the refs:",
+          line
+        );
+        return { currentX: 0, currentY: 0, targetX: 0, targetY: 0 };
+      }
+
+      const currentRect = currentDiv.getBoundingClientRect();
+      const targetRect = targetDiv.getBoundingClientRect();
+
+      console.log(
+        `Coordinates for line from ${line.current} to ${line.target}:`,
+        currentRect.x,
+        targetRect.x
+      );
+
+      return {
+        currentX: currentRect.x + currentRect.width / 2, // assuming center of the div
+        currentY: currentRect.y + currentRect.height / 2, // assuming center of the div
+        targetX: targetRect.x + targetRect.width / 2, // assuming center of the div
+        targetY: targetRect.y + targetRect.height / 2, // assuming center of the div
+      };
+    });
   };
 
   const exampleLine = {
     current: "fb-1", // This should match a key in refs.current
     target: "mf-3", // This should also match a key in refs.current
   };
-  console.log(lineData);
+  // console.log(lineData);
+  console.log(lineCoordinates);
   return (
     <>
       {showMoveLines && setPlayIsChosen && (
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          <Line
-            currentX={currentX}
-            targetX={targetX}
-            currentY={currentY}
-            targetY={targetY}
-          />
-          {/* other divs */}
+          {lineCoordinates.map((coords, index) => (
+            <Line
+              key={index}
+              currentX={coords.currentX}
+              targetX={coords.targetX}
+              currentY={coords.currentY}
+              targetY={coords.targetY}
+            />
+          ))}
         </div>
       )}
       <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-6  h-[90vh] top-[5vh] ">
@@ -409,17 +458,17 @@ const ViewPlay = (props) => {
                 <h1 className="mb-2 text-primary font-medium text-xl">
                   Please select a set play
                 </h1>
-                <table class="table shadow-xl rounded-lg  overflow-auto  w-auto bg-base-300">
+                <table class=" shadow-xl  h-[20vh] rounded-lg  w-auto bg-base-300">
                   {/* head */}
-                  <thead>
-                    <tr>
+                  <thead className="">
+                    <tr className="p-2">
                       <th>#</th>
                       <th>Name</th>
                       <th>Date</th>
                       <th>Moves</th>
                     </tr>
                   </thead>
-                  <tbody className="">
+                  <tbody className="p-2">
                     {/* dynamic rows */}
                     {plays && plays.length > 0 ? (
                       plays.map((play, index) => (
@@ -430,7 +479,9 @@ const ViewPlay = (props) => {
                           <th>{index + 1}</th>
                           <td>{play?.name ?? "N/A"}</td>
                           <td>{play?.date ?? "N/A"}</td>
-                          <td>{play?.firstArray?.length ?? 0}</td>
+                          <td className="pb-2">
+                            {play?.firstArray?.length ?? 0}
+                          </td>
                         </tr>
                       ))
                     ) : (
