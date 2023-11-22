@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Line = ({ currentX, targetX, currentY, targetY }) => {
+const Line = ({ currentX, targetX, currentY, targetY, playerNumber }) => {
   // Calculate the true length of the line
   const length = Math.sqrt(
     Math.pow(targetX - currentX, 2) + Math.pow(targetY - currentY, 2)
@@ -17,7 +17,8 @@ const Line = ({ currentX, targetX, currentY, targetY }) => {
     "#fff",
   ];
   const lineColor = colors[Math.floor(Math.random() * colors.length)];
-
+  const [showHoverPlayerBubbleState, setShowHoverPlayerBubbleState] =
+    useState(false);
   // Calculate the angle of the line
   const angle =
     Math.atan2(targetY - currentY, targetX - currentX) * (180 / Math.PI);
@@ -31,6 +32,7 @@ const Line = ({ currentX, targetX, currentY, targetY }) => {
   }, []);
   const circleStyle = {
     position: "fixed",
+
     left: `${currentX - 5}px`, // Half the width and height to center the circle on the line's starting point
     top: `${currentY - 5}px`,
     width: "15px", // Width of the circle
@@ -42,6 +44,7 @@ const Line = ({ currentX, targetX, currentY, targetY }) => {
   // Styles for the line
   const style = {
     position: "fixed",
+
     left: `${currentX}px`, // This is the starting x position of the line
     top: `${currentY}px`, // This is the starting y position of the line
     zIndex: 50,
@@ -53,11 +56,24 @@ const Line = ({ currentX, targetX, currentY, targetY }) => {
     transformOrigin: "0 0", // Ensures the div rotates around the starting point
     transition: `width 2s ease-out`, // Animate the width over 2 seconds
   };
-
+  const circleDivHoverHandler = () => {
+    // alert("hovered");
+    setShowHoverPlayerBubbleState(!showHoverPlayerBubbleState);
+    console.log("hovered over the div circle");
+  };
   return (
     <>
       <div style={style} />
-      <div style={circleStyle} />
+      <div
+        style={circleStyle}
+        className="hover:bg-red-600 cursor-pointer"
+        onMouseOver={circleDivHoverHandler}>
+        {showHoverPlayerBubbleState && (
+          <div className="hover-number-box z-auto px-2 py-1 w-auto text-center mx-auto bg-primary bottom-5 left-2 absolute rounded-full">
+            {playerNumber}
+          </div>
+        )}
+      </div>
       {/* This is the circle at the starting point */}
     </>
   );

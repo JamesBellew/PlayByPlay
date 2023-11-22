@@ -311,6 +311,7 @@ const ViewPlay = (props) => {
               targetX={coords.targetX}
               currentY={coords.currentY}
               targetY={coords.targetY}
+              playerNumber={11}
             />
           ))}
         </div>
@@ -381,13 +382,15 @@ const ViewPlay = (props) => {
         <div className="col-span-3  bg-base-200 rounded-md row-span-5 ...">
           {setPlayIsChosen ? (
             <div
-              className="flex pitch border flex-col
+              className="flex pitch border border-white/20 flex-col
            rounded bg-base-200 w-4/6 mx-auto mt-5 relative self-center
              h-[70vh]">
-              <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white z-50"></div>
-              <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white z-50"></div>
-              <div className="endLine absolute top-[50%]  w-full h-[1px] bg-white z-50"></div>
-              <div className="endLine absolute top-[90%]  w-full h-[1px] bg-white z-50"></div>
+              <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white/20 z-50"></div>
+              <div className="endLine absolute top-[30%]  w-full h-[1px] bg-white/20 z-50"></div>
+              <div className="endLine absolute top-[50%]  w-full h-[1px] bg-white/20 z-50"></div>
+              <div className="endLine absolute top-[70%]  w-full h-[1px] bg-white/20 z-50"></div>
+              {/* <div className="endLine absolute top-[20%]  w-full h-[1px] bg-white/20 z-50"></div> */}
+              <div className="endLine absolute top-[90%]  w-full h-[1px] bg-white/20 z-50"></div>
               <div className="flex-grow flex flex-col">
                 <div
                   className={`flex-grow mx-auto   grid ${
