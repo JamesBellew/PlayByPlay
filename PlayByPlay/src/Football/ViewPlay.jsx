@@ -381,9 +381,13 @@ const ViewPlay = (props) => {
         <div className="col-span-3  bg-base-200 rounded-md row-span-5 ...">
           {setPlayIsChosen ? (
             <div
-              className="flex pitch flex-col
-           rounded bg-base-200 w-4/6 mx-auto p-5 relative self-center
+              className="flex pitch border flex-col
+           rounded bg-base-200 w-4/6 mx-auto mt-5 relative self-center
              h-[70vh]">
+              <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white z-50"></div>
+              <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white z-50"></div>
+              <div className="endLine absolute top-[50%]  w-full h-[1px] bg-white z-50"></div>
+              <div className="endLine absolute top-[90%]  w-full h-[1px] bg-white z-50"></div>
               <div className="flex-grow flex flex-col">
                 <div
                   className={`flex-grow mx-auto   grid ${

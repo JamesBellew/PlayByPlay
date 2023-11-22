@@ -5,6 +5,18 @@ const Line = ({ currentX, targetX, currentY, targetY }) => {
   const length = Math.sqrt(
     Math.pow(targetX - currentX, 2) + Math.pow(targetY - currentY, 2)
   );
+  const colors = [
+    "#5616C5",
+    "#940B92",
+    "#E95793",
+    "#610C9F",
+    "#DA0C81",
+    "#E95793",
+    "#fff",
+    "#fff",
+    "#fff",
+  ];
+  const lineColor = colors[Math.floor(Math.random() * colors.length)];
 
   // Calculate the angle of the line
   const angle =
@@ -17,7 +29,16 @@ const Line = ({ currentX, targetX, currentY, targetY }) => {
   useEffect(() => {
     setIsAnimating(true);
   }, []);
-
+  const circleStyle = {
+    position: "fixed",
+    left: `${currentX - 5}px`, // Half the width and height to center the circle on the line's starting point
+    top: `${currentY - 5}px`,
+    width: "15px", // Width of the circle
+    height: "15px", // Height of the circle
+    backgroundColor: "#6419E6", // Color of the circle
+    borderRadius: "50%", // Makes the div a circle
+    zIndex: 10, // Ensure the circle is above the line
+  };
   // Styles for the line
   const style = {
     position: "fixed",
@@ -33,7 +54,13 @@ const Line = ({ currentX, targetX, currentY, targetY }) => {
     transition: `width 2s ease-out`, // Animate the width over 2 seconds
   };
 
-  return <div style={style} />;
+  return (
+    <>
+      <div style={style} />
+      <div style={circleStyle} />
+      {/* This is the circle at the starting point */}
+    </>
+  );
 };
 
 export default Line;
