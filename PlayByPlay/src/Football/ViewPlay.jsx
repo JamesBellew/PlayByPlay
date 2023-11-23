@@ -3,6 +3,7 @@ import Timeline from "./FootballComponents/Timeline";
 import SaveSetPlay from "./FootballComponents/SaveSetPlay";
 import AccountSideBar from "./FootballComponents/AccountSidebar";
 import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -19,7 +20,7 @@ import Line from "./Line";
 
 const ViewPlay = (props) => {
   const refs = useRef({});
-
+  let { playId } = useParams();
   const [activePosition, setActivePosition] = useState("fb-1");
   const [targetPosition, setTargetPosition] = useState("mf-3");
 
@@ -63,7 +64,19 @@ const ViewPlay = (props) => {
   const [playSelected, setPlaySelected] = useState({});
   const [lineData, setLineData] = useState([]);
   const [lineCoordinates, setLineCoordinates] = useState([]);
+  const { playIdUsed } = useParams();
 
+  useEffect(() => {
+    if (playIdUsed) {
+      // Logic to load the play by its ID
+      alert(playIdUsed)
+      setPlayIsPickedHandler(findPlayByName(playIdUsed));
+    }
+  }, [playId]);
+
+  const findPlayByName = (playName) => {
+    return plays.find(play => play.name === playName);
+  };
   useEffect(() => {
     // Ensure that we have line data to calculate coordinates for
     if (lineData.length > 0) {
@@ -75,6 +88,7 @@ const ViewPlay = (props) => {
   }, [lineData]); // Dependency array ensures this runs whenever lineData changes
   //A play is picked
   const setPlayIsPickedHandler = (play) => {
+    navigate(`/football/ViewPlay/local/${play.name}`);
     setPlaySelected(play);
     setSetplayIsChosen(true);
     getLineCoordinance("mf-5", "fb-4");
@@ -465,7 +479,7 @@ const ViewPlay = (props) => {
                 <h1 className="mb-2 text-primary font-medium text-xl">
                   Please select a set play
                 </h1>
-                <table class=" shadow-xl  h-[20vh] rounded-lg  w-auto bg-base-300">
+                <table class="table shadow-xl  h-[20vh] rounded-lg  w-auto bg-base-300">
                   {/* head */}
                   <thead className="">
                     <tr className="p-2">

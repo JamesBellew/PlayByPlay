@@ -24,6 +24,7 @@ function App() {
             <Route index element={<ViewPlay />} />
             <Route path="Football" element={<Football />} />
             <Route path="Football/ViewPlay" element={<ViewPlay />} />
+            <Route path="/football/ViewPlay/local/:playId" element={<ViewPlay />} />
             <Route path="Football/SetPlay" element={<SetPlay />} />
             <Route path="Football/Formations" element={<Formations />} />
             <Route path="Football/KickOuts" element={<KickOuts />} />
