@@ -3,7 +3,7 @@ import Timeline from "./FootballComponents/Timeline";
 import SaveSetPlay from "./FootballComponents/SaveSetPlay";
 import AccountSideBar from "./FootballComponents/AccountSidebar";
 import { useNavigate } from "react-router-dom";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -15,6 +15,8 @@ import {
   faShareNodes,
   faPenToSquare,
   faList,
+  faXmark,
+  faRemove,
 } from "@fortawesome/free-solid-svg-icons";
 import Line from "./Line";
 
@@ -36,23 +38,7 @@ const ViewPlay = (props) => {
   const [showMoveLines, setShowMoveLines] = useState(false);
   const [startingFifteenEditingState, updatestartingFifteenEditingState] =
     useState(true);
-  const [players, setPlayers] = useState([
-    // { playerNumber: 1, pitchPosition: "gk-1" },
-    // { playerNumber: 2, pitchPosition: "fb-3" },
-    // { playerNumber: 3, pitchPosition: "fb-6" },
-    // { playerNumber: 4, pitchPosition: "fb-9" },
-    // { playerNumber: 5, pitchPosition: "hb-3" },
-    // { playerNumber: 6, pitchPosition: "hb-6" },
-    // { playerNumber: 7, pitchPosition: "hb-9" },
-    // { playerNumber: 8, pitchPosition: "mf-5" },
-    // { playerNumber: 9, pitchPosition: "mf-7" },
-    // { playerNumber: 10, pitchPosition: "mf-hf-3" },
-    // { playerNumber: 11, pitchPosition: "mf-hf-6" },
-    // { playerNumber: 12, pitchPosition: "mf-hf-9" },
-    // { playerNumber: 13, pitchPosition: "ff-3" },
-    // { playerNumber: 14, pitchPosition: "ff-6" },
-    // { playerNumber: 15, pitchPosition: "ff-9" },
-  ]);
+  const [players, setPlayers] = useState([]);
   const [setplayName, setSetplayName] = useState("");
   const [setplayDate, setSetplayDate] = useState("");
   //false is not play, true is played
@@ -66,16 +52,17 @@ const ViewPlay = (props) => {
   const [lineCoordinates, setLineCoordinates] = useState([]);
   const { playIdUsed } = useParams();
 
-  useEffect(() => {
-    if (playIdUsed) {
-      // Logic to load the play by its ID
-      alert(playIdUsed)
-      setPlayIsPickedHandler(findPlayByName(playIdUsed));
-    }
-  }, [playId]);
+  // useEffect(() => {
+  //   console.log("in this header funmction");
+  //   if (playIdUsed) {
+  //     // Logic to load the play by its ID
+  //     alert(playIdUsed);
+  //     setPlayIsPickedHandler(findPlayByName(playIdUsed));
+  //   }
+  // }, [playIdUsed]);
 
   const findPlayByName = (playName) => {
-    return plays.find(play => play.name === playName);
+    return plays.find((play) => play.name === playName);
   };
   useEffect(() => {
     // Ensure that we have line data to calculate coordinates for
@@ -110,6 +97,7 @@ const ViewPlay = (props) => {
         play.secondArray
       );
       return {
+        playerNumber: 101,
         current: currentPosition,
         target: move.newPosition,
       };
@@ -275,7 +263,8 @@ const ViewPlay = (props) => {
   //   };
   // };
   const calculateAllLineCoordinates = (linesArray) => {
-    console.log("Calculating coordinates for all lines");
+    console.log("Calculating coordinates for all lines ya dig");
+    console.log(linesArray);
     // console.log(linesArray);
     return linesArray.map((line) => {
       const currentDiv = refs.current[line.current];
@@ -304,6 +293,7 @@ const ViewPlay = (props) => {
         currentY: currentRect.y + currentRect.height / 2, // assuming center of the div
         targetX: targetRect.x + targetRect.width / 2, // assuming center of the div
         targetY: targetRect.y + targetRect.height / 2, // assuming center of the div
+        playerNumber: line.playerNumber,
       };
     });
   };
@@ -313,6 +303,11 @@ const ViewPlay = (props) => {
     target: "mf-3", // This should also match a key in refs.current
   };
   // console.log(lineData);
+
+  const playRemoveHandler = (playselected) => {
+    console.log("in the delete handler");
+    console.log(playselected);
+  };
   console.log(lineCoordinates);
   return (
     <>
@@ -325,7 +320,7 @@ const ViewPlay = (props) => {
               targetX={coords.targetX}
               currentY={coords.currentY}
               targetY={coords.targetY}
-              playerNumber={11}
+              playerNumber={12}
             />
           ))}
         </div>
@@ -387,6 +382,11 @@ const ViewPlay = (props) => {
                 </button>
                 <button className="btn btn-secondary mx-1">
                   <FontAwesomeIcon icon={faShareNodes} />
+                </button>
+                <button
+                  className="btn btn-error "
+                  onClick={() => playRemoveHandler(playSelected)}>
+                  <FontAwesomeIcon icon={faRemove} />
                 </button>
               </div>
             </div>
@@ -479,7 +479,7 @@ const ViewPlay = (props) => {
                 <h1 className="mb-2 text-primary font-medium text-xl">
                   Please select a set play
                 </h1>
-                <table class="table shadow-xl  h-[20vh] rounded-lg  w-auto bg-base-300">
+                <table class=" shadow-xl  rounded-lg  w-auto bg-base-300">
                   {/* head */}
                   <thead className="">
                     <tr className="p-2">
@@ -489,7 +489,7 @@ const ViewPlay = (props) => {
                       <th>Moves</th>
                     </tr>
                   </thead>
-                  <tbody className="p-2">
+                  <tbody className="p-2 overflow-y-auto scrollable-tbody">
                     {/* dynamic rows */}
                     {plays && plays.length > 0 ? (
                       plays.map((play, index) => (

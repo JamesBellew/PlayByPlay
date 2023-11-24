@@ -12,6 +12,10 @@
   cursor: pointer;
   z-index: 100;
 }
+.scrollable-tbody {
+  height: 20vh;
+  overflow-y: auto;
+}
 .fb-1 {
   position: relative; /* Required for transform to work as expected */
   /* Other styles here */

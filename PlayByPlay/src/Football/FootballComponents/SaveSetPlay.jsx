@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
-
+import { v4 as uuidv4 } from "uuid";
 const SaveSetPlay = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedOptionPicked, updateSelectOptionPicked] = useState(false);
@@ -28,6 +28,7 @@ const SaveSetPlay = (props) => {
   };
   const saveSetPlayHandler = () => {
     const combinedData = {
+      id: uuidv4(),
       name: name,
       date: date,
       firstArray: movesArr,

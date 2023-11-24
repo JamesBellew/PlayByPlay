@@ -66,13 +66,13 @@ const Line = ({ currentX, targetX, currentY, targetY, playerNumber }) => {
       <div style={style} />
       <div
         style={circleStyle}
-        className="hover:bg-red-600 cursor-pointer"
+        className="hover:bg-red-600 "
         onMouseOver={circleDivHoverHandler}>
-        {showHoverPlayerBubbleState && (
+        {/* {showHoverPlayerBubbleState && (
           <div className="hover-number-box z-auto px-2 py-1 w-auto text-center mx-auto bg-primary bottom-5 left-2 absolute rounded-full">
             {playerNumber}
           </div>
-        )}
+        )} */}
       </div>
       {/* This is the circle at the starting point */}
     </>
