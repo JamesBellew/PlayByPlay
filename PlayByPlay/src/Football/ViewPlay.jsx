@@ -19,6 +19,7 @@ import {
   faRemove,
 } from "@fortawesome/free-solid-svg-icons";
 import Line from "./Line";
+import RemovePlayHandler from "./FootballComponents/RemovePlayConfirm";
 
 const ViewPlay = (props) => {
   const refs = useRef({});
@@ -34,6 +35,7 @@ const ViewPlay = (props) => {
 
   const [Moves, setMoves] = useState([]);
   const navigate = useNavigate();
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
   const [showTimelineState, setshowTimelineState] = useState(false);
   const [showMoveLines, setShowMoveLines] = useState(false);
   const [startingFifteenEditingState, updatestartingFifteenEditingState] =
@@ -244,24 +246,6 @@ const ViewPlay = (props) => {
   const targetX = xTarget;
   const currentY = yCurrent; // Example Y-coordinate
   const targetY = yTarget; // Example Y-coordinate
-  //I want to now be able to print multiple lines
-
-  // const calculateLineCoordinates = (line) => {
-  //   console.log("in the calculation function");
-
-  //   const currentDiv = refs.current[line.current];
-  //   const targetDiv = refs.current[line.target];
-  //   const currentRect = currentDiv.getBoundingClientRect();
-  //   const targetRect = targetDiv.getBoundingClientRect();
-  //   console.log(currentRect.x);
-  //   console.log(line.target);
-  //   return {
-  //     currentX: currentRect.x,
-  //     currentY: currentRect.y,
-  //     targetX: targetRect.x,
-  //     targetY: targetRect.y,
-  //   };
-  // };
   const calculateAllLineCoordinates = (linesArray) => {
     console.log("Calculating coordinates for all lines ya dig");
     console.log(linesArray);
@@ -305,8 +289,45 @@ const ViewPlay = (props) => {
   // console.log(lineData);
 
   const playRemoveHandler = (playselected) => {
-    console.log("in the delete handler");
-    console.log(playselected);
+    document.getElementById("my_modal_1").showModal();
+  };
+  const removePlayFinal = () => {
+    //remov
+    setSetplayIsChosen(false);
+  };
+  const RemovePlayModal = (playToRemoveName) => {
+    console.log(playToRemoveName);
+
+    return (
+      <>
+        <dialog id="my_modal_1" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-md ">Confirm Deletion ?</h3>
+            <p className="py-2 text-primary font-bold text-xl tracking-wide">
+              {playToRemoveName.prop}
+            </p>
+            <p>
+              This play will be removed forever and
+              <b className="text-warning">
+                <u>CANNOT</u>
+              </b>{" "}
+              be recovered
+            </p>
+            <div className="modal-action">
+              {/* if there is a button in form, it will close the modal */}
+              <div className="flex h-full items-center w-[100%]  justify-center">
+                <div className="flex justify-center">
+                  <button className="btn mx-2 ">Go Back</button>
+                  <button className="btn mx-2" onClick={removePlayFinal}>
+                    Remove Play hai
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </dialog>
+      </>
+    );
   };
   console.log(lineCoordinates);
   return (
@@ -325,9 +346,11 @@ const ViewPlay = (props) => {
           ))}
         </div>
       )}
+
       <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-6  h-[90vh] top-[5vh] ">
         {setPlayIsChosen && (
           <>
+            <RemovePlayModal prop={playSelected.name} />
             <div className="bg-base-200 rounded-md p-2 ">
               <div className="stat">
                 <div className="stat-figure text-primary">
