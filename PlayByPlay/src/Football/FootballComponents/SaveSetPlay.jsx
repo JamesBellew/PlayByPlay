@@ -13,7 +13,6 @@ const SaveSetPlay = (props) => {
 
   const today = new Date();
   const date = today.toISOString().split("T")[0];
-
   console.log(movesArr);
   console.log(formation);
 

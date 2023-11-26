@@ -18,12 +18,15 @@ import {
   faXmark,
   faRemove,
   faDownload,
+  faLink,
 } from "@fortawesome/free-solid-svg-icons";
 import Line from "./Line";
 import RemovePlayHandler from "./FootballComponents/RemovePlayConfirm";
+import { useLocation } from "react-router-dom";
 
 const ViewPlay = (props) => {
   const refs = useRef({});
+  const location = useLocation();
   let { playId } = useParams();
   const [activePosition, setActivePosition] = useState("fb-1");
   const [targetPosition, setTargetPosition] = useState("mf-3");
@@ -50,6 +53,7 @@ const ViewPlay = (props) => {
   const [move2, setMove2] = useState([]);
   const [setPlayIsChosen, setSetplayIsChosen] = useState(false);
   const [ballPosition, setBallPosition] = useState("gk-1");
+  const [upperModalMsg, setUpperModalMsg] = useState(":)");
   const [imageDownloadModalShowState, setImageDownloadModalShowState] =
     useState(false);
   const [playSelected, setPlaySelected] = useState({});
@@ -346,6 +350,26 @@ const ViewPlay = (props) => {
 
   // Example usage:
   // removeSetPlayById('8a4604d5-5634-4692-a68a-005ab3408e5e');
+  const copyPlayURLHandler = () => {
+    const currentUrl = window.location.href; // This gives you the full URL
+    // Or, if you just want the path without the domain:
+    // const currentUrl = `${window.location.origin}${location.pathname}`;
+
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        setUpperModalMsg("Link copied to Clipboard ");
+        console.log("Current URL copied to clipboard!");
+        setImageDownloadModalShowState(true);
+        setTimeout(() => {
+          // The code you want to execute after the delay goes here
+          setImageDownloadModalShowState(false);
+        }, 5000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
   const takeScreenshot = () => {
     html2canvas(document.body).then((canvas) => {
       // Create an image of the canvas
@@ -353,9 +377,10 @@ const ViewPlay = (props) => {
 
       // For example, to download the image you can do the following:
       const link = document.createElement("a");
-      link.download = "screenshot.png";
+      link.download = `${playSelected.name}-Screenshot.png`;
       link.href = base64image;
       link.click();
+      setUpperModalMsg("Image Successfully Saved, Check Your Downloads Folder");
       setImageDownloadModalShowState(true);
       setTimeout(() => {
         // The code you want to execute after the delay goes here
@@ -363,7 +388,7 @@ const ViewPlay = (props) => {
       }, 5000);
     });
   };
-  const PlayImageDownloadModal = () => {
+  const PlayImageDownloadModal = (props) => {
     return (
       <>
         <div role="alert" className="alert alert-success">
@@ -379,7 +404,7 @@ const ViewPlay = (props) => {
               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Your Image has been Exported, check your "Downloads" </span>
+          <span>{props.msg}</span>
         </div>
       </>
     );
@@ -441,7 +466,7 @@ const ViewPlay = (props) => {
         </div>
       )}
       {setPlayIsChosen && imageDownloadModalShowState && (
-        <PlayImageDownloadModal />
+        <PlayImageDownloadModal msg={upperModalMsg} />
       )}
 
       <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-6  h-[90vh] top-[5vh] ">
@@ -491,21 +516,22 @@ const ViewPlay = (props) => {
             </div>
 
             <div className="bg-base-200 flex items-center justify-center">
-              <div className="btn-group ">
+              <div className="btn-group  p-2 rounded ">
                 <button
                   onClick={viewPlaysBtnHandler}
-                  className="btn btn-primary mx-1">
+                  className="btn btn-primary ">
                   Plays <FontAwesomeIcon icon={faList} />
                 </button>
                 <button className="btn btn-primary">
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
-                <button className="btn mx-1 btn-primary">
-                  <FontAwesomeIcon icon={faShareNodes} />
-                </button>
                 <button
-                  onClick={takeScreenshot}
-                  className="btn btn-primary mr-1">
+                  className="btn  btn-primary"
+                  onClick={copyPlayURLHandler}>
+                  <FontAwesomeIcon icon={faLink} />
+                </button>
+
+                <button onClick={takeScreenshot} className="btn btn-primary ">
                   <FontAwesomeIcon icon={faDownload} />
                 </button>
                 <button
