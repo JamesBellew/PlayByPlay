@@ -5,6 +5,7 @@ const SaveSetPlay = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedOptionPicked, updateSelectOptionPicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const [ballPosition,setBallPosition] = useState([{}])
   const [categorySelectedOption, setCategorySelectedOption] = useState("None");
   const movesArr = props.movesArr;
   const formation = props.formation;
@@ -28,6 +29,7 @@ const SaveSetPlay = (props) => {
   const saveSetPlayHandler = () => {
     const combinedData = {
       id: uuidv4(),
+      ballPosition: "hb-4",
       name: name,
       date: date,
       firstArray: movesArr,
