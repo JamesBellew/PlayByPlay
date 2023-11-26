@@ -5,7 +5,7 @@ import AccountSideBar from "./FootballComponents/AccountSidebar";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import html2canvas from "html2canvas";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {
   faPlay,
@@ -17,6 +17,7 @@ import {
   faList,
   faXmark,
   faRemove,
+  faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import Line from "./Line";
 import RemovePlayHandler from "./FootballComponents/RemovePlayConfirm";
@@ -49,6 +50,8 @@ const ViewPlay = (props) => {
   const [move2, setMove2] = useState([]);
   const [setPlayIsChosen, setSetplayIsChosen] = useState(false);
   const [ballPosition, setBallPosition] = useState("gk-1");
+  const [imageDownloadModalShowState, setImageDownloadModalShowState] =
+    useState(false);
   const [playSelected, setPlaySelected] = useState({});
   const [lineData, setLineData] = useState([]);
   const [lineCoordinates, setLineCoordinates] = useState([]);
@@ -153,14 +156,24 @@ const ViewPlay = (props) => {
   };
   // console.log(playSelected);
   const numDivs = 11;
-  useEffect(() => {
-    // Fetch the plays data from local storage when the component mounts
+  // useEffect(() => {
+  //   // Fetch the plays data from local storage when the component mounts
+  //   const storedPlays = JSON.parse(localStorage.getItem("setPlays"));
+  //   if (storedPlays && Array.isArray(storedPlays)) {
+  //     setPlays(storedPlays);
+  //   }
+  // }, []);
+  const fetchPlays = () => {
     const storedPlays = JSON.parse(localStorage.getItem("setPlays"));
     if (storedPlays && Array.isArray(storedPlays)) {
       setPlays(storedPlays);
     }
-  }, []);
+  };
 
+  // Use useEffect to call fetchPlays when the component mounts
+  useEffect(() => {
+    fetchPlays();
+  }, []);
   const createNewFormationFromMoves = (Formations, Moves) => {
     return Formations.map((player) => {
       // Try to find the player in the Moves array by their playerNumber
@@ -292,8 +305,84 @@ const ViewPlay = (props) => {
     document.getElementById("my_modal_1").showModal();
   };
   const removePlayFinal = () => {
-    //remov
+    //remove play and de select the selected play
+    alert(playSelected.id);
+    removeSetPlayById(playSelected.id);
     setSetplayIsChosen(false);
+    fetchPlays();
+    navigate("/");
+  };
+  const escapeRemovePlayModalHandler = () => {
+    document.getElementById("my_modal_1").close();
+  };
+
+  const removeSetPlayById = (id) => {
+    // Retrieve the setplays array from local storage
+    const setplaysJSON = localStorage.getItem("setPlays");
+    console.log("in here baiiii");
+    if (setplaysJSON) {
+      // Parse the JSON string back into an array
+      const setplays = JSON.parse(setplaysJSON);
+
+      // Find the index of the object with the matching ID
+      const index = setplays.findIndex((sp) => sp.id === id);
+
+      // Remove the object from the array if it exists
+      if (index > -1) {
+        setplays.splice(index, 1);
+
+        // Convert the array back into a JSON string
+        const updatedSetplaysJSON = JSON.stringify(setplays);
+
+        // Save the updated array back to local storage
+        localStorage.setItem("setPlays", updatedSetplaysJSON);
+      } else {
+        console.log("Setplay with the provided ID was not found.");
+      }
+    } else {
+      console.log("Setplays array is not found in local storage.");
+    }
+  };
+
+  // Example usage:
+  // removeSetPlayById('8a4604d5-5634-4692-a68a-005ab3408e5e');
+  const takeScreenshot = () => {
+    html2canvas(document.body).then((canvas) => {
+      // Create an image of the canvas
+      const base64image = canvas.toDataURL("image/png");
+
+      // For example, to download the image you can do the following:
+      const link = document.createElement("a");
+      link.download = "screenshot.png";
+      link.href = base64image;
+      link.click();
+      setImageDownloadModalShowState(true);
+      setTimeout(() => {
+        // The code you want to execute after the delay goes here
+        setImageDownloadModalShowState(false);
+      }, 5000);
+    });
+  };
+  const PlayImageDownloadModal = () => {
+    return (
+      <>
+        <div role="alert" className="alert alert-success">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Your Image has been Exported, check your "Downloads" </span>
+        </div>
+      </>
+    );
   };
   const RemovePlayModal = (playToRemoveName) => {
     console.log(playToRemoveName);
@@ -308,8 +397,8 @@ const ViewPlay = (props) => {
             </p>
             <p>
               This play will be removed forever and
-              <b className="text-warning">
-                <u>CANNOT</u>
+              <b className="text-primary">
+                <u className="ml-1">CANNOT</u>
               </b>{" "}
               be recovered
             </p>
@@ -317,7 +406,11 @@ const ViewPlay = (props) => {
               {/* if there is a button in form, it will close the modal */}
               <div className="flex h-full items-center w-[100%]  justify-center">
                 <div className="flex justify-center">
-                  <button className="btn mx-2 ">Go Back</button>
+                  <button
+                    className="btn mx-2 "
+                    onClick={escapeRemovePlayModalHandler}>
+                    Go Back
+                  </button>
                   <button className="btn mx-2" onClick={removePlayFinal}>
                     Remove Play hai
                   </button>
@@ -329,6 +422,7 @@ const ViewPlay = (props) => {
       </>
     );
   };
+
   console.log(lineCoordinates);
   return (
     <>
@@ -345,6 +439,9 @@ const ViewPlay = (props) => {
             />
           ))}
         </div>
+      )}
+      {setPlayIsChosen && imageDownloadModalShowState && (
+        <PlayImageDownloadModal />
       )}
 
       <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-6  h-[90vh] top-[5vh] ">
@@ -403,8 +500,13 @@ const ViewPlay = (props) => {
                 <button className="btn btn-primary">
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
-                <button className="btn btn-secondary mx-1">
+                <button className="btn mx-1 btn-primary">
                   <FontAwesomeIcon icon={faShareNodes} />
+                </button>
+                <button
+                  onClick={takeScreenshot}
+                  className="btn btn-primary mr-1">
+                  <FontAwesomeIcon icon={faDownload} />
                 </button>
                 <button
                   className="btn btn-error "
@@ -502,7 +604,7 @@ const ViewPlay = (props) => {
                 <h1 className="mb-2 text-primary font-medium text-xl">
                   Please select a set play
                 </h1>
-                <table class=" shadow-xl  rounded-lg  w-auto bg-base-300">
+                <table class="table shadow-xl  rounded-lg  w-auto bg-base-300">
                   {/* head */}
                   <thead className="">
                     <tr className="p-2">
