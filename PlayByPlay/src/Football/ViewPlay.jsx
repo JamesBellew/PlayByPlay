@@ -30,7 +30,7 @@ const ViewPlay = (props) => {
   let { playId } = useParams();
   const [activePosition, setActivePosition] = useState("fb-1");
   const [targetPosition, setTargetPosition] = useState("mf-3");
-const [ballPositionLine,setBallPositionLine] = useState("hb-4")
+  const [ballPositionLine, setBallPositionLine] = useState("hb-4");
   useEffect(() => {
     // This will log the currentDiv after the component mounts and the ref is set
     const currentDiv = refs.current[activePosition];
@@ -52,7 +52,7 @@ const [ballPositionLine,setBallPositionLine] = useState("hb-4")
   const [plays, setPlays] = useState([]);
   const [move2, setMove2] = useState([]);
   const [setPlayIsChosen, setSetplayIsChosen] = useState(false);
-  const [ballPosition, setBallPosition] = useState("gk-1");
+  const [ballPosition, setBallPosition] = useState("hb-4");
   const [upperModalMsg, setUpperModalMsg] = useState(":)");
   const [imageDownloadModalShowState, setImageDownloadModalShowState] =
     useState(false);
@@ -110,6 +110,12 @@ const [ballPositionLine,setBallPositionLine] = useState("hb-4")
         current: currentPosition,
         target: move.newPosition,
       };
+    });
+    //this is the ball position
+    newLinesData.push({
+      playerNumber: 1,
+      current: "gk-1",
+      target: "hb-4",
     });
     setLineData(newLinesData);
     btnResetHandler();
@@ -460,13 +466,13 @@ const [ballPositionLine,setBallPositionLine] = useState("hb-4")
               targetX={coords.targetX}
               currentY={coords.currentY}
               targetY={coords.targetY}
-              playerNumber={12}
+              playerNumber={coords.playerNumber}
             />
           ))}
         </div>
       )}
       {setPlayIsChosen && imageDownloadModalShowState && (
-        <PlayImageDownloadModal msg={upperModalMsg}  />
+        <PlayImageDownloadModal msg={upperModalMsg} />
       )}
 
       <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-6  h-[90vh] top-[5vh] ">
