@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import html2canvas from "html2canvas";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {
   faPlay,
@@ -23,8 +24,18 @@ import {
 import Line from "./Line";
 import RemovePlayHandler from "./FootballComponents/RemovePlayConfirm";
 import { useLocation } from "react-router-dom";
+import { auth } from "../utils/firebase";
 
 const ViewPlay = (props) => {
+  const googleProvider = new GoogleAuthProvider();
+  const GoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log(result.user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const refs = useRef({});
   const location = useLocation();
   let { playId } = useParams();
@@ -487,7 +498,7 @@ const ViewPlay = (props) => {
                       <img src="https://images.pexels.com/photos/1722198/pexels-photo-1722198.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
                     </div>
                   </div>
-                  <p className="text-secondary">James</p>
+                  {/* <p className="text-secondary">James</p> */}
                 </div>
                 <div className="stat-title text-md capitalize">
                   {playSelected.category}
@@ -496,6 +507,11 @@ const ViewPlay = (props) => {
                   {playSelected.name}
                 </div>
                 <div className="stat-desc">{playSelected.date}</div>
+                <button
+                  onClick={GoogleLogin}
+                  className="btn absolute top-0 left-7 btn-primary">
+                  Sign In
+                </button>
               </div>
             </div>
             <div className="bg-base-200 rounded-md flex items-center justify-center h-full">
