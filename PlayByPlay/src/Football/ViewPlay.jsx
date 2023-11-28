@@ -4,6 +4,7 @@ import SaveSetPlay from "./FootballComponents/SaveSetPlay";
 import AccountSideBar from "./FootballComponents/AccountSidebar";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import html2canvas from "html2canvas";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -27,6 +28,7 @@ import { useLocation } from "react-router-dom";
 import { auth } from "../utils/firebase";
 
 const ViewPlay = (props) => {
+  const [user, loading] = useAuthState(auth);
   const googleProvider = new GoogleAuthProvider();
   const GoogleLogin = async () => {
     try {
@@ -497,8 +499,15 @@ const ViewPlay = (props) => {
               <div className="stat">
                 <div className="stat-figure text-primary">
                   <div className="avatar online">
-                    <div className="w-14 rounded-full">
-                      <img src="https://images.pexels.com/photos/1722198/pexels-photo-1722198.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
+                    <div class="w-14 h-14 rounded-full bg-base-100 flex items-center justify-center">
+                      {user && (
+                        <img src={user.photoURL} className="rounded-full" />
+                      )}
+                      {!user && (
+                        <div className="flex items-center justify-center">
+                          G
+                        </div>
+                      )}
                     </div>
                   </div>
                   {/* <p className="text-secondary">James</p> */}
@@ -510,11 +519,24 @@ const ViewPlay = (props) => {
                   {playSelected.name}
                 </div>
                 <div className="stat-desc">{playSelected.date}</div>
-                <button
-                  onClick={singInBtnHandler}
-                  className="btn absolute top-5 left-5 btn-primary">
-                  Sign In
-                </button>
+                {!user && (
+                  <button
+                    onClick={singInBtnHandler}
+                    className="btn absolute top-5 left-5 btn-primary">
+                    Sign In
+                  </button>
+                )}
+                {user && (
+                  <>
+                    <p>{user.displayName}</p>
+                    <p
+                      className="text-secondary cursor-pointer  hover:font-bold"
+                      onClick={() => auth.signOut()}>
+                      Logout
+                    </p>
+                    {/* <img src={user.photoURL} /> */}
+                  </>
+                )}
               </div>
             </div>
             <div className="bg-base-200 rounded-md flex items-center justify-center h-full">
