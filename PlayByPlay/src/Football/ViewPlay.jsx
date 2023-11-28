@@ -405,6 +405,9 @@ const ViewPlay = (props) => {
       }, 5000);
     });
   };
+  const singInBtnHandler = () => {
+    navigate("/auth/login");
+  };
   const PlayImageDownloadModal = (props) => {
     return (
       <>
@@ -508,8 +511,8 @@ const ViewPlay = (props) => {
                 </div>
                 <div className="stat-desc">{playSelected.date}</div>
                 <button
-                  onClick={GoogleLogin}
-                  className="btn absolute top-0 left-7 btn-primary">
+                  onClick={singInBtnHandler}
+                  className="btn absolute top-5 left-5 btn-primary">
                   Sign In
                 </button>
               </div>

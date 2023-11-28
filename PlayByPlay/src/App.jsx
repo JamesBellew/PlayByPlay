@@ -12,7 +12,6 @@ import SetPlay from "./Football/SetPlay";
 import Formations from "./Football/Formations";
 import KickOuts from "./Football/KickOuts";
 import ViewPlay from "./Football/ViewPlay";
-
 import Test from "./Football/Test";
 import Login from "./auth/login";
 
