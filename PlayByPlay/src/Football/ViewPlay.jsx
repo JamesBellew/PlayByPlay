@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import html2canvas from "html2canvas";
+import AccountNav from "../AccountNav";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {
@@ -436,6 +437,7 @@ const ViewPlay = (props) => {
 
     return (
       <>
+      <AccountNav/>
         <dialog id="my_modal_1" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-md ">Confirm Deletion ?</h3>
@@ -520,11 +522,12 @@ const ViewPlay = (props) => {
                 </div>
                 <div className="stat-desc">{playSelected.date}</div>
                 {!user && (
-                  <button
-                    onClick={singInBtnHandler}
-                    className="btn absolute top-5 left-5 btn-primary">
-                    Sign In
-                  </button>
+                  <></>
+                  // <button
+                  //   onClick={singInBtnHandler}
+                  //   className="btn absolute top-5 left-5 btn-primary">
+                  //   Sign In
+                  // </button>
                 )}
                 {user && (
                   <>
@@ -685,6 +688,7 @@ const ViewPlay = (props) => {
                       <th>Name</th>
                       <th>Date</th>
                       <th>Moves</th>
+                      <th>Saved</th>
                     </tr>
                   </thead>
                   <tbody className="p-2 overflow-y-auto scrollable-tbody">
@@ -701,6 +705,7 @@ const ViewPlay = (props) => {
                           <td className="pb-2">
                             {play?.firstArray?.length ?? 0}
                           </td>
+                          <td>local</td>
                         </tr>
                       ))
                     ) : (
