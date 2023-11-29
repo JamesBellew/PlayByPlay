@@ -104,6 +104,7 @@ const ViewPlay = (props) => {
     getLineCoordinance("mf-5", "fb-4");
     console.log(play);
     //set the target and current coordinants
+    setBallPosition(play.ballPosition);
     setTargetPosition(play.firstArray[0].newPosition);
     setActivePosition("mf-3");
     setActivePosition(
@@ -129,7 +130,7 @@ const ViewPlay = (props) => {
     newLinesData.push({
       playerNumber: 1,
       current: "gk-1",
-      target: "hb-4",
+      target: play.ballPosition,
     });
     setLineData(newLinesData);
     btnResetHandler();
@@ -175,6 +176,7 @@ const ViewPlay = (props) => {
   };
   const viewPlaysBtnHandler = () => {
     setSetplayIsChosen(false);
+    navigate("/");
     // setActivePosition([]);
     // setTargetPosition([]);
   };
@@ -437,7 +439,7 @@ const ViewPlay = (props) => {
 
     return (
       <>
-      <AccountNav/>
+        <AccountNav />
         <dialog id="my_modal_1" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-md ">Confirm Deletion ?</h3>
@@ -502,16 +504,21 @@ const ViewPlay = (props) => {
                 <div className="stat-figure text-primary">
                   <div className="avatar online">
                     <div class="w-14 h-14 rounded-full bg-base-100 flex items-center justify-center">
-                      {user && (
+                      {/* {user && (
                         <img src={user.photoURL} className="rounded-full" />
                       )}
                       {!user && (
                         <div className="flex items-center justify-center">
                           G
                         </div>
-                      )}
+                      )} */}
+                      <img
+                        src="https://i.ytimg.com/vi/LwjxhkHORaM/maxresdefault.jpg"
+                        className="rounded-full"
+                      />
                     </div>
                   </div>
+                  <p className="text-white">Louth GAA</p>
                   {/* <p className="text-secondary">James</p> */}
                 </div>
                 <div className="stat-title text-md capitalize">
@@ -521,25 +528,6 @@ const ViewPlay = (props) => {
                   {playSelected.name}
                 </div>
                 <div className="stat-desc">{playSelected.date}</div>
-                {!user && (
-                  <></>
-                  // <button
-                  //   onClick={singInBtnHandler}
-                  //   className="btn absolute top-5 left-5 btn-primary">
-                  //   Sign In
-                  // </button>
-                )}
-                {user && (
-                  <>
-                    <p>{user.displayName}</p>
-                    <p
-                      className="text-secondary cursor-pointer  hover:font-bold"
-                      onClick={() => auth.signOut()}>
-                      Logout
-                    </p>
-                    {/* <img src={user.photoURL} /> */}
-                  </>
-                )}
               </div>
             </div>
             <div className="bg-base-200 rounded-md flex items-center justify-center h-full">

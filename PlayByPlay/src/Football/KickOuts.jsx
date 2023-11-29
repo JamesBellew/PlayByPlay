@@ -424,7 +424,14 @@ const KickOuts = (props) => {
 
   const moveToNextHandler = () => {
     // alert("clicked");
+
+    //! this is only for testing comment this back in before pushing to github
+    // setIsOnSaveSeytPlayPage(true);
+    setBallEditingState(true);
+  };
+  const movetoSaveHandler = () => {
     setIsOnSaveSeytPlayPage(true);
+    setBallEditingState(false);
   };
 
   const [saveSetPlayChildData, setSaveSetPlayChildData] = useState(null);
@@ -470,13 +477,17 @@ const KickOuts = (props) => {
             <StartingFifteen></StartingFifteen>
           </div>
         )}
-        {showTimelineState && !isOnSaveSeytPlayPage && (
+        {showTimelineState && !isOnSaveSeytPlayPage && !ballEditingState && (
           <Timeline
             onRunClick={handleFormationData}
             onButtonClick={handleDataFromChild}
             movesArr={Moves}></Timeline>
         )}
-
+        {ballEditingState && (
+          <h1 className="my-5 font-semibold text-xl">
+            Please select a position for the ball to be kicked to
+          </h1>
+        )}
         <div className="w-full my-auto self-center  flex bg-base-200 rounded-md">
           <div className="w-1/6 mx-auto ">
             <ul class="menu bg-base-200 h-full w-auto rounded-box">
@@ -542,15 +553,20 @@ const KickOuts = (props) => {
                   </li>
                   <div className=" divider ml-4"></div>
                   <li>
-                    <a
-                      onClick={moveToNextHandler}
-                      className={` ${
-                        Moves.length < 1
-                          ? "pointer-events-none opacity-50 text-base-200"
-                          : ""
-                      }hover:text-primary`}>
-                      Next
-                    </a>
+                    {!ballEditingState && (
+                      <a
+                        onClick={moveToNextHandler}
+                        className={` ${
+                          Moves.length < 1
+                            ? "pointer-events-none opacity-50 text-base-200"
+                            : ""
+                        }hover:text-primary`}>
+                        Next
+                      </a>
+                    )}
+                    {ballEditingState && (
+                      <a onClick={movetoSaveHandler}>Next</a>
+                    )}
                   </li>
                   <li>
                     <a
@@ -654,6 +670,7 @@ const KickOuts = (props) => {
               movesArr={Moves}
               formation={players}
               dataFromSaveSetPlay={handleDataFromChildSaveSetPlay}
+              ballPos={ballPosition}
             />
           )}
           <div className="w-1/6 mx-auto ">
