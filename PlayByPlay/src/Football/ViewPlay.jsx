@@ -20,6 +20,7 @@ import {
   faList,
   faXmark,
   faRemove,
+  faFloppyDisk,
   faDownload,
   faLink,
 } from "@fortawesome/free-solid-svg-icons";
@@ -563,12 +564,21 @@ const ViewPlay = (props) => {
                 <button className="btn btn-primary">
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
-                <button
-                  className="btn  btn-primary"
-                  onClick={copyPlayURLHandler}>
-                  <FontAwesomeIcon icon={faLink} />
-                </button>
 
+                {user && (
+                  <button
+                    className="btn  btn-primary"
+                    onClick={copyPlayURLHandler}>
+                    <FontAwesomeIcon icon={faLink} />
+                  </button>
+                )}
+                {user && (
+                  <button
+                    className="btn  btn-primary"
+                    onClick={copyPlayURLHandler}>
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                  </button>
+                )}
                 <button onClick={takeScreenshot} className="btn btn-primary ">
                   <FontAwesomeIcon icon={faDownload} />
                 </button>
