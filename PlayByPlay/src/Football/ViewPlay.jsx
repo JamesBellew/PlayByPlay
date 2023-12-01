@@ -393,6 +393,25 @@ const ViewPlay = (props) => {
         console.error("Failed to copy: ", err);
       });
   };
+  const [userUUID, setUserUUID] = useState("1");
+  const [playName, setPlayName] = useState("test");
+  const savePlayDB = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/add-play", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userUUID, playName }),
+      });
+      const data = await response.json();
+      console.log("Success:", data);
+      // Handle success scenario (e.g., showing a success message)
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error scenario (e.g., showing an error message)
+    }
+  };
   const takeScreenshot = () => {
     html2canvas(document.body).then((canvas) => {
       // Create an image of the canvas
@@ -573,9 +592,7 @@ const ViewPlay = (props) => {
                   </button>
                 )}
                 {user && (
-                  <button
-                    className="btn  btn-primary"
-                    onClick={copyPlayURLHandler}>
+                  <button className="btn  btn-primary" onClick={savePlayDB}>
                     <FontAwesomeIcon icon={faFloppyDisk} />
                   </button>
                 )}
@@ -703,7 +720,7 @@ const ViewPlay = (props) => {
                           <td className="pb-2">
                             {play?.firstArray?.length ?? 0}
                           </td>
-                          <td>local</td>
+                          <td className="text-secondary">local</td>
                         </tr>
                       ))
                     ) : (
