@@ -1,13 +1,40 @@
 const express = require('express')
-const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
-const User = require('./models/User');
 const app = express()
 const cors = require('cors');
 
-// Enable All CORS Requests
+
+const admin = require('firebase-admin');
+
+let serviceAccount = require('./utils/Key.json'); // Replace with the path to your key file
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://playbyplay-f5338-default-rtdb.europe-west1.firebasedatabase.app" // Replace with your Realtime Database URL
+});
+
+const db = admin.database();
+
+// Define a reference to a specific location in your database
+let ref = db.ref("Plays");
+
+// Write a String to the Database
+// ref.set("This is a test string")
+//   .then(() => console.log("String added to the database successfully."))
+//   .catch(error => console.error("Error writing string to the database: ", error));
+
+// // Read Data
+// ref.once("value", function(snapshot) {
+//   console.log("Retrieved data from database:", snapshot.val());
+// });
+
+
 app.use(cors());
 app.use(bodyParser.json());
+
+
+
+
 app.get("/api", (req,res)=>{
     res.json(
         
@@ -15,33 +42,22 @@ app.get("/api", (req,res)=>{
         
         )
 })
-app.get("/formations", (req,res)=>{
-    res.json(
-        
-        {"formations": ["wcwcw","cwc","wwww"]}
-        
-        )
+
+  
+app.get('/storePlay/:play',(req,res)=>{
+    const play = req.params.play;
+    console.log('Play Below');
+    console.log(play);
 })
 
-
-mongoose.connect('mongodb+srv://cluster0.rtexs1r.mongodb.net/', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(error => console.error('Could not connect to MongoDB', error));
+app.get('/storeUserId/:userId', (req, res) => {
+    const userId = req.params.userId;
+    let ref = db.ref("userIds").child(userId);
   
+    ref.set({ addedAt: new Date().toISOString() })
+      .then(() => res.send(`UserId ${userId} stored successfully`))
+      .catch(error => res.status(500).send(`Error storing userId: ${error}`));
+  });
 
-  app.post('/add-user', async (req, res) => {
-    const user = new User({
-        name: req.body.name
-    });
-
-    try {
-        await user.save();
-        res.status(201).send(user);
-    } catch (error) {
-        res.status(400).send(error);
-    }
-});
+  
 app.listen(5000,()=>{console.log("Server started on port 5000");})
