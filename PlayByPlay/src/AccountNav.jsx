@@ -8,10 +8,22 @@ const AccountNav = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       console.log(result.user);
+      sendUserIdToServer(result.user.uid);
     } catch (error) {
       console.log(error);
     }
   };
+
+  //this is the functino call to the backedn to store userID
+  function sendUserIdToServer(userId) {
+    fetch(`http://localhost:5000/storeUserId/${userId}`, {
+      method: "GET",
+    })
+      .then((response) => response.text())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
+  }
+
   return (
     <>
       {!user && (

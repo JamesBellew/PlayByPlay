@@ -7,6 +7,7 @@ const cors = require('cors');
 const admin = require('firebase-admin');
 
 let serviceAccount = require('./utils/Key.json'); // Replace with the path to your key file
+app.use(express.json());
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -44,10 +45,17 @@ app.get("/api", (req,res)=>{
 })
 
   
-app.get('/storePlay/:play',(req,res)=>{
-    const play = req.params.play;
+app.post('/storePlay', (req, res) => {
+    const play = req.body;
+    const playID = req.body.id
     console.log('Play Below');
     console.log(play);
+    let ref = db.ref("plays").child(play);
+
+    ref.set({ addedAt: new Date().toISOString() })
+    .then(() => res.send(`playId ${playID} stored successfully`))
+    .catch(error => res.status(500).send(`Error storing playID: ${error}`));
+
 })
 
 app.get('/storeUserId/:userId', (req, res) => {

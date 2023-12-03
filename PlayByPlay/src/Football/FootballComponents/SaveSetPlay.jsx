@@ -18,6 +18,20 @@ const SaveSetPlay = (props) => {
   console.log(movesArr);
   console.log(formation);
 
+  //this is the functino call to the backedn to store userID
+  function sendPlayToServer(play) {
+    fetch("http://localhost:5000/storePlay", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(play),
+    })
+      .then((response) => response.text())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
+  }
+
   const selectOptionClickHandler = (event) => {
     setSelectedOption(event.target.value);
 
@@ -37,6 +51,10 @@ const SaveSetPlay = (props) => {
       category: categorySelectedOption,
       secondArray: formation,
     };
+
+    if (selectedOption === "account") {
+      sendPlayToServer(combinedData);
+    }
 
     // Get existing data from local storage
     let existingData = JSON.parse(localStorage.getItem("setPlays"));
@@ -110,6 +128,7 @@ const SaveSetPlay = (props) => {
           <option value={"45"}>45 Kick</option>
         </select>
         <br></br>
+
         {selectedOption === "machine" ? (
           <>
             <small className="text-yellow-300">
