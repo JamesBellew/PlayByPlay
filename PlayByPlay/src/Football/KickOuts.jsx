@@ -448,6 +448,7 @@ const KickOuts = (props) => {
       navigate("/football/ViewPlay");
     }
   };
+
   return (
     <>
       <div className="centering-wrapper">

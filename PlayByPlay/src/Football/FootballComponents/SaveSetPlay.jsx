@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { v4 as uuidv4 } from "uuid";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../utils/firebase";
 const SaveSetPlay = (props) => {
+  const [user, loading] = useAuthState(auth);
   const [inputValue, setInputValue] = useState("");
   const [selectedOptionPicked, updateSelectOptionPicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
@@ -50,26 +53,30 @@ const SaveSetPlay = (props) => {
       firstArray: movesArr,
       category: categorySelectedOption,
       secondArray: formation,
+      userId: user && selectedOption === "account" ? user.uid : null,
     };
 
-    if (selectedOption === "account") {
+    if (selectedOption === "account" && user) {
+      //save to database
       sendPlayToServer(combinedData);
+      props.dataFromSaveSetPlay(true);
+    } else {
+      // Get existing data from local storage
+      let existingData = JSON.parse(localStorage.getItem("setPlays"));
+
+      // Check if existingData is not an array or is null, then initialize it as an empty array
+      if (!Array.isArray(existingData)) {
+        existingData = [];
+      }
+
+      // Push the new record to the existing data
+      existingData.push(combinedData);
+
+      // Save the updated data back to local storage
+      localStorage.setItem("setPlays", JSON.stringify(existingData));
+      props.dataFromSaveSetPlay(true);
     }
 
-    // Get existing data from local storage
-    let existingData = JSON.parse(localStorage.getItem("setPlays"));
-
-    // Check if existingData is not an array or is null, then initialize it as an empty array
-    if (!Array.isArray(existingData)) {
-      existingData = [];
-    }
-
-    // Push the new record to the existing data
-    existingData.push(combinedData);
-
-    // Save the updated data back to local storage
-    localStorage.setItem("setPlays", JSON.stringify(existingData));
-    props.dataFromSaveSetPlay(true);
     //now we want to direct the user to a new view
   };
 
@@ -102,11 +109,16 @@ const SaveSetPlay = (props) => {
           <option disabled selected>
             Where to Save
           </option>
+
+          {/* <label>Requires Sign in</label> */}
+          {user && (
+            <option className="text-secondary" value={"account"}>
+              Account
+            </option>
+          )}
+          <hr></hr>
           <option value={"machine"}>Save to this machine</option>
           <option value={"file"}>Save as file</option>
-          <hr></hr>
-          {/* <label>Requires Sign in</label> */}
-          <option value={"account"}>Account (Sign In)</option>
         </select>
         <select
           onChange={CategorySelectOptionClickHandler}

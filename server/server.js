@@ -46,17 +46,49 @@ app.get("/api", (req,res)=>{
 
   
 app.post('/storePlay', (req, res) => {
-    const play = req.body;
-    const playID = req.body.id
-    console.log('Play Below');
-    console.log(play);
-    let ref = db.ref("plays").child(play);
+  const play = req.body;
+  const playID = req.body.id; // Ensure that playID is unique for each play
+  console.log('Play Below');
+  console.log(play);
 
-    ref.set({ addedAt: new Date().toISOString() })
-    .then(() => res.send(`playId ${playID} stored successfully`))
-    .catch(error => res.status(500).send(`Error storing playID: ${error}`));
+  // Reference to your Firebase Realtime Database
+  const dbRef = admin.database().ref('plays/' + playID);
 
-})
+  // Set the play object in the database
+  dbRef.set(play, (error) => {
+      if (error) {
+          // Handle the error case
+          console.error('Data could not be saved.' + error);
+          res.status(500).send('Error saving data to Firebase.');
+      } else {
+          // Data saved successfully!
+          console.log('Data saved successfully.');
+          res.status(200).send('Data saved to Firebase.');
+      }
+  });
+});
+
+app.get('/getUserPlays/:userId', (req, res) => {
+  const userId = req.params.userId;
+  
+  // Reference to your 'plays' node in Firebase Realtime Database
+  const playsRef = admin.database().ref('plays');
+
+  // Query for plays with the matching userId
+  playsRef.orderByChild('userId').equalTo(userId).once('value', (snapshot) => {
+    if (snapshot.exists()) {
+      const playsData = snapshot.val();
+      // Send the data back as a response
+      res.json(playsData);
+    } else {
+      res.status(404).send('No plays found for this user');
+    }
+  }).catch(error => {
+    console.error("Error fetching data:", error);
+    res.status(500).send('Internal Server Error');
+  });
+});
+
 
 app.get('/storeUserId/:userId', (req, res) => {
     const userId = req.params.userId;

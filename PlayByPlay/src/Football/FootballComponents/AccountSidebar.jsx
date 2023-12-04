@@ -1,7 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../utils/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 const AccountSideBar = (props) => {
+  const [user, loading] = useAuthState(auth);
+  const googleProvider = new GoogleAuthProvider();
+  const GoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log(result.user);
+      sendUserIdToServer(result.user.uid);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const [plays, setPlays] = useState([]);
   const navigate = useNavigate();
   const [playCount, setPlayCount] = useState(plays.length);
@@ -20,13 +35,32 @@ const AccountSideBar = (props) => {
     <>
       <div className="my-auto w-full h-auto rounded-md text-white align-text-bottom items-end relative p-2">
         <div class="bg-neutral-focus text-neutral-content align-bottom rounded-full w-14 mx-auto p-2">
-          <span class="text-3xl text-secondary">G</span>
+          {!user && <span class="text-3xl text-secondary">G</span>}
+          {user && (
+            <img
+              src={user.photoURL}
+              className="w-full h-full rounded-full p-0"
+              alt=""
+            />
+          )}
         </div>
-        <h1 className="m-3">Guest</h1>
-        <div className="btn-group">
-          <button className="btn">Sign In</button>
-          <button className="btn">Sign Up</button>
-        </div>
+        {!user ? <h1 className="m-3">Guest</h1> : <h1>{user.displayName}</h1>}
+        {user && (
+          <p
+            className="text-secondary cursor-pointer "
+            onClick={() => auth.signOut()}>
+            Logout
+          </p>
+        )}
+
+        {!user && (
+          <div className="btn-group">
+            <button className="btn" onClick={GoogleLogin}>
+              Sign In
+            </button>
+            <button className="btn">Sign Up</button>
+          </div>
+        )}
         <div class="indicator mt-4">
           {plays.length >= 1 && (
             <span class="indicator-item badge badge-secondary"></span>
