@@ -52,6 +52,52 @@ const ViewPlay = (props) => {
     const targetDiv = refs.current[targetPosition];
   }, []);
 
+  function removeUserPlays(playId) {
+    // Replace 'http://localhost:5000' with the actual URL of your server
+    const url = `http://localhost:5000/removePlay/${playId}`;
+
+    return fetch(url, { method: "DELETE" }) // Specify the DELETE method
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text(); // It's likely that the response is not JSON but a simple text message
+      })
+      .then((data) => {
+        console.log("Play removal response:", data); // Handle the data (confirmation message)
+        return data;
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }
+
+  function getUserPlays(userId) {
+    // Replace 'your-server-url' with the actual URL of your server
+    const url = `http://localhost:5000/getUserPlays/${userId}`;
+
+    return fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Parse the JSON data from the response
+      })
+      .then((data) => {
+        // console.log("User Plays:", data); // Handle the data
+        return data;
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }
+
   const [Moves, setMoves] = useState([]);
   const navigate = useNavigate();
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
@@ -75,16 +121,26 @@ const ViewPlay = (props) => {
   const [lineData, setLineData] = useState([]);
   const [lineCoordinates, setLineCoordinates] = useState([]);
   const { playIdUsed } = useParams();
+  const [userPlaysUpdateTrigger, setUserPlaysUpdateTrigger] = useState(0);
+  const [userPlays, setUserPlays] = useState(null);
 
-  // useEffect(() => {
-  //   console.log("in this header funmction");
-  //   if (playIdUsed) {
-  //     // Logic to load the play by its ID
-  //     alert(playIdUsed);
-  //     setPlayIsPickedHandler(findPlayByName(playIdUsed));
-  //   }
-  // }, [playIdUsed]);
-
+  //this useeffect is called when t he user is signed in and then it retreives all of the plays stored to that user in the db
+  useEffect(() => {
+    if (user) {
+      // User is logged in, call getUserPlays
+      getUserPlays(user.uid)
+        .then((plays) => {
+          console.log(plays);
+          setUserPlays(plays); // Store the plays in state
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      //clearing the previous user plays if user is logged out
+      setUserPlays([]);
+    }
+  }, [user, AccountNav, userPlaysUpdateTrigger]);
   const findPlayByName = (playName) => {
     return plays.find((play) => play.name === playName);
   };
@@ -181,15 +237,8 @@ const ViewPlay = (props) => {
     // setActivePosition([]);
     // setTargetPosition([]);
   };
-  // console.log(playSelected);
+
   const numDivs = 11;
-  // useEffect(() => {
-  //   // Fetch the plays data from local storage when the component mounts
-  //   const storedPlays = JSON.parse(localStorage.getItem("setPlays"));
-  //   if (storedPlays && Array.isArray(storedPlays)) {
-  //     setPlays(storedPlays);
-  //   }
-  // }, []);
   const fetchPlays = () => {
     const storedPlays = JSON.parse(localStorage.getItem("setPlays"));
     if (storedPlays && Array.isArray(storedPlays)) {
@@ -333,11 +382,18 @@ const ViewPlay = (props) => {
   };
   const removePlayFinal = () => {
     //remove play and de select the selected play
-    alert(playSelected.id);
+    // alert(playSelected.id);
+    if (user) {
+      removeUserPlays(playSelected.id);
+    }
+
     removeSetPlayById(playSelected.id);
+
     setSetplayIsChosen(false);
     fetchPlays();
     navigate("/");
+    //I want to call that trigegr here for updating the play list on start menu
+    setUserPlaysUpdateTrigger((prev) => prev + 1);
   };
   const escapeRemovePlayModalHandler = () => {
     document.getElementById("my_modal_1").close();
@@ -413,23 +469,34 @@ const ViewPlay = (props) => {
     }
   };
   const takeScreenshot = () => {
-    html2canvas(document.body).then((canvas) => {
-      // Create an image of the canvas
-      const base64image = canvas.toDataURL("image/png");
+    // Select the element with the ID 'pitch'
+    const pitchElement = document.getElementById("pitch");
 
-      // For example, to download the image you can do the following:
-      const link = document.createElement("a");
-      link.download = `${playSelected.name}-Screenshot.png`;
-      link.href = base64image;
-      link.click();
-      setUpperModalMsg("Image Successfully Saved, Check Your Downloads Folder");
-      setImageDownloadModalShowState(true);
-      setTimeout(() => {
-        // The code you want to execute after the delay goes here
-        setImageDownloadModalShowState(false);
-      }, 5000);
-    });
+    // Check if the element exists
+    if (pitchElement) {
+      html2canvas(pitchElement).then((canvas) => {
+        // Create an image of the canvas
+        const base64image = canvas.toDataURL("image/png");
+
+        // For example, to download the image you can do the following:
+        const link = document.createElement("a");
+        link.download = `${playSelected.name}-Screenshot.png`;
+        link.href = base64image;
+        link.click();
+        setUpperModalMsg(
+          "Image Successfully Saved, Check Your Downloads Folder"
+        );
+        setImageDownloadModalShowState(true);
+        setTimeout(() => {
+          // The code you want to execute after the delay goes here
+          setImageDownloadModalShowState(false);
+        }, 5000);
+      });
+    } else {
+      console.error('Element with ID "pitch" not found');
+    }
   };
+
   const singInBtnHandler = () => {
     navigate("/auth/login");
   };
@@ -459,7 +526,6 @@ const ViewPlay = (props) => {
 
     return (
       <>
-        <AccountNav />
         <dialog id="my_modal_1" className="modal">
           <div className="modal-box">
             <h3 className="font-bold text-md ">Confirm Deletion ?</h3>
@@ -497,7 +563,8 @@ const ViewPlay = (props) => {
   console.log(lineCoordinates);
   return (
     <>
-      {showMoveLines && setPlayIsChosen && (
+      <AccountNav />
+      {/* {showMoveLines && setPlayIsChosen && (
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           {lineCoordinates.map((coords, index) => (
             <Line
@@ -510,7 +577,7 @@ const ViewPlay = (props) => {
             />
           ))}
         </div>
-      )}
+      )} */}
       {setPlayIsChosen && imageDownloadModalShowState && (
         <PlayImageDownloadModal msg={upperModalMsg} />
       )}
@@ -519,61 +586,51 @@ const ViewPlay = (props) => {
         {setPlayIsChosen && (
           <>
             <RemovePlayModal prop={playSelected.name} />
-            <div className="bg-base-200 rounded-md p-2 ">
-              <div className="stat">
-                <div className="stat-figure text-primary">
-                  <div className="avatar online">
-                    <div class="w-14 h-14 rounded-full bg-base-100 flex items-center justify-center">
-                      {/* {user && (
-                        <img src={user.photoURL} className="rounded-full" />
-                      )}
-                      {!user && (
-                        <div className="flex items-center justify-center">
-                          G
-                        </div>
-                      )} */}
-                      <img
-                        src="https://i.ytimg.com/vi/LwjxhkHORaM/maxresdefault.jpg"
-                        className="rounded-full"
-                      />
-                    </div>
-                  </div>
-                  <p className="text-white">Louth GAA</p>
-                  {/* <p className="text-secondary">James</p> */}
+            <div className="bg-base-200 rounded-md flex items-center justify-center h-auto relative">
+              <p className="absolute top-2 ">Apperance</p>
+              <div className="dropdown ">
+                <div tabIndex={0} role="button" className="btn m-1 bg-base-100">
+                  Players
                 </div>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                  <li>
+                    <a>Dropdown 1</a>
+                    <a>Dropdown 2</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="bg-base-200 rounded-md p-2 flex items-center justify-center h-auto relative ">
+              <p className="absolute top-2 ">Play</p>
+              <div className="stat">
                 <div className="stat-title text-md capitalize">
-                  {playSelected.category}
+                  {playSelected.category + " / " + playSelected.date}
                 </div>
                 <div className="text-2xl font-bold text-primary">
                   {playSelected.name}
+                  {playTimelineState ? (
+                    <button
+                      className="btn btn-active btn-primary ml-2"
+                      onClick={btnResetHandler}>
+                      {" "}
+                      <FontAwesomeIcon icon={faRepeat} />
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-active btn-primary ml-2"
+                      onClick={btnPlayHandler}>
+                      {" "}
+                      <FontAwesomeIcon icon={faPlay} />
+                    </button>
+                  )}
                 </div>
-                <div className="stat-desc">{playSelected.date}</div>
-              </div>
-            </div>
-            <div className="bg-base-200 rounded-md flex items-center justify-center h-full">
-              <div className="btn-group  lg:btn-group-horizontal">
-                {playTimelineState ? (
-                  <button className="btn btn-active" onClick={btnResetHandler}>
-                    {" "}
-                    <FontAwesomeIcon icon={faRepeat} />
-                  </button>
-                ) : (
-                  <button className="btn btn-active" onClick={btnPlayHandler}>
-                    {" "}
-                    <FontAwesomeIcon icon={faPlay} />
-                  </button>
-                )}
-
-                <button className="btn">
-                  <FontAwesomeIcon icon={faPause} />
-                </button>
-                <button className="btn">
-                  <FontAwesomeIcon icon={faForward} />
-                </button>
               </div>
             </div>
 
-            <div className="bg-base-200 flex items-center justify-center">
+            <div className="bg-base-200 flex items-center justify-center h-auto relative">
+              <p className="absolute top-2 ">Controls</p>
               <div className="btn-group  p-2 rounded ">
                 <button
                   onClick={viewPlaysBtnHandler}
@@ -612,9 +669,29 @@ const ViewPlay = (props) => {
         <div className="col-span-3  bg-base-200 rounded-md row-span-5 ...">
           {setPlayIsChosen ? (
             <div
-              className="flex pitch border border-white/20 flex-col
+              id="pitch"
+              className="flex pitch border  border-white/20 flex-col
            rounded bg-base-200 w-4/6 mx-auto mt-5 relative self-center
              h-[70vh]">
+              {showMoveLines && setPlayIsChosen && (
+                <div
+                  style={{
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                  }}>
+                  {lineCoordinates.map((coords, index) => (
+                    <Line
+                      key={index}
+                      currentX={coords.currentX}
+                      targetX={coords.targetX}
+                      currentY={coords.currentY}
+                      targetY={coords.targetY}
+                      playerNumber={coords.playerNumber}
+                    />
+                  ))}
+                </div>
+              )}
               <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white/20 z-50"></div>
               <div className="endLine absolute top-[30%]  w-full h-[1px] bg-white/20 z-50"></div>
               <div className="endLine absolute top-[50%]  w-full h-[1px] bg-white/20 z-50"></div>
@@ -707,7 +784,27 @@ const ViewPlay = (props) => {
                     </tr>
                   </thead>
                   <tbody className="p-2 overflow-y-auto scrollable-tbody">
-                    {/* dynamic rows */}
+                    {userPlays ? (
+                      <>
+                        {Object.values(userPlays).map((play, index) => (
+                          <tr
+                            className="bg-base-200 cursor-pointer hover:bg-primary rounded-xl transition-all"
+                            key={index}
+                            onClick={() => setPlayIsPickedHandler(play)}>
+                            <th>{index + 1}</th>
+                            <td>{play?.name ?? "N/A"}</td>
+                            <td>{play?.date ?? "N/A"}</td>
+                            <td className="pb-2">
+                              {play?.firstArray?.length ?? 0}
+                            </td>
+                            <td className="text-secondary">Account</td>
+                            {/* {play.name} */}
+                          </tr>
+                        ))}
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     {plays && plays.length > 0 ? (
                       plays.map((play, index) => (
                         <tr
@@ -720,7 +817,7 @@ const ViewPlay = (props) => {
                           <td className="pb-2">
                             {play?.firstArray?.length ?? 0}
                           </td>
-                          <td className="text-secondary">local</td>
+                          <td className="">local</td>
                         </tr>
                       ))
                     ) : (

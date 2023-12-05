@@ -44,7 +44,23 @@ app.get("/api", (req,res)=>{
         )
 })
 
+app.delete('/removePlay/:playId', (req, res) => {
+  const playId = req.params.playId;
   
+  // Reference to the specific play in the 'plays' node in Firebase Realtime Database
+  const playRef = admin.database().ref(`plays/${playId}`);
+
+  // Remove the play with the matching playId
+  playRef.remove()
+    .then(() => {
+      res.send('Play successfully removed');
+    })
+    .catch(error => {
+      console.error("Error removing play:", error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
 app.post('/storePlay', (req, res) => {
   const play = req.body;
   const playID = req.body.id; // Ensure that playID is unique for each play
