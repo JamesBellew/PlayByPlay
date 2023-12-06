@@ -154,7 +154,13 @@ const ViewPlay = (props) => {
     }
   }, [lineData]); // Dependency array ensures this runs whenever lineData changes
   //A play is picked
-  const setPlayIsPickedHandler = (play) => {
+  const setPlayIsPickedHandler = (play, location) => {
+    // if (location === "local") {
+    //   navigate(`/football/ViewPlay/local/${play.name}`);
+
+    // } else {
+    //   navigate(`/football/ViewPlay/account/${location}/${play.name}`);
+    // }
     navigate(`/football/ViewPlay/local/${play.name}`);
     setPlaySelected(play);
     setSetplayIsChosen(true);
@@ -335,6 +341,25 @@ const ViewPlay = (props) => {
   const targetX = xTarget;
   const currentY = yCurrent; // Example Y-coordinate
   const targetY = yTarget; // Example Y-coordinate
+  //* this useeffect code below is used to fix my issue with lines not adjusting to window resizing.
+  //* The use effect is called when the window resizes and then when resizing the calccoords function is called
+  useEffect(() => {
+    // Function to handle resize event
+    const handleResize = () => {
+      console.log("window resized");
+      const newLineCoordinates = calculateAllLineCoordinates(lineData);
+      // Update the state with the new coordinates
+      setLineCoordinates(newLineCoordinates);
+    };
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up event listener
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const calculateAllLineCoordinates = (linesArray) => {
     console.log("Calculating coordinates for all lines ya dig");
     console.log(linesArray);
@@ -503,7 +528,9 @@ const ViewPlay = (props) => {
   const PlayImageDownloadModal = (props) => {
     return (
       <>
-        <div role="alert" className="alert alert-success w-auto">
+        <div
+          role="alert"
+          className="alert alert-success w-auto absolute text-center mx-auto z-50 self-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="stroke-current shrink-0 h-6 w-6"
@@ -588,19 +615,6 @@ const ViewPlay = (props) => {
             <RemovePlayModal prop={playSelected.name} />
             <div className="bg-base-200 rounded-md flex items-center justify-center h-auto relative">
               <p className="absolute top-2 ">Apperance</p>
-              <div className="dropdown ">
-                <div tabIndex={0} role="button" className="btn m-1 bg-base-100">
-                  Players
-                </div>
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                  <li>
-                    <a>Dropdown 1</a>
-                    <a>Dropdown 2</a>
-                  </li>
-                </ul>
-              </div>
             </div>
             <div className="bg-base-200 rounded-md p-2 flex items-center justify-center h-auto relative ">
               <p className="absolute top-2 ">Play</p>
@@ -666,105 +680,109 @@ const ViewPlay = (props) => {
           </>
         )}
 
-        <div className="col-span-3  bg-base-200 rounded-md row-span-5 ...">
+        <div
+          id="pitch"
+          className="col-span-3  bg-base-200 rounded-md row-span-5 ...">
           {setPlayIsChosen ? (
-            <div
-              id="pitch"
-              className="flex pitch border  border-white/20 flex-col
+            <>
+              <div
+                className="flex pitch border  border-white/20 flex-col
            rounded bg-base-200 w-4/6 mx-auto mt-5 relative self-center
              h-[70vh]">
-              {showMoveLines && setPlayIsChosen && (
-                <div
-                  style={{
-                    position: "absolute",
-                    width: "100%",
-                    height: "100%",
-                  }}>
-                  {lineCoordinates.map((coords, index) => (
-                    <Line
-                      key={index}
-                      currentX={coords.currentX}
-                      targetX={coords.targetX}
-                      currentY={coords.currentY}
-                      targetY={coords.targetY}
-                      playerNumber={coords.playerNumber}
-                    />
-                  ))}
-                </div>
-              )}
-              <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white/20 z-50"></div>
-              <div className="endLine absolute top-[30%]  w-full h-[1px] bg-white/20 z-50"></div>
-              <div className="endLine absolute top-[50%]  w-full h-[1px] bg-white/20 z-50"></div>
-              <div className="endLine absolute top-[70%]  w-full h-[1px] bg-white/20 z-50"></div>
-              {/* <div className="endLine absolute top-[20%]  w-full h-[1px] bg-white/20 z-50"></div> */}
-              <div className="endLine absolute top-[90%]  w-full h-[1px] bg-white/20 z-50"></div>
-              <div className="flex-grow flex flex-col">
-                <div
-                  className={`flex-grow mx-auto   grid ${
-                    numDivs === 11 ? "grid-cols-1" : "grid-cols-1"
-                  }`}>
-                  <TenDivs outerDivName="gk" count={1} />
-                </div>
-                <div
-                  className={`flex-grow  grid ${
-                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                  }`}>
-                  <TenDivs outerDivName="fb" count={numDivs} />
-                </div>
+                {showMoveLines && setPlayIsChosen && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      width: "100%",
+                      height: "100%",
+                    }}>
+                    {lineCoordinates.map((coords, index) => (
+                      <Line
+                        key={index}
+                        currentX={coords.currentX}
+                        targetX={coords.targetX}
+                        currentY={coords.currentY}
+                        targetY={coords.targetY}
+                        playerNumber={coords.playerNumber}
+                      />
+                    ))}
+                  </div>
+                )}
+                <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white/20 z-50"></div>
+                <div className="endLine absolute top-[30%]  w-full h-[1px] bg-white/20 z-50"></div>
+                <div className="endLine absolute top-[50%]  w-full h-[1px] bg-white/20 z-50"></div>
+                <div className="endLine absolute top-[70%]  w-full h-[1px] bg-white/20 z-50"></div>
+                {/* <div className="endLine absolute top-[20%]  w-full h-[1px] bg-white/20 z-50"></div> */}
+                <div className="endLine absolute top-[90%]  w-full h-[1px] bg-white/20 z-50"></div>
+                <div className="flex-grow flex flex-col">
+                  <div
+                    className={`flex-grow mx-auto   grid ${
+                      numDivs === 11 ? "grid-cols-1" : "grid-cols-1"
+                    }`}>
+                    <TenDivs outerDivName="gk" count={1} />
+                  </div>
+                  <div
+                    className={`flex-grow  grid ${
+                      numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                    }`}>
+                    <TenDivs outerDivName="fb" count={numDivs} />
+                  </div>
 
-                <div
-                  className={`flex-grow  h-10  grid ${
-                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                  }`}>
-                  <TenDivs outerDivName="fb-hf" count={numDivs} />
-                </div>
-                <div
-                  className={`flex-grow  grid ${
-                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                  }`}>
-                  <TenDivs outerDivName="hb" count={numDivs} />
-                </div>
-                <div
-                  className={`flex-grow  h-10  grid ${
-                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                  }`}>
-                  <TenDivs outerDivName="hb-mf" count={numDivs} />
-                </div>
-              </div>
-              <div
-                className={`flex-grow   grid ${
-                  numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                }`}>
-                <TenDivs outerDivName="mf" count={numDivs} />
-              </div>
-
-              <div className="flex-grow flex flex-col">
-                <div
-                  className={`flex-grow  h-10  grid ${
-                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                  }`}>
-                  <TenDivs outerDivName="mf-hf" count={numDivs} />
-                </div>
-                <div
-                  className={`flex-grow  grid ${
-                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                  }`}>
-                  <TenDivs outerDivName="hf" count={numDivs} />
-                </div>
-                <div
-                  className={`flex-grow  h-10  grid ${
-                    numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
-                  }`}>
-                  <TenDivs outerDivName="hf-ff" count={numDivs} />
+                  <div
+                    className={`flex-grow  h-10  grid ${
+                      numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                    }`}>
+                    <TenDivs outerDivName="fb-hf" count={numDivs} />
+                  </div>
+                  <div
+                    className={`flex-grow  grid ${
+                      numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                    }`}>
+                    <TenDivs outerDivName="hb" count={numDivs} />
+                  </div>
+                  <div
+                    className={`flex-grow  h-10  grid ${
+                      numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                    }`}>
+                    <TenDivs outerDivName="hb-mf" count={numDivs} />
+                  </div>
                 </div>
                 <div
                   className={`flex-grow   grid ${
                     numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
                   }`}>
-                  <TenDivs outerDivName="ff" count={numDivs} />
+                  <TenDivs outerDivName="mf" count={numDivs} />
+                </div>
+
+                <div className="flex-grow flex flex-col">
+                  <div
+                    className={`flex-grow  h-10  grid ${
+                      numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                    }`}>
+                    <TenDivs outerDivName="mf-hf" count={numDivs} />
+                  </div>
+                  <div
+                    className={`flex-grow  grid ${
+                      numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                    }`}>
+                    <TenDivs outerDivName="hf" count={numDivs} />
+                  </div>
+                  <div
+                    className={`flex-grow  h-10  grid ${
+                      numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                    }`}>
+                    <TenDivs outerDivName="hf-ff" count={numDivs} />
+                  </div>
+                  <div
+                    className={`flex-grow   grid ${
+                      numDivs === 11 ? "grid-cols-11" : "grid-cols-3"
+                    }`}>
+                    <TenDivs outerDivName="ff" count={numDivs} />
+                  </div>
                 </div>
               </div>
-            </div>
+              <p className="">{playSelected.name}</p>
+            </>
           ) : (
             <>
               <div className="h-full flex flex-col justify-center items-center ">
@@ -790,7 +808,9 @@ const ViewPlay = (props) => {
                           <tr
                             className="bg-base-200 cursor-pointer hover:bg-primary rounded-xl transition-all"
                             key={index}
-                            onClick={() => setPlayIsPickedHandler(play)}>
+                            onClick={() =>
+                              setPlayIsPickedHandler(play, user.uid)
+                            }>
                             <th>{index + 1}</th>
                             <td>{play?.name ?? "N/A"}</td>
                             <td>{play?.date ?? "N/A"}</td>
@@ -809,7 +829,7 @@ const ViewPlay = (props) => {
                       plays.map((play, index) => (
                         <tr
                           key={index}
-                          onClick={() => setPlayIsPickedHandler(play)}
+                          onClick={() => setPlayIsPickedHandler(play, "local")}
                           className="bg-base-200 cursor-pointer hover:bg-primary rounded-xl transition-all">
                           <th>{index + 1}</th>
                           <td>{play?.name ?? "N/A"}</td>
@@ -822,8 +842,8 @@ const ViewPlay = (props) => {
                       ))
                     ) : (
                       <tr className="bg-base-200">
-                        <td colSpan="4" className="text-center">
-                          No plays available
+                        <td colSpan="6" className="text-center">
+                          No local plays available
                         </td>
                       </tr>
                     )}

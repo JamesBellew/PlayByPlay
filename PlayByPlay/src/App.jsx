@@ -31,6 +31,10 @@ function App() {
               path="/football/ViewPlay/local/:playIdUsed"
               element={<ViewPlay />}
             />
+            <Route
+              path="/football/ViewPlay/account/:user/:playIdUsed"
+              element={<ViewPlay />}
+            />
             <Route path="Football/SetPlay" element={<SetPlay />} />
             <Route path="Football/Formations" element={<Formations />} />
             <Route path="Football/KickOuts" element={<KickOuts />} />
