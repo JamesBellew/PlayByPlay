@@ -692,7 +692,7 @@ const ViewPlay = (props) => {
                 {showMoveLines && setPlayIsChosen && (
                   <div
                     style={{
-                      position: "absolute",
+                      position: "fixed",
                       width: "100%",
                       height: "100%",
                     }}>
