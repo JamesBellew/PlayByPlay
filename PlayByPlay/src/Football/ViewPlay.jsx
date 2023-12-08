@@ -42,7 +42,9 @@ const ViewPlay = (props) => {
   };
   const refs = useRef({});
   const location = useLocation();
-  let { playId } = useParams();
+  // let { playId } = useParams();
+  let { userPlay, playIdUsed } = useParams();
+  // let { userURL, playIdUsed } = useParams();
   const [activePosition, setActivePosition] = useState("fb-1");
   const [targetPosition, setTargetPosition] = useState("mf-3");
   const [ballPositionLine, setBallPositionLine] = useState("hb-4");
@@ -97,6 +99,10 @@ const ViewPlay = (props) => {
         );
       });
   }
+  useEffect(() => {
+    // console.log("User ID:", userPlay);
+    // console.log("Play ID:", playIdUsed);
+  }, [userPlay, playIdUsed]);
 
   const [Moves, setMoves] = useState([]);
   const navigate = useNavigate();
@@ -120,7 +126,7 @@ const ViewPlay = (props) => {
   const [playSelected, setPlaySelected] = useState({});
   const [lineData, setLineData] = useState([]);
   const [lineCoordinates, setLineCoordinates] = useState([]);
-  const { playIdUsed } = useParams();
+  // const { playIdUsed } = useParams();
   const [userPlaysUpdateTrigger, setUserPlaysUpdateTrigger] = useState(0);
   const [userPlays, setUserPlays] = useState(null);
 
@@ -155,13 +161,12 @@ const ViewPlay = (props) => {
   }, [lineData]); // Dependency array ensures this runs whenever lineData changes
   //A play is picked
   const setPlayIsPickedHandler = (play, location) => {
-    // if (location === "local") {
-    //   navigate(`/football/ViewPlay/local/${play.name}`);
-
-    // } else {
-    //   navigate(`/football/ViewPlay/account/${location}/${play.name}`);
-    // }
-    navigate(`/football/ViewPlay/local/${play.name}`);
+    if (location === "local") {
+      navigate(`/football/ViewPlay/local/${play.name}`);
+    } else {
+      navigate(`/football/ViewPlay/account/${location}/${play.name}`);
+    }
+    // navigate(`/football/ViewPlay/local/${play.name}`);
     setPlaySelected(play);
     setSetplayIsChosen(true);
     getLineCoordinance("mf-5", "fb-4");
@@ -586,7 +591,14 @@ const ViewPlay = (props) => {
       </>
     );
   };
-
+  if (setPlayIsChosen === false && playIdUsed && userPlay) {
+    console.log(
+      "you clicked on a link lets load the play ",
+      playIdUsed,
+      " created by ",
+      userPlay
+    );
+  }
   console.log(lineCoordinates);
   return (
     <>
@@ -609,16 +621,13 @@ const ViewPlay = (props) => {
         <PlayImageDownloadModal msg={upperModalMsg} />
       )}
 
-      <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-6  h-[90vh] top-[5vh] ">
+      <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-  h-[90vh] top-[5vh] ">
         {setPlayIsChosen && (
           <>
             <RemovePlayModal prop={playSelected.name} />
-            <div className="bg-base-200 rounded-md flex items-center justify-center h-auto relative">
-              <p className="absolute top-2 ">Apperance</p>
-            </div>
-            <div className="bg-base-200 rounded-md p-2 flex items-center justify-center h-auto relative ">
-              <p className="absolute top-2 ">Play</p>
-              <div className="stat">
+            <div className="bg-base-200 rounded-md row-span-1 flex items-center justify-center relative"></div>
+            <div className="bg-base-200 rounded-md flex items-center justify-center relative ">
+              <div className="stat ">
                 <div className="stat-title text-md capitalize">
                   {playSelected.category + " / " + playSelected.date}
                 </div>
@@ -643,9 +652,8 @@ const ViewPlay = (props) => {
               </div>
             </div>
 
-            <div className="bg-base-200 flex items-center justify-center h-auto relative">
-              <p className="absolute top-2 ">Controls</p>
-              <div className="btn-group  p-2 rounded ">
+            <div className="bg-base-200 flex items-center justify-center relative">
+              <div className="btn-group  rounded ">
                 <button
                   onClick={viewPlaysBtnHandler}
                   className="btn btn-primary ">
@@ -682,7 +690,7 @@ const ViewPlay = (props) => {
 
         <div
           id="pitch"
-          className="col-span-3  bg-base-200 rounded-md row-span-5 ...">
+          className="col-span-3  bg-base-200 rounded-md row-span-6 ...">
           {setPlayIsChosen ? (
             <>
               <div
