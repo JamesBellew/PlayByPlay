@@ -44,6 +44,46 @@ app.get("/api", (req,res)=>{
         )
 })
 
+// app.get('/loadPlayFromLink/:userId/:playId', (req,res)=>{
+//   console.log('in the server boiiiiiiii');
+//   const userId = req.params.userId;
+//   const playId = req.params.playId;
+//   console.log(userId, playId);
+//   const playsRef = admin.database().ref('plays');
+
+// })
+app.get('/loadPlayFromLink/:userId/:playId', (req, res) => {
+  console.log('in the server boiiiiiiii');
+  const userId = req.params.userId;
+  const playId = req.params.playId;
+  // console.log('UserID:', userId, 'PlayID:', playId);
+
+  const playPath = `plays/${playId}`;
+  // console.log('Querying Firebase at path:', playPath);
+
+  const playsRef = admin.database().ref(playPath);
+
+  playsRef.get().then((snapshot) => {
+      if (snapshot.exists()) {
+          const play = snapshot.val();
+          // console.log('Fetched play:', play);
+
+          if (play.userId === userId) {
+              res.json(play);
+          } else {
+              res.status(404).send('Play not found for the provided user ID');
+          }
+      } else {
+          res.status(404).send('Play not found');
+          console.log(':(((((');
+      }
+  }).catch((error) => {
+      console.error("Error fetching data", error);
+      res.status(500).send('Error fetching play');
+  });
+});
+
+
 app.delete('/removePlay/:playId', (req, res) => {
   const playId = req.params.playId;
   

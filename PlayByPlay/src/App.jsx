@@ -32,7 +32,7 @@ function App() {
               element={<ViewPlay />}
             />
             <Route
-              path="/football/ViewPlay/account/:userPlay/:playIdUsed"
+              path="/football/ViewPlay/account/:userId/:playId"
               element={<ViewPlay />}
             />
 

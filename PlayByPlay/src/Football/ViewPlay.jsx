@@ -28,6 +28,7 @@ import Line from "./Line";
 import RemovePlayHandler from "./FootballComponents/RemovePlayConfirm";
 import { useLocation } from "react-router-dom";
 import { auth } from "../utils/firebase";
+import { Helmet } from "react-helmet";
 
 const ViewPlay = (props) => {
   const [user, loading] = useAuthState(auth);
@@ -43,7 +44,7 @@ const ViewPlay = (props) => {
   const refs = useRef({});
   const location = useLocation();
   // let { playId } = useParams();
-  let { userPlay, playIdUsed } = useParams();
+  let { playId, userId } = useParams();
   // let { userURL, playIdUsed } = useParams();
   const [activePosition, setActivePosition] = useState("fb-1");
   const [targetPosition, setTargetPosition] = useState("mf-3");
@@ -99,11 +100,49 @@ const ViewPlay = (props) => {
         );
       });
   }
-  useEffect(() => {
-    // console.log("User ID:", userPlay);
-    // console.log("Play ID:", playIdUsed);
-  }, [userPlay, playIdUsed]);
 
+  function loadPlayFromLink(playId, userId) {
+    console.log("callled yayayyayayya");
+    const url = `http://localhost:5000/loadPlayFromLink/${userId}/${playId}`;
+    return fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Parse the JSON data from the response
+      })
+      .then((data) => {
+        // console.log("User Plays:", data); // Handle the data
+        return data;
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }
+  useEffect(() => {
+    console.log("User ID:", userId);
+    console.log("Play ID:", playId);
+  }, [userId, playId]);
+
+  //here is the hemlet for the sharing of plays on sociual media
+  //! will want top dynamically change this to play name and shit, but cant test this until app is hosted
+  <Helmet>
+    <title>Play by Play Setplay</title>
+    <meta property="og:title" content="play by play" />
+    <meta property="og:description" content="this is a desc" />
+    <meta
+      property="og:image"
+      content="https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg"
+    />
+    <meta
+      property="og:url"
+      content={`http://localhost:5173/football/ViewPlay/account/${userId}/${playId}`}
+    />
+    <meta property="og:type" content="website" />
+  </Helmet>;
   const [Moves, setMoves] = useState([]);
   const navigate = useNavigate();
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
@@ -164,7 +203,7 @@ const ViewPlay = (props) => {
     if (location === "local") {
       navigate(`/football/ViewPlay/local/${play.name}`);
     } else {
-      navigate(`/football/ViewPlay/account/${location}/${play.name}`);
+      navigate(`/football/ViewPlay/account/${location}/${play.id}`);
     }
     // navigate(`/football/ViewPlay/local/${play.name}`);
     setPlaySelected(play);
@@ -591,13 +630,29 @@ const ViewPlay = (props) => {
       </>
     );
   };
-  if (setPlayIsChosen === false && playIdUsed && userPlay) {
+  if (setPlayIsChosen === false && playId && userId) {
+    // const playFromLink = loadPlayFromLink(playId, userId);
+    loadPlayFromLink(playId, userId)
+      .then((play) => {
+        // console.log("Loaded play:", play);
+        setPlayIsPickedHandler(play, userId);
+        // Here you can update the state with the loaded play
+        // this.setState({ currentPlay: play });
+      })
+      .catch((error) => {
+        console.error("Error loading play:", error);
+      });
     console.log(
       "you clicked on a link lets load the play ",
-      playIdUsed,
+      playId,
       " created by ",
-      userPlay
+      userId
     );
+    // setPlayIsPickedHandler(
+    //   playFromLink,
+    //   "f6388012-cb7f-48be-9588-a7ede12e0f88"
+    // );
+    // console.log(playFromLink);
   }
   console.log(lineCoordinates);
   return (
@@ -700,7 +755,8 @@ const ViewPlay = (props) => {
                 {showMoveLines && setPlayIsChosen && (
                   <div
                     style={{
-                      position: "fixed",
+                      position: "absolute",
+                      zIndex: 50,
                       width: "100%",
                       height: "100%",
                     }}>
