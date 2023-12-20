@@ -12,6 +12,24 @@
   cursor: pointer;
   z-index: 100;
 }
+.circle-player {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(145deg, #ff7e5f, #feb47b);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.circle-player:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
 
 .scrollable-tbody {
   height: 20vh;

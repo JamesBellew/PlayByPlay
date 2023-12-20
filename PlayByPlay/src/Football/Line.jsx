@@ -33,11 +33,10 @@ const Line = ({ currentX, targetX, currentY, targetY, playerNumber }) => {
   }, []);
   const circleStyle = {
     position: "fixed",
-
     left: `${currentX - 5}px`, // Half the width and height to center the circle on the line's starting point
     top: `${currentY - 5}px`,
-    width: "15px", // Width of the circle
-    height: "15px", // Height of the circle
+    width: "10px", // Width of the circle
+    height: "10px", // Height of the circle
     backgroundColor: "#6419E6", // Color of the circle
     borderRadius: "50%", // Makes the div a circle
     zIndex: 10, // Ensure the circle is above the line
@@ -47,7 +46,7 @@ const Line = ({ currentX, targetX, currentY, targetY, playerNumber }) => {
     position: "fixed",
     left: `${currentX}px`, // This is the starting x position of the line
     top: `${currentY}px`, // This is the starting y position of the line
-    zIndex: 50,
+    zIndex: 100,
     width: isAnimating ? `${length}px` : "0px", // Start with 0 width and then animate to full length
     height: "0px", // Set to 0 because the border will create the line
     borderTop: playerNumber === 1 ? "4px dotted #fff" : "3px dotted #6419E6", // Creates a dotted line with the specified thickness and color
