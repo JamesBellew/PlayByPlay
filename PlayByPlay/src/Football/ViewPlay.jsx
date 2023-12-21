@@ -17,12 +17,18 @@ import {
   faRepeat,
   faShareNodes,
   faPenToSquare,
+  faTrash,
   faList,
+  faEyeSlash,
   faXmark,
+  faListOl,
   faRemove,
+  faCircleNodes,
   faFloppyDisk,
   faDownload,
+  faArrowDown91,
   faLink,
+  faSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import Line from "./Line";
 import RemovePlayHandler from "./FootballComponents/RemovePlayConfirm";
@@ -552,9 +558,7 @@ const ViewPlay = (props) => {
         link.download = `${playSelected.name}-Screenshot.png`;
         link.href = base64image;
         link.click();
-        setUpperModalMsg(
-          "Image Successfully Saved"
-        );
+        setUpperModalMsg("Image Successfully Saved");
         setImageDownloadModalShowState(true);
         setTimeout(() => {
           // The code you want to execute after the delay goes here
@@ -672,35 +676,35 @@ const ViewPlay = (props) => {
           ))}
         </div>
       )} */}
-     
 
       <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-  h-[90vh] top-[5vh] ">
         {setPlayIsChosen && (
           <>
             <RemovePlayModal prop={playSelected.name} />
             <div className="bg-base-200 rounded-md row-span-1 flex items-center justify-center relative">
-
-               {setPlayIsChosen && imageDownloadModalShowState && (
-        <PlayImageDownloadModal msg={upperModalMsg} />
-      )}
+              {setPlayIsChosen && imageDownloadModalShowState && (
+                <PlayImageDownloadModal msg={upperModalMsg} />
+              )}
+              {playSelected.category}
             </div>
+
             <div className="bg-base-200 rounded-md flex items-center justify-center relative ">
               <div className="stat ">
-                <div className="stat-title text-md capitalize">
-                  {playSelected.category + " / " + playSelected.date}
+                <div className="stat-title text-sm  ">
+                  {/* {playSelected.category} */}
                 </div>
-                <div className="text-2xl font-bold text-primary">
+                <div className="text-2xl font-bold text-white">
                   {playSelected.name}
                   {playTimelineState ? (
                     <button
-                      className="btn btn-sm h-5 btn-active btn-primary ml-2"
+                      className="btn btn-sm h-5 border-none btn-primary bg-primary/20 ml-2"
                       onClick={btnResetHandler}>
                       {" "}
                       <FontAwesomeIcon icon={faRepeat} />
                     </button>
                   ) : (
                     <button
-                      className="btn-sm btn  h-5 btn-active btn-primary ml-2"
+                      className="btn-sm btn  h-5 border-none  btn-primary bg-primary/20 ml-2"
                       onClick={btnPlayHandler}>
                       {" "}
                       <FontAwesomeIcon icon={faPlay} />
@@ -710,69 +714,81 @@ const ViewPlay = (props) => {
               </div>
             </div>
 
-            <div className="bg-base-200 flex items-center justify-center relative">
-              {/* <div className="btn-group   ">
-                <button
-                  onClick={viewPlaysBtnHandler}
-                  className="btn btn-sm  rounded-md btn-primary ">
-                  Plays <FontAwesomeIcon icon={faList} />
-                </button>
-                <button className="btn btn-sm btn-primary">
-                  <FontAwesomeIcon icon={faPenToSquare} />
-                </button>
-
-                {user && (
+            <div className="bg-base-200 flex items-center justify-center relative rounded-sm">
+              <div class="grid w-full h-full grid-cols-4 gap-1 p-2">
+                <div className="  ">
+                  {" "}
                   <button
-                    className=" btn-sm  btn btn-primary"
-                    onClick={copyPlayURLHandler}>
-                    <FontAwesomeIcon icon={faLink} />
+                    onClick={viewPlaysBtnHandler}
+                    className="btn btn-sm  w-full h-full rounded-sm  bg-base-100 text-primary border-none ">
+                    {/* Plays  */}
+                    <FontAwesomeIcon icon={faList} />
                   </button>
-                )}
+                </div>
+                <div className=" ">
+                  {" "}
+                  <button className="btn h-full w-full rounded-sm btn-sm border-none  bg-base-100 text-primary ">
+                    {/* EDIT  */}
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                  </button>
+                </div>
                 {user && (
-                  <button className=" btn-sm btn  btn-primary" onClick={savePlayDB}>
-                    <FontAwesomeIcon icon={faFloppyDisk} />
-                  </button>
-                )}
-                <button onClick={takeScreenshot} className="btn btn-sm btn-primary ">
-                  <FontAwesomeIcon icon={faDownload} />
-                </button>
-                <button
-                  className="btn-sm btn btn-error "
-                  onClick={() => playRemoveHandler(playSelected)}>
-                  <FontAwesomeIcon icon={faRemove} />
-                </button>
-              </div> */}
-                      <div class="grid w-full h-full grid-cols-3 gap-1">
-  <div className="  "> <button
-                  onClick={viewPlaysBtnHandler}
-                  className="btn btn-sm  w-full h-full rounded-sm btn-primary bg-primary/50 border-none ">
-                  Plays <FontAwesomeIcon icon={faList} />
-                </button></div>
-  <div className=" ">    <button className="btn h-full w-full rounded-sm btn-sm border-none  bg-primary/50 btn-primary">
-               EDIT   <FontAwesomeIcon icon={faPenToSquare} />
-                </button></div>
-                {user && (
-                   <div className=" ">
-                  <button className=" w-full h-full btn-sm rounded-sm btn bg-primary/50 border-none btn-primary" onClick={savePlayDB}>
-                    SAVE <FontAwesomeIcon icon={faFloppyDisk} />
-                  </button>
+                  <div className=" ">
+                    <button
+                      className=" w-full h-full btn-sm rounded-sm btn bg-base-100 text-primary border-none "
+                      onClick={savePlayDB}>
+                      {/* SAVE  */}
+                      <FontAwesomeIcon icon={faFloppyDisk} />
+                    </button>
                   </div>
                 )}
-               
-                <div className=" "> <button onClick={takeScreenshot} className="btn h-full  rounded-sm border-none  bg-primary/50 w-full h-full btn-sm btn-primary ">
-                 PRINT <FontAwesomeIcon icon={faDownload} />
-                </button></div>
-                <div className=" w-full h-full "> <button onClick={takeScreenshot} className="btn rounded-sm border-none w-full h-full btn-sm btn-primary bg-primary/50 ">
-             GET      <FontAwesomeIcon icon={faDownload} />
-                </button></div>
-                <div className=""> <button
-                  className="btn-sm btn btn-error h-full rounded-sm w-full "
-                  onClick={() => playRemoveHandler(playSelected)}>
-                  DELETE<FontAwesomeIcon icon={faRemove} />
-                </button></div>
 
-
-</div>
+                <div className=" ">
+                  {" "}
+                  <button
+                    onClick={takeScreenshot}
+                    className="btn h-full  rounded-sm border-none  bg-base-100 text-primary w-full h-full btn-sm  ">
+                    {/* PRINT */}
+                    <FontAwesomeIcon icon={faDownload} />
+                  </button>
+                </div>
+                <div className=" w-full h-full ">
+                  {" "}
+                  <button
+                    onClick={takeScreenshot}
+                    className="btn rounded-sm border-none w-full h-full btn-sm  bg-base-100 text-primary ">
+                    {/* Nums */}
+                    <FontAwesomeIcon icon={faArrowDown91} />
+                  </button>
+                </div>
+                <div className=" w-full h-full ">
+                  {" "}
+                  <button
+                    onClick={takeScreenshot}
+                    className="btn rounded-sm border-none w-full h-full btn-sm  bg-base-100 text-primary ">
+                    {/* Show  */}
+                    <FontAwesomeIcon icon={faCircleNodes} />
+                  </button>
+                </div>
+                <div className=" w-full h-full ">
+                  {" "}
+                  <button
+                    onClick={takeScreenshot}
+                    className="btn rounded-sm border-none w-full h-full btn-sm  bg-base-100 text-primary ">
+                    {/* Hide  */}
+                    <FontAwesomeIcon icon={faEyeSlash} />
+                  </button>
+                </div>
+                <div className="">
+                  {" "}
+                  <button
+                    className="btn-sm btn bg-base-100  text-secondary border-none h-full rounded-sm w-full "
+                    onClick={() => playRemoveHandler(playSelected)}>
+                    {/* DELETE */}
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              </div>
             </div>
           </>
         )}
@@ -796,7 +812,7 @@ const ViewPlay = (props) => {
                     }}>
                     {lineCoordinates.map((coords, index) => (
                       <Line
-                      style={{position: "absolute",zIndex:100}}
+                        style={{ position: "absolute", zIndex: 100 }}
                         key={index}
                         currentX={coords.currentX}
                         targetX={coords.targetX}
