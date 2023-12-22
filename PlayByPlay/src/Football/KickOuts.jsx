@@ -31,6 +31,7 @@ const KickOuts = (props) => {
       addPlayer(startingFiftenPlayerNumberSelected, positionClicked);
     }
   };
+
   //this below usestate is for testing the API from the backend
   const [backendData, setBackendData] = useState([{}]);
   useEffect(() => {
@@ -42,16 +43,32 @@ const KickOuts = (props) => {
   }, []);
   //end of the testing
   const [Moves, setMoves] = useState([]);
+  const [Moves2, setMoves2] = useState([]);
+  const [currentMoveSelected, setCurrentMoveSelected] = useState(1);
+
+  const onMoveChange = (moveNumber) => {
+    setCurrentMoveSelected(moveNumber); // Update the state with the new move number
+    console.log(currentMoveSelected);
+    // You can also perform other actions here if needed
+  };
   const [isOnSaveSeytPlayPage, setIsOnSaveSeytPlayPage] = useState(false);
   const [ballPosition, setBallPosition] = useState("gk-1");
   const [firstCall, setFirstCall] = useState(true);
   const [ballEditingState, setBallEditingState] = useState(false);
   function addMove(playerNumber, newPosition) {
     if (firstCall) {
-      setMoves([{ playerNumber, newPosition }]);
+      if (currentMoveSelected == 2) {
+        setMoves2([{ playerNumber, newPosition }]);
+      } else {
+        setMoves([{ playerNumber, newPosition }]);
+      }
       setFirstCall(false);
     } else {
-      setMoves((prevMoves) => [...prevMoves, { playerNumber, newPosition }]);
+      if (currentMoveSelected == 2) {
+        setMoves2((prevMoves) => [...prevMoves, { playerNumber, newPosition }]);
+      } else {
+        setMoves((prevMoves) => [...prevMoves, { playerNumber, newPosition }]);
+      }
     }
   }
 
@@ -195,7 +212,7 @@ const KickOuts = (props) => {
           (player) => player.pitchPosition === divposition
         );
         const ballIsHere = divposition === ballPosition;
-        console.log(ballIsHere);
+        // console.log(ballIsHere);
         const matchingPlayerNumber =
           players.find((player) => player.pitchPosition === divposition)
             ?.playerNumber || "Not Found";
@@ -448,7 +465,8 @@ const KickOuts = (props) => {
       navigate("/football/ViewPlay");
     }
   };
-
+  console.log(currentMoveSelected);
+  console.log(Moves2);
   return (
     <>
       <div className="centering-wrapper">
@@ -480,6 +498,7 @@ const KickOuts = (props) => {
         )}
         {showTimelineState && !isOnSaveSeytPlayPage && !ballEditingState && (
           <Timeline
+            onMoveChange={onMoveChange}
             onRunClick={handleFormationData}
             onButtonClick={handleDataFromChild}
             movesArr={Moves}></Timeline>
@@ -669,6 +688,7 @@ const KickOuts = (props) => {
           ) : (
             <SaveSetPlay
               movesArr={Moves}
+              secondMovesArray={Moves2}
               formation={players}
               dataFromSaveSetPlay={handleDataFromChildSaveSetPlay}
               ballPos={ballPosition}

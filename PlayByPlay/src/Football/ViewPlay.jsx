@@ -55,6 +55,7 @@ const ViewPlay = (props) => {
   const [activePosition, setActivePosition] = useState("fb-1");
   const [targetPosition, setTargetPosition] = useState("mf-3");
   const [ballPositionLine, setBallPositionLine] = useState("hb-4");
+  const [showPlayerNumberState, setShowPlayerNumberState] = useState(true);
   useEffect(() => {
     // This will log the currentDiv after the component mounts and the ref is set
     const currentDiv = refs.current[activePosition];
@@ -163,6 +164,7 @@ const ViewPlay = (props) => {
   const [playTimelineState, setPlayTimelineState] = useState(false);
   const [plays, setPlays] = useState([]);
   const [move2, setMove2] = useState([]);
+  const [secondMoveArray, setsecondMoveArray] = useState([]);
   const [setPlayIsChosen, setSetplayIsChosen] = useState(false);
   const [ballPosition, setBallPosition] = useState("hb-4");
   const [upperModalMsg, setUpperModalMsg] = useState(":)");
@@ -228,6 +230,9 @@ const ViewPlay = (props) => {
     );
     setPlayers(play.secondArray);
     setMove2(createNewFormationFromMoves(play.secondArray, play.firstArray));
+    setsecondMoveArray(
+      createNewFormationFromMoves(play.secondArray, play.secondMoveArray)
+    );
     const newLinesData = play.firstArray.map((move) => {
       const currentPosition = getCurrentPositionOnTargetValue(
         move.playerNumber,
@@ -276,6 +281,10 @@ const ViewPlay = (props) => {
     setTimeout(() => {
       setPlayers(move2);
     }, 2000);
+    setTimeout(() => {
+      console.log(secondMoveArray);
+      setPlayers(secondMoveArray);
+    }, 4000);
   };
 
   const getLineCoordinance = (currentDiv, targetDiv) => {};
@@ -293,7 +302,9 @@ const ViewPlay = (props) => {
     // setActivePosition([]);
     // setTargetPosition([]);
   };
-
+  const showPlayerNumbersHandler = () => {
+    setShowPlayerNumberState(!showPlayerNumberState);
+  };
   const numDivs = 11;
   const fetchPlays = () => {
     const storedPlays = JSON.parse(localStorage.getItem("setPlays"));
@@ -376,7 +387,9 @@ const ViewPlay = (props) => {
                 className={` ${
                   positionIsUsed ? "text-black" : "text-white"
                 } duration-75`}>
-                {positionIsUsed ? matchingPlayerNumber : ""}
+                {positionIsUsed && showPlayerNumberState
+                  ? matchingPlayerNumber
+                  : ""}
                 {ballIsHere && showTimelineState && ballEditingState && (
                   <div className="football absolute z-100 cursor-pointer hover:bg-primary bg-black h-4 w-4 mx-auto ml-1 mt-2 rounded-full"></div>
                 )}
@@ -677,23 +690,23 @@ const ViewPlay = (props) => {
         </div>
       )} */}
 
-      <div className="grid grid-cols-3 gap-1 mt-5 grid-rows-  h-[90vh] top-[5vh] ">
+      <div className="grid grid-cols-5 gap-1 mt-5 grid-rows-  h-[90vh] top-[5vh] ">
         {setPlayIsChosen && (
           <>
             <RemovePlayModal prop={playSelected.name} />
-            <div className="bg-base-200 rounded-md row-span-1 flex items-center justify-center relative">
+            {/* <div className="bg-base-200 rounded-md row-span-1 flex items-center justify-center relative">
               {setPlayIsChosen && imageDownloadModalShowState && (
                 <PlayImageDownloadModal msg={upperModalMsg} />
               )}
               {playSelected.category}
-            </div>
+            </div> */}
 
-            <div className="bg-base-200 rounded-md flex items-center justify-center relative ">
+            <div className="bg-base-200  lg:cols-span-2 col-span-2  rounded-md flex items-center justify-center relative ">
               <div className="stat ">
                 <div className="stat-title text-sm  ">
                   {/* {playSelected.category} */}
                 </div>
-                <div className="text-2xl font-bold text-white">
+                <div className="lg:text-2xl text-sm font-bold text-white">
                   {playSelected.name}
                   {playTimelineState ? (
                     <button
@@ -714,8 +727,8 @@ const ViewPlay = (props) => {
               </div>
             </div>
 
-            <div className="bg-base-200 flex items-center justify-center relative rounded-sm">
-              <div class="grid w-full h-full grid-cols-4 gap-1 p-2">
+            <div className="bg-base-200 lg:col-span-3 col-span-3 flex items-center justify-center relative rounded-sm">
+              <div class="grid w-full h-full lg:grid-cols-6 grid-cols-4 lg:gap-1 lg:p-2 p-1 ">
                 <div className="  ">
                   {" "}
                   <button
@@ -755,7 +768,7 @@ const ViewPlay = (props) => {
                 <div className=" w-full h-full ">
                   {" "}
                   <button
-                    onClick={takeScreenshot}
+                    onClick={copyPlayURLHandler}
                     className="btn rounded-sm border-none w-full h-full btn-sm  bg-base-100 text-primary ">
                     {/* Nums */}
                     <FontAwesomeIcon icon={faArrowDown91} />
@@ -770,23 +783,31 @@ const ViewPlay = (props) => {
                     <FontAwesomeIcon icon={faCircleNodes} />
                   </button>
                 </div>
-                <div className=" w-full h-full ">
+                <div className=" w-full h-full group ">
                   {" "}
                   <button
-                    onClick={takeScreenshot}
+                    onClick={showPlayerNumbersHandler}
                     className="btn rounded-sm border-none w-full h-full btn-sm  bg-base-100 text-primary ">
                     {/* Hide  */}
                     <FontAwesomeIcon icon={faEyeSlash} />
                   </button>
+                  <div className="absolute   hidden group-hover:block">
+                    <div className="bg-gray-500 text-white text-xs rounded py-1 px-2 right-0">
+                      Show Numbers
+                    </div>
+                  </div>
                 </div>
-                <div className="">
-                  {" "}
+                <div className="group relative">
                   <button
-                    className="btn-sm btn bg-base-100  text-secondary border-none h-full rounded-sm w-full "
-                    onClick={() => playRemoveHandler(playSelected)}>
-                    {/* DELETE */}
+                    onClick={() => playRemoveHandler(playSelected)}
+                    className="btn-sm btn bg-base-100 text-secondary border-none h-full rounded-sm w-full">
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
+                  <div className="absolute   hidden group-hover:block">
+                    <div className="bg-gray-500 text-white text-xs rounded py-1 px-2 right-0 bottom-0">
+                      Delete Play
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -795,13 +816,13 @@ const ViewPlay = (props) => {
 
         <div
           id="pitch"
-          className="col-span-3  bg-base-200 rounded-md row-span-6 ...">
+          className="col-span-5  bg-base-200 rounded-md row-span-6 ...">
           {setPlayIsChosen ? (
             <>
               <div
                 className="flex pitch border  border-white/20 flex-col
-           rounded bg-base-200 w-4/6 mx-auto mt-5 relative self-center
-             h-[70vh] ">
+           rounded bg-base-200 w-6/6 sm:w-4/6 mx-auto mt-5 relative self-center
+             sm:h-[70vh] h-full  ">
                 {showMoveLines && setPlayIsChosen && (
                   <div
                     style={{

@@ -11,11 +11,12 @@ const SaveSetPlay = (props) => {
   // const [ballPosition,setBallPosition] = useState([{}])
   const [categorySelectedOption, setCategorySelectedOption] = useState("None");
   const movesArr = props.movesArr;
+  const secondMoveArray = props.secondMovesArray;
   const formation = props.formation;
   const ballPosition = props.ballPos;
   const name = inputValue;
   // const date = today();
-
+  // const secondMoveArray = [{ playerNumber: 10, newPosition: "hb-4" }];
   const today = new Date();
   const date = today.toISOString().split("T")[0];
   console.log(movesArr);
@@ -52,6 +53,7 @@ const SaveSetPlay = (props) => {
       date: date,
       firstArray: movesArr,
       category: categorySelectedOption,
+      secondMoveArray: secondMoveArray,
       secondArray: formation,
       userId: user && selectedOption === "account" ? user.uid : null,
     };

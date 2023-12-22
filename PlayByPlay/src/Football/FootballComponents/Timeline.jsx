@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import { useState, useEffect } from "react";
 
-const Timeline = ({ movesArr, onButtonClick }) => {
+const Timeline = ({ movesArr, onButtonClick, onMoveChange }) => {
   const [currentMoveSelected, setcurrentMoveSelected] = useState(1);
   const [NumberOfMoves, setNumberOfMoves] = useState(1);
   const [showTimelineState, setShowTimeLineState] = useState(true);
@@ -63,6 +63,8 @@ const Timeline = ({ movesArr, onButtonClick }) => {
 
   const changeMoveSelected = (moveNumber) => {
     setcurrentMoveSelected(moveNumber);
+    //passing to the parent component here
+    onMoveChange(moveNumber);
   };
 
   const MoveDropdownComponent = ({ moveNumber }) => {
@@ -109,8 +111,9 @@ const Timeline = ({ movesArr, onButtonClick }) => {
   }, [movesArr]);
 
   const moveLabelClickHandler = () => {
-    alert("clicked");
+    console.log("hi");
   };
+  console.log("clicked and you are now on a new move" + currentMoveSelected);
   return (
     <div className="bg-base-200 p-4 rounded-md mb-2">
       {/* <h1 className="ml-4 text-xl">
