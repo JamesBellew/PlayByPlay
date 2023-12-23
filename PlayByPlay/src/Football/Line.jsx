@@ -54,7 +54,7 @@ const Line = ({ currentX, targetX, currentY, targetY, playerNumber }) => {
     transform: `rotate(${angle}deg)`,
     transformOrigin: "0 0", // Ensures the div rotates around the starting point
     transition: `width 2s ease-out`, // Animate the width over 2 seconds
-    transitionDelay: playerNumber === 1 ? "2s" : "",
+    transitionDelay: playerNumber === 1 ? "4s" : "",
   };
   const circleDivHoverHandler = () => {
     // alert("hovered");

@@ -164,6 +164,7 @@ const ViewPlay = (props) => {
   const [playTimelineState, setPlayTimelineState] = useState(false);
   const [plays, setPlays] = useState([]);
   const [move2, setMove2] = useState([]);
+  const [secondMovesArray, setSecondMovesArray] = useState([]);
   const [secondMoveArray, setsecondMoveArray] = useState([]);
   const [setPlayIsChosen, setSetplayIsChosen] = useState(false);
   const [ballPosition, setBallPosition] = useState("hb-4");
@@ -172,7 +173,9 @@ const ViewPlay = (props) => {
     useState(false);
   const [playSelected, setPlaySelected] = useState({});
   const [lineData, setLineData] = useState([]);
+  const [lineData2, setLineData2] = useState([]);
   const [lineCoordinates, setLineCoordinates] = useState([]);
+  const [lineCoordinates2, setLineCoordinates2] = useState([]);
   // const { playIdUsed } = useParams();
   const [userPlaysUpdateTrigger, setUserPlaysUpdateTrigger] = useState(0);
   const [userPlays, setUserPlays] = useState(null);
@@ -202,8 +205,10 @@ const ViewPlay = (props) => {
     if (lineData.length > 0) {
       // Calculate all line coordinates
       const newLineCoordinates = calculateAllLineCoordinates(lineData);
+      const newLineCoordinates2 = calculateAllLineCoordinates(lineData2);
       // Update the state with the new coordinates
       setLineCoordinates(newLineCoordinates);
+      setLineCoordinates2(newLineCoordinates2);
     }
   }, [lineData]); // Dependency array ensures this runs whenever lineData changes
   //A play is picked
@@ -230,9 +235,10 @@ const ViewPlay = (props) => {
     );
     setPlayers(play.secondArray);
     setMove2(createNewFormationFromMoves(play.secondArray, play.firstArray));
-    setsecondMoveArray(
-      createNewFormationFromMoves(play.secondArray, play.secondMoveArray)
-    );
+    setSecondMovesArray(play.secondMoveArray);
+    // setsecondMoveArray(
+    //   createNewFormationFromMoves(play.secondArray, play.secondMoveArray)
+    // );
     const newLinesData = play.firstArray.map((move) => {
       const currentPosition = getCurrentPositionOnTargetValue(
         move.playerNumber,
@@ -244,6 +250,34 @@ const ViewPlay = (props) => {
         target: move.newPosition,
       };
     });
+    //this is the lines for the second move array
+    // const newLinesData2 = play.secondMoveArray.map((move) => {
+    //   const currentPosition = getCurrentPositionOnTargetValue(
+    //     move.playerNumber,
+    //     play.secondArray
+    //   );
+    //   return {
+    //     playerNumber: 101,
+    //     current: currentPosition,
+    //     target: move.newPosition,
+    //   };
+    // });
+
+    const newLinesData2 =
+      play.secondMoveArray && play.secondMoveArray.length > 0
+        ? play.secondMoveArray.map((move) => {
+            const currentPosition = getCurrentPositionOnTargetValue(
+              move.playerNumber,
+              play.secondArray
+            );
+            return {
+              playerNumber: 101,
+              current: currentPosition,
+              target: move.newPosition,
+            };
+          })
+        : [];
+
     //this is the ball position
     newLinesData.push({
       playerNumber: 1,
@@ -251,6 +285,7 @@ const ViewPlay = (props) => {
       target: play.ballPosition,
     });
     setLineData(newLinesData);
+    setLineData2(newLinesData2);
     btnResetHandler();
     setPlayers(play.secondArray);
     // calculateLineCoordinates(exampleLine);
@@ -281,9 +316,42 @@ const ViewPlay = (props) => {
     setTimeout(() => {
       setPlayers(move2);
     }, 2000);
+    console.log(move2);
+    // const mergedMoves = move2.map((move) => {
+    //   const override = secondMovesArray.find(
+    //     (m) => m.playerNumber === move.playerNumber
+    //   );
+    //   if (override) {
+    //     // Override the 'pitchPosition' in 'move2' with 'newPosition' from 'secondMovesArray'
+    //     return {
+    //       ...move,
+    //       pitchPosition: override.newPosition,
+    //     };
+    //   }
+    //   // If no override is found, retain the original 'move2' element
+    //   return move;
+    // });
+    const mergedMoves =
+      secondMovesArray.length > 0
+        ? move2.map((move) => {
+            const override = secondMovesArray.find(
+              (m) => m.playerNumber === move.playerNumber
+            );
+            if (override) {
+              // Override the 'pitchPosition' in 'move2' with 'newPosition' from 'secondMovesArray'
+              return {
+                ...move,
+                pitchPosition: override.newPosition,
+              };
+            }
+            // If no override is found, retain the original 'move2' element
+            return move;
+          })
+        : move2;
+
+    console.log(mergedMoves);
     setTimeout(() => {
-      console.log(secondMoveArray);
-      setPlayers(secondMoveArray);
+      setPlayers(mergedMoves);
     }, 4000);
   };
 
@@ -411,8 +479,10 @@ const ViewPlay = (props) => {
     const handleResize = () => {
       console.log("window resized");
       const newLineCoordinates = calculateAllLineCoordinates(lineData);
+      const newLineCoordinates2 = calculateAllLineCoordinates(lineData2);
       // Update the state with the new coordinates
       setLineCoordinates(newLineCoordinates);
+      setLineCoordinates2(newLineCoordinates2);
     };
 
     // Add event listener
@@ -671,7 +741,10 @@ const ViewPlay = (props) => {
     // );
     // console.log(playFromLink);
   }
+  console.log(lineCoordinates2);
   console.log(lineCoordinates);
+  console.log(lineData2);
+  console.log(lineData);
   return (
     <>
       <AccountNav />
@@ -840,6 +913,17 @@ const ViewPlay = (props) => {
                         currentY={coords.currentY}
                         targetY={coords.targetY}
                         playerNumber={coords.playerNumber}
+                      />
+                    ))}
+                    {lineCoordinates2.map((coords2, index) => (
+                      <Line
+                        style={{ position: "absolute", zIndex: 100 }}
+                        key={index}
+                        currentX={coords2.currentX}
+                        targetX={coords2.targetX}
+                        currentY={coords2.currentY}
+                        targetY={coords2.targetY}
+                        playerNumber={coords2.playerNumber}
                       />
                     ))}
                   </div>
