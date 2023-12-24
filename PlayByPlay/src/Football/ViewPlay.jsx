@@ -54,6 +54,7 @@ const ViewPlay = (props) => {
   // let { userURL, playIdUsed } = useParams();
   const [activePosition, setActivePosition] = useState("fb-1");
   const [targetPosition, setTargetPosition] = useState("mf-3");
+  const [numberOfMoves, setNumberofMoves] = useState(1);
   const [ballPositionLine, setBallPositionLine] = useState("hb-4");
   const [showPlayerNumberState, setShowPlayerNumberState] = useState(true);
   useEffect(() => {
@@ -212,6 +213,7 @@ const ViewPlay = (props) => {
     }
   }, [lineData]); // Dependency array ensures this runs whenever lineData changes
   //A play is picked
+
   const setPlayIsPickedHandler = (play, location) => {
     if (location === "local") {
       navigate(`/football/ViewPlay/local/${play.name}`);
@@ -223,6 +225,13 @@ const ViewPlay = (props) => {
     setSetplayIsChosen(true);
     getLineCoordinance("mf-5", "fb-4");
     console.log(play);
+    //getting the number of moves within the play for timign of delay
+    if (play.secondMoveArray && play.secondMoveArray.length > 0) {
+      setNumberofMoves(2);
+    } else {
+      setNumberofMoves(1);
+    }
+    console.log(numberOfMoves + "baiiiiiii");
     //set the target and current coordinants
     setBallPosition(play.ballPosition);
     setTargetPosition(play.firstArray[0].newPosition);
@@ -745,23 +754,13 @@ const ViewPlay = (props) => {
   console.log(lineCoordinates);
   console.log(lineData2);
   console.log(lineData);
+  console.log(numberOfMoves + "haiiiii");
+
+  //! this is the end of the React moving onto JSX
+
   return (
     <>
       <AccountNav />
-      {/* {showMoveLines && setPlayIsChosen && (
-        <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          {lineCoordinates.map((coords, index) => (
-            <Line
-              key={index}
-              currentX={coords.currentX}
-              targetX={coords.targetX}
-              currentY={coords.currentY}
-              targetY={coords.targetY}
-              playerNumber={coords.playerNumber}
-            />
-          ))}
-        </div>
-      )} */}
 
       <div className="grid grid-cols-5 gap-1 mt-5 grid-rows-  h-[90vh] top-[5vh] ">
         {setPlayIsChosen && (
@@ -894,7 +893,7 @@ const ViewPlay = (props) => {
             <>
               <div
                 className="flex pitch border  border-white/20 flex-col
-           rounded bg-base-200 w-6/6 sm:w-4/6 mx-auto mt-5 relative self-center
+           rounded bg-base-100 w-6/6 sm:w-4/6 mx-auto mt-5 relative self-center
              sm:h-[70vh] h-full  ">
                 {showMoveLines && setPlayIsChosen && (
                   <div
@@ -910,6 +909,9 @@ const ViewPlay = (props) => {
                         key={index}
                         currentX={coords.currentX}
                         targetX={coords.targetX}
+                        lineColor="#5616C5"
+                        countMoves={numberOfMoves}
+                        lineNumber={1}
                         currentY={coords.currentY}
                         targetY={coords.targetY}
                         playerNumber={coords.playerNumber}
@@ -921,6 +923,9 @@ const ViewPlay = (props) => {
                         key={index}
                         currentX={coords2.currentX}
                         targetX={coords2.targetX}
+                        lineColor="#D926A9"
+                        lineNumber={2}
+                        countMoves={numberOfMoves}
                         currentY={coords2.currentY}
                         targetY={coords2.targetY}
                         playerNumber={coords2.playerNumber}
@@ -929,6 +934,8 @@ const ViewPlay = (props) => {
                   </div>
                 )}
                 <div className="endLine absolute top-[10%]  w-full h-[1px] bg-white/20 z-50"></div>
+                <div className="goalSquare absolute w-[12%] left-[44%] top-0 h-7 border border-white/20 z-50"></div>
+                <div className="goalSquare absolute w-[12%] left-[44%] top-7 h-9 border rounded-bl-full rounded-br-full border-white/20 z-50"></div>
                 <div className="endLine absolute top-[30%]  w-full h-[1px] bg-white/20 z-50"></div>
                 <div className="endLine absolute top-[50%]  w-full h-[1px] bg-white/20 z-50"></div>
                 <div className="endLine absolute top-[70%]  w-full h-[1px] bg-white/20 z-50"></div>
