@@ -56,6 +56,7 @@ const ViewPlay = (props) => {
   const [targetPosition, setTargetPosition] = useState("mf-3");
   const [numberOfMoves, setNumberofMoves] = useState(1);
   const [ballPositionLine, setBallPositionLine] = useState("hb-4");
+  const [showRunBoxComponent, setShowRunBoxComponent] = useState(false);
   const [showPlayerNumberState, setShowPlayerNumberState] = useState(true);
   useEffect(() => {
     // This will log the currentDiv after the component mounts and the ref is set
@@ -321,6 +322,7 @@ const ViewPlay = (props) => {
     setYCurrent(currentRect.y);
     //I want delay of 2 seconds here before stplayers() is called
     // setPlayers(move2);
+    setShowRunBoxComponent(true);
     setShowMoveLines(true);
     setTimeout(() => {
       setPlayers(move2);
@@ -369,6 +371,7 @@ const ViewPlay = (props) => {
     setPlayTimelineState(false);
     setPlayers(playSelected.secondArray);
     setShowMoveLines(false);
+    setShowRunBoxComponent(false);
   };
   const createPlayBtnHandler = () => {
     navigate("/Football/KickOuts");
@@ -778,11 +781,11 @@ const ViewPlay = (props) => {
                 <div className="stat-title text-sm  ">
                   {/* {playSelected.category} */}
                 </div>
-                <div className="lg:text-2xl text-sm font-bold text-white">
-                  {playSelected.name}
+                <div className="lg:text-xl capitalize text-sm font-bold  text-white">
+                  <span className="text-left">{playSelected.name}</span>
                   {playTimelineState ? (
                     <button
-                      className="btn btn-sm h-5 border-none btn-primary bg-primary/20 ml-2"
+                      className="btn btn-sm h-5 border-none btn-primary mx-auto bg-primary/20 ml-2"
                       onClick={btnResetHandler}>
                       {" "}
                       <FontAwesomeIcon icon={faRepeat} />
@@ -794,6 +797,41 @@ const ViewPlay = (props) => {
                       {" "}
                       <FontAwesomeIcon icon={faPlay} />
                     </button>
+                  )}
+                  {showRunBoxComponent && (
+                    <div className="runsComponent">
+                      <div className="flex w-full text-left text-xs font-extralight">
+                        <div className="w-1/3 px-2">1st Run</div>
+
+                        {numberOfMoves > 1 && (
+                          <div className="w-1/3 px-2">2nd Run</div>
+                        )}
+
+                        <div className="w-1/3 px-2">Ball Kick</div>
+                      </div>
+                      <div className="flex w-full">
+                        <div className="w-1/3 px-2">
+                          <div className="text-sm font-thin w-full h-[1px] bg-primary animate-width mt-1 rounded"></div>
+                        </div>
+                        {numberOfMoves > 1 && (
+                          <div className="w-1/3 px-2">
+                            <div className="text-sm font-thin w-0 h-[1px] bg-secondary animate-width-two mt-1 rounded"></div>
+                          </div>
+                        )}
+                        <div className="w-1/3 px-2">
+                          <div
+                            className={`text-sm font-thin w-0 h-[1px] bg-white 
+                            ${
+                              numberOfMoves > 1
+                                ? "animate-width-three"
+                                : "animate-width-two"
+                            }
+                            animate-width-three
+                            
+                            mt-1 rounded`}></div>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>

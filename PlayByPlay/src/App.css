@@ -66,7 +66,14 @@ input[type=text]{
 .my-component .hide p {
   display: none;
 }
-
+@keyframes widthAnimation {
+  from {
+      width: 0;
+  }
+  to {
+      width: 100%;
+  }
+}
 .my-component .show p {
   display: block;
 }
