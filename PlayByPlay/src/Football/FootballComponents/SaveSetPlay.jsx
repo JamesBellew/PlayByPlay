@@ -8,6 +8,7 @@ const SaveSetPlay = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedOptionPicked, updateSelectOptionPicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const [accessSelectedOption, setAccessSelectedOption] = useState("public");
   // const [ballPosition,setBallPosition] = useState([{}])
   const [categorySelectedOption, setCategorySelectedOption] = useState("None");
   const movesArr = props.movesArr;
@@ -45,6 +46,10 @@ const SaveSetPlay = (props) => {
   const CategorySelectOptionClickHandler = (event) => {
     setCategorySelectedOption(event.target.value);
   };
+
+  const accessSelectOptionClickHandler = (event) => {
+    setAccessSelectedOption(event.target.value);
+  };
   const saveSetPlayHandler = () => {
     const combinedData = {
       id: uuidv4(),
@@ -53,6 +58,7 @@ const SaveSetPlay = (props) => {
       date: date,
       firstArray: movesArr,
       category: categorySelectedOption,
+      access: accessSelectedOption,
       secondMoveArray: secondMoveArray,
       secondArray: formation,
       userId: user && selectedOption === "account" ? user.uid : null,
@@ -140,6 +146,26 @@ const SaveSetPlay = (props) => {
           <option value={"press"}>Press</option>
           <option value={"lineBall"}>Line Ball</option>
           <option value={"45"}>45 Kick</option>
+        </select>
+        <select
+          onChange={accessSelectOptionClickHandler}
+          className={`mt-2 select
+        ${
+          selectedOptionPicked
+            ? "border-l-emerald-400 border-l-4 "
+            : "border-l-gray-400 border-l-4"
+        }
+        select-bordered w-full max-w-xs`}>
+          <option disabled selected>
+            Access
+          </option>
+          <option value={"public"} selected>
+            Public
+          </option>
+          <option value={"private"}>Private</option>
+          <hr></hr>
+
+          <option value={"group"}>Group - Kilkerley</option>
         </select>
         <br></br>
 

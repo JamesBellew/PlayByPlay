@@ -20,6 +20,7 @@ import {
   faTrash,
   faList,
   faEyeSlash,
+  faPeopleGroup,
   faXmark,
   faListOl,
   faRemove,
@@ -29,6 +30,8 @@ import {
   faArrowDown91,
   faLink,
   faSlash,
+  faUnlockKeyhole,
+  faLockOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import Line from "./Line";
 import RemovePlayHandler from "./FootballComponents/RemovePlayConfirm";
@@ -58,6 +61,7 @@ const ViewPlay = (props) => {
   const [ballPositionLine, setBallPositionLine] = useState("hb-4");
   const [showRunBoxComponent, setShowRunBoxComponent] = useState(false);
   const [showPlayerNumberState, setShowPlayerNumberState] = useState(true);
+  const [accessMessage, setAccessMessage] = useState("");
   useEffect(() => {
     // This will log the currentDiv after the component mounts and the ref is set
     const currentDiv = refs.current[activePosition];
@@ -123,12 +127,14 @@ const ViewPlay = (props) => {
       .then((data) => {
         // console.log("User Plays:", data); // Handle the data
         return data;
+        setAccessMessage("");
       })
       .catch((error) => {
         console.error(
           "There has been a problem with your fetch operation:",
           error
         );
+        setAccessMessage("Cannot View Play, currently set to private by owner");
       });
   }
   useEffect(() => {
@@ -171,6 +177,7 @@ const ViewPlay = (props) => {
   const [setPlayIsChosen, setSetplayIsChosen] = useState(false);
   const [ballPosition, setBallPosition] = useState("hb-4");
   const [upperModalMsg, setUpperModalMsg] = useState(":)");
+  const [playAccessLevel, setPlayAccessLevel] = useState("public");
   const [imageDownloadModalShowState, setImageDownloadModalShowState] =
     useState(false);
   const [playSelected, setPlaySelected] = useState({});
@@ -215,90 +222,107 @@ const ViewPlay = (props) => {
   }, [lineData]); // Dependency array ensures this runs whenever lineData changes
   //A play is picked
 
+  const isAllowedViewPlay = (playUserId, userId) => {
+    if (playUserId === userId) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const setPlayIsPickedHandler = (play, location) => {
-    if (location === "local") {
-      navigate(`/football/ViewPlay/local/${play.name}`);
+    if (
+      play.access === "private" &&
+      isAllowedViewPlay(play.userId, user.uid) === false
+    ) {
+      console.log("you are not allowed here :(");
     } else {
-      navigate(`/football/ViewPlay/account/${location}/${play.id}`);
-    }
-    // navigate(`/football/ViewPlay/local/${play.name}`);
-    setPlaySelected(play);
-    setSetplayIsChosen(true);
-    getLineCoordinance("mf-5", "fb-4");
-    console.log(play);
-    //getting the number of moves within the play for timign of delay
-    if (play.secondMoveArray && play.secondMoveArray.length > 0) {
-      setNumberofMoves(2);
-    } else {
-      setNumberofMoves(1);
-    }
-    console.log(numberOfMoves + "baiiiiiii");
-    //set the target and current coordinants
-    setBallPosition(play.ballPosition);
-    setTargetPosition(play.firstArray[0].newPosition);
-    setActivePosition("mf-3");
-    setActivePosition(
-      getCurrentPositionOnTargetValue(
-        play.firstArray[0].playerNumber,
-        play.secondArray
-      )
-    );
-    setPlayers(play.secondArray);
-    setMove2(createNewFormationFromMoves(play.secondArray, play.firstArray));
-    setSecondMovesArray(play.secondMoveArray);
-    // setsecondMoveArray(
-    //   createNewFormationFromMoves(play.secondArray, play.secondMoveArray)
-    // );
-    const newLinesData = play.firstArray.map((move) => {
-      const currentPosition = getCurrentPositionOnTargetValue(
-        move.playerNumber,
-        play.secondArray
+      if (location === "local") {
+        navigate(`/football/ViewPlay/local/${play.name}`);
+      } else {
+        navigate(`/football/ViewPlay/account/${location}/${play.id}`);
+      }
+      console.log("you are allowed here");
+      setAccessMessage("");
+      // navigate(`/football/ViewPlay/local/${play.name}`);
+      setPlaySelected(play);
+      setSetplayIsChosen(true);
+      getLineCoordinance("mf-5", "fb-4");
+      console.log(play);
+      //getting the number of moves within the play for timign of delay
+      if (play.secondMoveArray && play.secondMoveArray.length > 0) {
+        setNumberofMoves(2);
+      } else {
+        setNumberofMoves(1);
+      }
+      console.log(numberOfMoves + "baiiiiiii");
+      //set the target and current coordinants
+      setBallPosition(play.ballPosition);
+      setTargetPosition(play.firstArray[0].newPosition);
+      setActivePosition("mf-3");
+      setActivePosition(
+        getCurrentPositionOnTargetValue(
+          play.firstArray[0].playerNumber,
+          play.secondArray
+        )
       );
-      return {
-        playerNumber: 101,
-        current: currentPosition,
-        target: move.newPosition,
-      };
-    });
-    //this is the lines for the second move array
-    // const newLinesData2 = play.secondMoveArray.map((move) => {
-    //   const currentPosition = getCurrentPositionOnTargetValue(
-    //     move.playerNumber,
-    //     play.secondArray
-    //   );
-    //   return {
-    //     playerNumber: 101,
-    //     current: currentPosition,
-    //     target: move.newPosition,
-    //   };
-    // });
+      setPlayers(play.secondArray);
+      setMove2(createNewFormationFromMoves(play.secondArray, play.firstArray));
+      setSecondMovesArray(play.secondMoveArray);
+      // setsecondMoveArray(
+      //   createNewFormationFromMoves(play.secondArray, play.secondMoveArray)
+      // );
+      const newLinesData = play.firstArray.map((move) => {
+        const currentPosition = getCurrentPositionOnTargetValue(
+          move.playerNumber,
+          play.secondArray
+        );
+        return {
+          playerNumber: 101,
+          current: currentPosition,
+          target: move.newPosition,
+        };
+      });
+      //this is the lines for the second move array
+      // const newLinesData2 = play.secondMoveArray.map((move) => {
+      //   const currentPosition = getCurrentPositionOnTargetValue(
+      //     move.playerNumber,
+      //     play.secondArray
+      //   );
+      //   return {
+      //     playerNumber: 101,
+      //     current: currentPosition,
+      //     target: move.newPosition,
+      //   };
+      // });
 
-    const newLinesData2 =
-      play.secondMoveArray && play.secondMoveArray.length > 0
-        ? play.secondMoveArray.map((move) => {
-            const currentPosition = getCurrentPositionOnTargetValue(
-              move.playerNumber,
-              play.secondArray
-            );
-            return {
-              playerNumber: 101,
-              current: currentPosition,
-              target: move.newPosition,
-            };
-          })
-        : [];
+      const newLinesData2 =
+        play.secondMoveArray && play.secondMoveArray.length > 0
+          ? play.secondMoveArray.map((move) => {
+              const currentPosition = getCurrentPositionOnTargetValue(
+                move.playerNumber,
+                play.secondArray
+              );
+              return {
+                playerNumber: 101,
+                current: currentPosition,
+                target: move.newPosition,
+              };
+            })
+          : [];
 
-    //this is the ball position
-    newLinesData.push({
-      playerNumber: 1,
-      current: "gk-1",
-      target: play.ballPosition,
-    });
-    setLineData(newLinesData);
-    setLineData2(newLinesData2);
-    btnResetHandler();
-    setPlayers(play.secondArray);
-    // calculateLineCoordinates(exampleLine);
+      //this is the ball position
+      newLinesData.push({
+        playerNumber: 1,
+        current: "gk-1",
+        target: play.ballPosition,
+      });
+      setLineData(newLinesData);
+      setLineData2(newLinesData2);
+      btnResetHandler();
+      setPlayers(play.secondArray);
+      // calculateLineCoordinates(exampleLine);
+    }
   };
   //end of setplay is selected brackats
   const getCurrentPositionOnTargetValue = (playerNumber, players) => {
@@ -740,6 +764,7 @@ const ViewPlay = (props) => {
       })
       .catch((error) => {
         console.error("Error loading play:", error);
+        setAccessMessage("play is set to private by owner");
       });
     console.log(
       "you clicked on a link lets load the play ",
@@ -753,12 +778,12 @@ const ViewPlay = (props) => {
     // );
     // console.log(playFromLink);
   }
-  console.log(lineCoordinates2);
-  console.log(lineCoordinates);
-  console.log(lineData2);
-  console.log(lineData);
-  console.log(numberOfMoves + "haiiiii");
-
+  // console.log(lineCoordinates2);
+  // console.log(lineCoordinates);
+  // console.log(lineData2);
+  // console.log(lineData);
+  // console.log(numberOfMoves + "haiiiii");
+  // console.log(user.uid);
   //! this is the end of the React moving onto JSX
 
   return (
@@ -782,6 +807,9 @@ const ViewPlay = (props) => {
                   {/* {playSelected.category} */}
                 </div>
                 <div className="lg:text-xl capitalize text-sm font-bold  text-white">
+                  <span className="text-sm mr-2 font-extralight left-0 text-left p-0 text-primary">
+                    <FontAwesomeIcon icon={faLockOpen} />
+                  </span>
                   <span className="text-left">{playSelected.name}</span>
                   {playTimelineState ? (
                     <button
@@ -897,7 +925,11 @@ const ViewPlay = (props) => {
                   {" "}
                   <button
                     onClick={showPlayerNumbersHandler}
-                    className="btn rounded-sm border-none w-full h-full btn-sm  bg-base-100 text-primary ">
+                    className={`btn btn-active rounded-sm border-none w-full h-full btn-sm 
+                    ${showPlayerNumberState ? ` bg-base-100` : "bg-base-300"}
+                    
+                    
+                    text-primary `}>
                     {/* Hide  */}
                     <FontAwesomeIcon icon={faEyeSlash} />
                   </button>
@@ -1052,6 +1084,7 @@ const ViewPlay = (props) => {
             <>
               <div className="h-full flex flex-col justify-center items-center ">
                 {/* //no setplay is selected */}
+                <h4 className="text-error ">{accessMessage}</h4>
                 <h1 className="mb-2 text-primary font-medium text-xl">
                   Please select a set play
                 </h1>
@@ -1062,7 +1095,7 @@ const ViewPlay = (props) => {
                       <th>#</th>
                       <th>Name</th>
                       <th>Date</th>
-                      <th>Moves</th>
+                      <th>Access</th>
                       <th>Saved</th>
                     </tr>
                   </thead>
@@ -1079,9 +1112,7 @@ const ViewPlay = (props) => {
                             <th>{index + 1}</th>
                             <td>{play?.name ?? "N/A"}</td>
                             <td>{play?.date ?? "N/A"}</td>
-                            <td className="pb-2">
-                              {play?.firstArray?.length ?? 0}
-                            </td>
+                            <td className="pb-2">{play?.access ?? "public"}</td>
                             <td className="text-secondary">Account</td>
                             {/* {play.name} */}
                           </tr>
