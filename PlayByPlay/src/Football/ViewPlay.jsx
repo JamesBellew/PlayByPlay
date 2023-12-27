@@ -32,6 +32,7 @@ import {
   faSlash,
   faUnlockKeyhole,
   faLockOpen,
+  faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import Line from "./Line";
 import RemovePlayHandler from "./FootballComponents/RemovePlayConfirm";
@@ -60,6 +61,7 @@ const ViewPlay = (props) => {
   const [numberOfMoves, setNumberofMoves] = useState(1);
   const [ballPositionLine, setBallPositionLine] = useState("hb-4");
   const [showRunBoxComponent, setShowRunBoxComponent] = useState(false);
+  const [homePageMessage, setHomePageMessage] = useState("");
   const [showPlayerNumberState, setShowPlayerNumberState] = useState(true);
   const [accessMessage, setAccessMessage] = useState("");
   useEffect(() => {
@@ -104,6 +106,39 @@ const ViewPlay = (props) => {
       })
       .then((data) => {
         // console.log("User Plays:", data); // Handle the data
+        return data;
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }
+  function changeAccess(playID, newAccess) {
+    setPlayAccessLevel(newAccess);
+    setHomePageMessage("Play Access changed to " + newAccess);
+    setTimeout(() => {
+      setHomePageMessage("");
+    }, 2000);
+    const url = "http://localhost:5000/changeAccess";
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ playID, access: newAccess }), // Send playID and access in the request body
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the data
+        setPlayAccessLevel(newAccess);
+
         return data;
       })
       .catch((error) => {
@@ -235,6 +270,7 @@ const ViewPlay = (props) => {
       play.access === "private" &&
       isAllowedViewPlay(play.userId, user.uid) === false
     ) {
+      setPlayAccessLevel(play.access);
       console.log("you are not allowed here :(");
     } else {
       if (location === "local") {
@@ -242,6 +278,7 @@ const ViewPlay = (props) => {
       } else {
         navigate(`/football/ViewPlay/account/${location}/${play.id}`);
       }
+      setPlayAccessLevel(play.access);
       console.log("you are allowed here");
       setAccessMessage("");
       // navigate(`/football/ViewPlay/local/${play.name}`);
@@ -789,7 +826,9 @@ const ViewPlay = (props) => {
   return (
     <>
       <AccountNav />
-
+      <div className="homePageMessageBox absolute top-5 left-5 text-white">
+        {homePageMessage}
+      </div>
       <div className="grid grid-cols-5 gap-1 mt-5 grid-rows-  h-[90vh] top-[5vh] ">
         {setPlayIsChosen && (
           <>
@@ -808,7 +847,11 @@ const ViewPlay = (props) => {
                 </div>
                 <div className="lg:text-xl capitalize text-sm font-bold  text-white">
                   <span className="text-sm mr-2 font-extralight left-0 text-left p-0 text-primary">
-                    <FontAwesomeIcon icon={faLockOpen} />
+                    {playAccessLevel === "public" ? (
+                      <FontAwesomeIcon icon={faLockOpen} />
+                    ) : (
+                      <FontAwesomeIcon icon={faLock} />
+                    )}
                   </span>
                   <span className="text-left">{playSelected.name}</span>
                   {playTimelineState ? (
@@ -912,14 +955,30 @@ const ViewPlay = (props) => {
                     <FontAwesomeIcon icon={faArrowDown91} />
                   </button>
                 </div>
-                <div className=" w-full h-full ">
+                <div className=" w-full h-full group ">
                   {" "}
                   <button
-                    onClick={takeScreenshot}
-                    className="btn rounded-sm border-none w-full h-full btn-sm  bg-base-100 text-primary ">
+                    className="btn rounded-sm border-none w-full h-full btn-sm  bg-base-100 text-primary "
+                    onClick={() => {
+                      const newAccessLevel =
+                        playAccessLevel === "public" ? "private" : "public";
+                      changeAccess(playSelected.id, newAccessLevel);
+                    }}>
                     {/* Show  */}
-                    <FontAwesomeIcon icon={faCircleNodes} />
+                    {playAccessLevel === "private" ? (
+                      <FontAwesomeIcon icon={faLockOpen} />
+                    ) : (
+                      <FontAwesomeIcon icon={faLock} />
+                    )}
+                    {/* <FontAwesomeIcon icon={faloc} /> */}
                   </button>
+                  <div className="absolute   hidden group-hover:block">
+                    <div className="bg-gray-500 text-white text-xs rounded py-1 px-2 right-0">
+                      {playAccessLevel === "private"
+                        ? "Make Public"
+                        : "Make Private"}
+                    </div>
+                  </div>
                 </div>
                 <div className=" w-full h-full group ">
                   {" "}
@@ -1112,7 +1171,7 @@ const ViewPlay = (props) => {
                             <th>{index + 1}</th>
                             <td>{play?.name ?? "N/A"}</td>
                             <td>{play?.date ?? "N/A"}</td>
-                            <td className="pb-2">{play?.access ?? "public"}</td>
+                            <td className="pb-2">{play?.access ?? ""}</td>
                             <td className="text-secondary">Account</td>
                             {/* {play.name} */}
                           </tr>

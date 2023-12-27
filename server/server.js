@@ -124,6 +124,33 @@ app.post('/storePlay', (req, res) => {
   });
 });
 
+app.post('/changeAccess', (req, res) => {
+  const playID = req.body.playID;
+  const newAccess = req.body.access;
+
+  // Input validation (ensure newAccess is either 'public' or 'private')
+  if (newAccess !== 'public' && newAccess !== 'private') {
+      return res.status(400).send('Invalid access value. It must be "public" or "private".');
+  }
+
+  // Reference to the specific play in your Firebase Realtime Database
+  const playRef = admin.database().ref('plays/' + playID);
+
+  // Update the 'access' field of the play
+  playRef.update({ 'access': newAccess }, (error) => {
+      if (error) {
+          // Handle the error case
+          console.error('Data could not be updated.' + error);
+          res.status(500).send('Error updating data in Firebase.');
+      } else {
+          // Data updated successfully!
+          console.log('Access updated successfully.');
+          res.status(200).send('Access level updated to ' + newAccess);
+      }
+  });
+});
+
+
 app.get('/getUserPlays/:userId', (req, res) => {
   const userId = req.params.userId;
   
