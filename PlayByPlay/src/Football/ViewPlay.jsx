@@ -64,6 +64,7 @@ const ViewPlay = (props) => {
   const [homePageMessage, setHomePageMessage] = useState("");
   const [showPlayerNumberState, setShowPlayerNumberState] = useState(true);
   const [accessMessage, setAccessMessage] = useState("");
+  const [isUserPlay,setIsUserPlay] = useState(false);
   useEffect(() => {
     // This will log the currentDiv after the component mounts and the ref is set
     const currentDiv = refs.current[activePosition];
@@ -266,6 +267,9 @@ const ViewPlay = (props) => {
   };
 
   const setPlayIsPickedHandler = (play, location) => {
+    setIsUserPlay(isAllowedViewPlay(play.userId,user.uid));
+    // console.log('here baiiii');
+    // console.log(isAllowedViewPlay(play.id,user.uid));
     if (
       play.access === "private" &&
       isAllowedViewPlay(play.userId, user.uid) === false
@@ -821,6 +825,12 @@ const ViewPlay = (props) => {
   // console.log(lineData);
   // console.log(numberOfMoves + "haiiiii");
   // console.log(user.uid);
+  // isAllowedViewPlay(playSelected.userId,user.uid);
+  // console.log('here chickilickin');
+  // console.log(playSelected.userId);
+  // console.log(user.uid);
+  // console.log(isAllowedViewPlay(playSelected.userId,user.uid));
+  // console.log(isUserPlay);
   //! this is the end of the React moving onto JSX
 
   return (
@@ -909,7 +919,7 @@ const ViewPlay = (props) => {
             </div>
 
             <div className="bg-base-200 lg:col-span-3 col-span-3 flex items-center justify-center relative rounded-sm">
-              <div class="grid w-full h-full lg:grid-cols-6 grid-cols-4 lg:gap-1 lg:p-2 p-1 ">
+              <div class="grid w-full h-full lg:grid-cols-6 grid-cols-4 lg:gap-1 lg:p-2 p-1  ">
                 <div className="  ">
                   {" "}
                   <button
@@ -919,14 +929,21 @@ const ViewPlay = (props) => {
                     <FontAwesomeIcon icon={faList} />
                   </button>
                 </div>
-                <div className=" ">
+                {user && isUserPlay &&
+                <div className="group ">
                   {" "}
                   <button className="btn h-full w-full rounded-sm btn-sm border-none  bg-base-100 text-primary ">
                     {/* EDIT  */}
                     <FontAwesomeIcon icon={faPenToSquare} />
                   </button>
+                  <div className="absolute z-50   hidden group-hover:block">
+                    <div className="bg-gray-500 text-white text-xs rounded py-1 px-2 right-0">
+                      Edit Play
+                    </div>
+                  </div>
                 </div>
-                {user && (
+}
+                {user && isUserPlay && (
                   <div className=" ">
                     <button
                       className=" w-full h-full btn-sm rounded-sm btn bg-base-100 text-primary border-none "
@@ -955,6 +972,7 @@ const ViewPlay = (props) => {
                     <FontAwesomeIcon icon={faArrowDown91} />
                   </button>
                 </div>
+                {user && isUserPlay &&
                 <div className=" w-full h-full group ">
                   {" "}
                   <button
@@ -980,6 +998,7 @@ const ViewPlay = (props) => {
                     </div>
                   </div>
                 </div>
+}
                 <div className=" w-full h-full group ">
                   {" "}
                   <button
@@ -998,6 +1017,7 @@ const ViewPlay = (props) => {
                     </div>
                   </div>
                 </div>
+                {user && isUserPlay &&
                 <div className="group relative">
                   <button
                     onClick={() => playRemoveHandler(playSelected)}
@@ -1010,6 +1030,7 @@ const ViewPlay = (props) => {
                     </div>
                   </div>
                 </div>
+}
               </div>
             </div>
           </>
