@@ -3,6 +3,8 @@ import Timeline from "./FootballComponents/Timeline";
 import SaveSetPlay from "./FootballComponents/SaveSetPlay";
 import AccountSideBar from "./FootballComponents/AccountSidebar";
 import { useNavigate } from "react-router-dom";
+import Line from "./Line";
+
 
 const KickOuts = (props) => {
   const navigate = useNavigate();
