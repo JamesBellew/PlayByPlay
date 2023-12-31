@@ -20,7 +20,7 @@ const KickOuts = (props) => {
     updateStartingFifteenPlayerNumberSelected(playherNumber);
   };
   const handleDivClick = (outerDiv, index) => {
-    //alert(`You clicked the ${index + 1}-th div inside the ${outerDiv} div`);
+    //alert(`You clicked  on the ${index + 1}-th div inside the ${outerDiv} div`);
     const positionClicked = outerDiv + "-" + (index + 1);
 
     // alert(startingFiftenPlayerNumberSelected + "  into " + positionClicked);
