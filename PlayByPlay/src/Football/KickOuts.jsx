@@ -12,7 +12,7 @@ const KickOuts = (props) => {
   useEffect(() => {
     if (fb1Ref.current) {
       const rect = fb1Ref.current.getBoundingClientRect();
-      console.log(`Position of div with class 'fb-1': `, rect.top, rect.left);
+      console.log(`Position of the div with class 'fb-1': `, rect.top, rect.left);
     }
   }, [fb1Ref.current]);
   const testhandler = (playherNumber) => {
