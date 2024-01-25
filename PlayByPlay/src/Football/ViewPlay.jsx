@@ -73,7 +73,7 @@ const ViewPlay = (props) => {
 
   function removeUserPlays(playId) {
     // Replace 'http://localhost:5000' with the actual URL of your server
-    const url = `http://localhost:5000/removePlay/${playId}`;
+    const url = `http://1/removePlay/${playId}`;
 
     return fetch(url, { method: "DELETE" }) // Specify the DELETE method
       .then((response) => {
@@ -96,20 +96,23 @@ const ViewPlay = (props) => {
 
   function getUserPlays(userId) {
     // Replace 'your-server-url' with the actual URL of your server
-    const url = `http://localhost:5000/getUserPlays/${userId}`;
+    const url = `http://localhost:5001/getUserPlays/${userId}`;
 
     return fetch(url)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+        
         return response.json(); // Parse the JSON data from the response
       })
       .then((data) => {
         // console.log("User Plays:", data); // Handle the data
         return data;
+        setIsServerErrorStatus(false)
       })
       .catch((error) => {
+        setIsServerErrorStatus(true);
         console.error(
           "There has been a problem with your fetch operation:",
           error
@@ -122,7 +125,7 @@ const ViewPlay = (props) => {
     setTimeout(() => {
       setHomePageMessage("");
     }, 2000);
-    const url = "http://localhost:5000/changeAccess";
+    const url = "http://localhost:5001/changeAccess";
     return fetch(url, {
       method: "POST",
       headers: {
@@ -152,7 +155,7 @@ const ViewPlay = (props) => {
 
   function loadPlayFromLink(playId, userId) {
     console.log("callled yayayyayayya");
-    const url = `http://localhost:5000/loadPlayFromLink/${userId}/${playId}`;
+    const url = `http://1/loadPlayFromLink/${userId}/${playId}`;
     return fetch(url)
       .then((response) => {
         if (!response.ok) {
@@ -213,6 +216,8 @@ const ViewPlay = (props) => {
   const [setPlayIsChosen, setSetplayIsChosen] = useState(false);
   const [ballPosition, setBallPosition] = useState("hb-4");
   const [upperModalMsg, setUpperModalMsg] = useState(":)");
+  const [isServerErrorStatus,setIsServerErrorStatus] = useState(false)
+  const [isServerChildMsgShown,setIsServerChildMsgShown] = useState(false)
   const [playAccessLevel, setPlayAccessLevel] = useState("public");
   const [imageDownloadModalShowState, setImageDownloadModalShowState] =
     useState(false);
@@ -265,7 +270,9 @@ const ViewPlay = (props) => {
       return false;
     }
   };
-
+const toggleChildServerErrorMsgDropdownHandler = ()=>{
+  setIsServerChildMsgShown(!isServerChildMsgShown)
+}
   const setPlayIsPickedHandler = (play, location) => {
     setIsUserPlay(isAllowedViewPlay(play.userId,user.uid));
     // console.log('here baiiii');
@@ -376,6 +383,7 @@ const ViewPlay = (props) => {
   const [yCurrent, setYCurrent] = useState(0);
 
   const btnPlayHandler = () => {
+    
     setPlayTimelineState(true);
     const currentDiv = refs.current[activePosition];
     const targetDiv = refs.current[targetPosition];
@@ -393,6 +401,8 @@ const ViewPlay = (props) => {
       setPlayers(move2);
     }, 2000);
     console.log(move2);
+  
+   
     // const mergedMoves = move2.map((move) => {
     //   const override = secondMovesArray.find(
     //     (m) => m.playerNumber === move.playerNumber
@@ -688,7 +698,7 @@ const ViewPlay = (props) => {
   const [playName, setPlayName] = useState("test");
   const savePlayDB = async () => {
     try {
-      const response = await fetch("http://localhost:5000/add-play", {
+      const response = await fetch("http://localhost:5001/add-play", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -729,6 +739,8 @@ const ViewPlay = (props) => {
       console.error('Element with ID "pitch" not found');
     }
   };
+
+ 
 
   const singInBtnHandler = () => {
     navigate("/auth/login");
@@ -835,6 +847,25 @@ const ViewPlay = (props) => {
 
   return (
     <>
+    {isServerErrorStatus == true &&
+    <>
+<div role="alert absolute top-0">
+  <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+    Server Error
+    <button onClick={toggleChildServerErrorMsgDropdownHandler} className="  p-2 text-zinc-800 underline rounded-lg">
+
+      {isServerChildMsgShown == false ? "More Info" : " Less Info"}
+    </button>
+  </div>
+  {isServerChildMsgShown &&
+  <div class="border border-t-0 border-red-400 rounded-b  bg-red-100 px-4 py-3 text-red-700">
+    <p>Something not ideal might be happening.</p>
+    <p>User Plays are not loading, please check connection and reload page </p>
+  </div>
+}
+</div>
+    </>
+    }
       <AccountNav />
       <div className="homePageMessageBox absolute top-5 left-5 text-white">
         {homePageMessage}
