@@ -1257,13 +1257,13 @@ const toggleChildServerErrorMsgDropdownHandler = ()=>{
                   </tbody>
                 </table>
                 <hr className="text-xl font-bold mt-5 text-secondary"></hr>
-                <h1 className="text-primary step  mb-2 font-medium text-xl">
+                {/* <h1 className="text-primary step  mb-2 font-medium text-xl">
                   Import a setPlay
-                </h1>
-                <input
+                </h1> */}
+                {/* <input
                   type="file"
                   className="file-input align-top left-0 file-input-bordered  w-auto max-w-xs"
-                />{" "}
+                />{" "} */}
                 <div>
                   <hr className="text-xl font-bold m-5 text-secondary"></hr>
 

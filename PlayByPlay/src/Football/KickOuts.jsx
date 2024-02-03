@@ -162,8 +162,8 @@ const KickOuts = (props) => {
   };
   const StartingFifteen = () => {
     return (
-      <div className="grid grid-rows-2 text-center grid-cols-8 w-full h-auto p-5">
-        <h2 className="col-span-8 row  text-white text-lg left-0">
+      <div className="grid grid-rows-2  text-center grid-cols-12 w-full h-auto ">
+        <h2 className="col-span-12 row mb-5 text-white text-lg left-0">
           Select Position on pitch for Player
           {startingFiftenPlayerNumberSelected}
         </h2>
@@ -191,11 +191,11 @@ const KickOuts = (props) => {
               onClick={() => startingFifteenSelectedHandler(playerNumber)}
               className={` hover:scale-105 mx-auto
             transition-all cursor-pointer h-10 my-auto
-            text-center  m-2 w-10 
+            text-center  m-3 w-10 
             ${
               playerNumber === startingFiftenPlayerNumberSelected
                 ? "bg-white text-black"
-                : "bg-primary/20"
+                : "bg-primary/10"
             } rounded-full`}>
               {playerNumber}
             </p>
@@ -494,7 +494,7 @@ const KickOuts = (props) => {
           </div>
         </dialog>
         {!showTimelineState && (
-          <div className="relative flex  h-[18vh] bg-base-200 mb-[2vh] rounded">
+          <div className="relative flex  h-[20vh] align-middle justify-center pb-5 bg-base-200 mb-[2vh] rounded">
             <StartingFifteen></StartingFifteen>
           </div>
         )}
